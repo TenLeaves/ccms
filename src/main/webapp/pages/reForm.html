@@ -1,0 +1,630 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+ <head> 
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />  
+  <title>订阅订单信息填写</title> 
+  <link rel="stylesheet" th:href="@{/static/css/base.css}" href="../css/base.css" /> 
+  <link rel="stylesheet" type="text/css" th:href="@{/static/css/order_input.css}" href="../css/order_input.css" /> 
+  
+  <script type="text/javascript" th:src="@{/static/js/jquery-1.8.js}" src="../js/jquery.min.js"></script> 
+  <script type="text/javascript" th:src="@{/static/js/jquery.json-2.4.js}"></script> 
+  <script type="text/javascript" th:src="@{/static/js/common.js}" src="../js/jquery.min.js"></script> 
+  <script type="text/javascript" th:src="@{/static/js/rorderInfo.js}" src="../js/jquery.min.js"></script> 
+    <script th:src="@{/static/js/jq-overlay.js}"></script>
+  <script th:src="@{/static/js/jquery.timers-1.2.js}"></script>
+    <script th:src="@{/static/js/jquery.form.min.js}"></script>
+    <script  th:src="@{/static/js/date/WdatePicker.js}"></script>
+ </head> 
+ <body> 
+  <div class="w"> 
+   <div class="sec-top"> 
+    <h2 class="sec-title">订单信息填写<a id="TOPAREA" name="TOPAREA" >&nbsp;</a></h2> 
+    <ul class="process"> 
+     <li class="on" id="custInfoStepBack"> <p>1.客户信息</p> <span class="line"><em>1</em></span> </li> 
+     <li id="orderInfoStepBack"> <p>2.订单信息</p> <span class="line"><em>2</em></span> </li> 
+     <li id="sendListStepBack"> <p>3.配送信息</p> <span class="line"><em>3</em></span> </li> 
+    </ul> 
+   </div> 
+   <div class="sec-box"> 
+    <div id="custInfoStep" class="processing" > 
+     <table class="oprt-table" cellspacing="0" cellpadding="0" border="0"> 
+      <tbody>
+       <tr> 
+        <th><em class="star">*</em>订购单位：</th> 
+        <td> <input type="text" class="ipt-style w480" id="orderCompany"/> <a id="append" class="append" href="javascript:void(0);" onclick="searchFromExist();"><i class="add"></i><span>从已保存的客户中查找</span></a> </td> 
+       </tr> 
+       <tr> 
+        <th><em class="star">*</em>联系人：</th> 
+        <td>
+          <input type="text" class="ipt-style w300" id="contactPerson"/>
+          <input  type="hidden" value="" id="contactPersonId" />
+          </td> 
+       </tr> 
+       <tr> 
+        <th><em class="star">*</em>客户类型：</th> 
+        <td> 
+        <span class="sel-box sel-long sel-box-on custTypeId" custtype="1">大客户</span> 
+        <span class="sel-box sel-long custTypeId" custtype="2">批发商</span> 
+        <span class="sel-box sel-long custTypeId" custtype="6">报刊发行局</span>  
+        <span class="sel-box sel-long custTypeId" custtype="7">发行站</span>  
+        <input id="custTypeValue" type="hidden" value="1" />
+        </td>
+       </tr> 
+       <tr> 
+        <th><em class="star">*</em>联系人手机：</th> 
+        <td><input type="text" class="ipt-style w300" id="contactPhone"/></td> 
+       </tr> 
+       <tr> 
+        <th>座机：</th> 
+        <td> <input type="text" class="ipt-style w80 c-place" placeholder="区号" id="fixQuHao"/><span class="hinge">-</span><input type="text" class="ipt-style w168" id="fixTle"/><span class="hinge">转</span><input type="text" class="ipt-style w80" id="fixTrans"/> </td> 
+       </tr> 
+       <tr> 
+        <th>折扣率：</th> 
+        <td><input type="text" class="ipt-style w80 c-place" placeholder="例：85" id="discount"/><span class="hinge">折</span></td> 
+       </tr> 
+       <tr> 
+        <th>经联人：</th> 
+        <td><input type="text" class="ipt-style w300" id="throughPerson"/></td> 
+       </tr> 
+       <tr> 
+        <th>经联人电话：</th> 
+        <td><input type="text" class="ipt-style w300" id="throPsonPhone"/></td> 
+       </tr> 
+       <tr> 
+        <th>备注：</th> 
+        <td> <textarea class="text-style remarks" id="remark"></textarea> <p class="ipt-tips">文字不超过200字</p> </td> 
+       </tr> 
+       <tr> 
+        <th>&nbsp;</th> 
+        <td> <a id="next-step1" href="javascript:void(0);" class="blue-btn next-step" onclick="nextOrPre('custInfoStep','orderInfoStep');">下一步</a> <span class="empty" id="errorInfoCust" style="color:red;"></span> </td> 
+       </tr> 
+      </tbody>
+     </table> 
+    </div> 
+    <div id="orderInfoStep" class="processing" style="display:none;"> 
+     <div class="info-box"> 
+      <div class="info-show"> 
+       <table class="result-thead"  cellspacing="0" cellpadding="0" border="0"> 
+        <tbody>
+         <tr> 
+          <th width="20%">订阅序列</th> 
+          <th width="20%">产品</th> 
+          <th width="20%">订阅周期</th> 
+          <th width="20%">订阅数(本/月)</th> 
+          <th>操作</th>
+          <input type="hidden" value="" id="ordertoModifyid"/> 
+         </tr> 
+        </tbody>
+       </table> 
+       <div class="result-tb-w"> 
+        <table id="orderListTable" class="result-tb" cellspacing="0" cellpadding="0" border="0"> 
+         <tbody>
+         
+         </tbody>
+        </table> 
+       </div> 
+       <div class="info-new">
+        <i></i>
+        <a id="addOrderInfoControBtn" href="#MIDDLE" onclick="showAddArea();"><span >添加订阅信息</span></a>
+        
+       </div> 
+      </div> 
+      <table class="oprt-table" cellspacing="0" cellpadding="0" border="0"> 
+       <tbody>
+        <tr> 
+         <th>需要发票：</th> 
+         <td> 
+          <span class="choice"><input type="radio" name="fapiao" ticket="1" class="check-style ticket" /><label>是</label></span>
+          <span class="choice"><input type="radio" name="fapiao" checked="checked" ticket="2" class="check-style ticket" /><label>否</label></span>
+          </td> 
+        <input id="isNeedTicket" type="hidden" value="2" />
+        </tr> 
+        <tr id="typeInvoiceFitstId" style="display:none;"> 
+         <th>未付款先打印发票：</th> 
+         <td> 
+          <span class="choice"><input type="radio" name="first" invoiceFirst="1" class="check-style invoiceFirst" /><label>是</label></span>
+          <span class="choice"><input type="radio" name="first" checked="checked" invoiceFirst="2" class="check-style invoiceFirst" /><label>否</label></span>
+          </td> 
+        <input id="isTypeInvoiceFirst" type="hidden" value="2" />
+        </tr> 
+        <tr> 
+         <th>未付全款先发货：</th> 
+         <td> 
+         <span class="choice"><input type="radio" name="sendany" sendanyway='1' class="check-style sendAnyway" /><label>是</label></span> 
+         <span class="choice"><input type="radio" name="sendany" checked="checked" sendanyway='2' class="check-style sendAnyway" /><label>否</label></span> </td> 
+        <input id="isSendAnyway" type="hidden" value="2" />
+        </tr> 
+        <tr> 
+         <th>当前订单总价格：</th> 
+         <td> 
+         <span style="color:blue;" id="currentOrderTotalMoney">0</span> 
+         </td>
+        </tr> 
+        <tr> 
+         <td colspan="2"> <a id="pre-step0" href="javascript:void(0);" class="blue-bdr-btn mrg-r-10 pre-step" onclick="nextOrPre('orderInfoStep','custInfoStep');" >上一步</a> <a id="next-step2" href="javascript:void(0);" class="blue-btn next-step" onclick="nextOrPre('orderInfoStep','sendListStep');" >下一步</a> 
+           
+         </td> 
+        </tr> 
+       </tbody>
+      </table> 
+     </div> 
+     <div class="info-edit" id="addOrderInfoArea" style="display:none;"> 
+      <h3 class="info-edit-title">添加订阅信息<a name="MIDDLE" id="MIDDLE" >&nbsp;</a></h3> 
+      
+      <table class="oprt-table" cellspacing="0" cellpadding="0" border="0"> 
+       <tbody>
+        <tr> 
+         <th><em class="star">*</em>订阅方式：</th> 
+         <td> 
+          <span class="sel-box sel-long sel-box-on orderWay" orderway="1">电话订阅</span>
+          <span class="sel-box sel-long orderWay" orderway="2">邮局订阅</span> 
+          <span class="sel-box sel-long orderWay" orderway="3">上门订阅</span>
+          <input id="orderWay" type="hidden" value="1" /> 
+          </td> 
+        </tr> 
+        <tr> 
+         <th><em class="star">*</em>产品：</th> 
+         <td> 
+         <span class="sel-box sel-long sel-box-on productMode" productmode="1">中国书法专业版</span> 
+         <span class="sel-box sel-long productMode" productmode="2">中国书法普及版</span>
+         <input id="productMode" type="hidden" value="1" /> 
+         </td> 
+        </tr> 
+        <tr> 
+         <th><em class="star">*</em>订阅周期：</th> 
+         <td> 
+          <dl class="period mrg-b-10" > 
+           <dt>
+            <input type="radio" class="radio-style consistance" consistag="1" name="period" checked="checked" />
+            <label>连续月：</label>
+            <input id="isConstitance" type="hidden" value="1" />
+           </dt> 
+           <dd id="consisInputArea"> 
+            <input id="orderStartTime" readonly="readonly" type="text" class="ipt-style date" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'orderEndTime\')}',dateFmt:'yyyy-MM'})" /><span class="hinge">至</span>
+            <input id="orderEndTime" readonly="readonly" type="text" class="ipt-style date"  onfocus="WdatePicker({minDate:'#F{$dp.$D(\'orderStartTime\')}',dateFmt:'yyyy-MM'})"/>
+           </dd> 
+          </dl> 
+          <dl class="period"> 
+           <dt>
+            <input type="radio" class="radio-style consistance" consistag="2" name="period" />
+            <label>非连续月：</label>
+           </dt> 
+           <dd class="paper-years" id="noConsistantArea" style="display:none;"> 
+            <div class="all-year all-year-on"> 
+             <input type="hidden" value="" id="yearHaSelectedId"/>
+             <span class="sel-box  yearselect" onclick="year_info(this);">2012(0/13)</span> 
+             <i class="arrow"></i> 
+             <div class="paper-monthes"> 
+              <input type="hidden" id="monthSelected" value=""/>
+              <span><input type="checkbox" class="check-style" name="2012" onclick="month_info(this)" monthvalue="01"/><label>1月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2012" onclick="month_info(this)" monthvalue="02"/><label>2月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2012" onclick="month_info(this)" monthvalue="03"/><label>3月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2012" onclick="month_info(this)" monthvalue="04"/><label>4月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2012" onclick="month_info(this)" monthvalue="05"/><label>5月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2012" onclick="month_info(this)" monthvalue="06"/><label>6月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2012" onclick="month_info(this)" monthvalue="07"/><label>7月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2012" onclick="month_info(this)" monthvalue="08"/><label>8月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2012" onclick="month_info(this)" monthvalue="09"/><label>9月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2012" onclick="month_info(this)" monthvalue="10"/><label>10月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2012" onclick="month_info(this)" monthvalue="11"/><label>11月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2012" onclick="month_info(this)" monthvalue="12"/><label>12月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2012" onclick="month_info(this)" monthvalue="13"/><label>合刊</label></span> 
+             </div> 
+            </div> 
+            <div class="all-year"> 
+             <span class="sel-box yearselect" onclick="year_info(this);">2013(0/13)</span> 
+             <i class="arrow"></i> 
+             <div class="paper-monthes"> 
+              <span><input type="checkbox" class="check-style" name="2013" onclick="month_info(this)" monthvalue="01"/><label>1月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2013" onclick="month_info(this)" monthvalue="02"/><label>2月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2013" onclick="month_info(this)" monthvalue="03"/><label>3月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2013" onclick="month_info(this)" monthvalue="04"/><label>4月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2013" onclick="month_info(this)" monthvalue="05"/><label>5月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2013" onclick="month_info(this)" monthvalue="06"/><label>6月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2013" onclick="month_info(this)" monthvalue="07"/><label>7月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2013" onclick="month_info(this)" monthvalue="08"/><label>8月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2013" onclick="month_info(this)" monthvalue="09"/><label>9月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2013" onclick="month_info(this)" monthvalue="10"/><label>10月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2013" onclick="month_info(this)" monthvalue="11"/><label>11月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2013" onclick="month_info(this)" monthvalue="12"/><label>12月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2013" onclick="month_info(this)" monthvalue="13"/><label>合刊</label></span> 
+             </div> 
+            </div> 
+            <div class="all-year "> 
+             <span class="sel-box yearselect" onclick="year_info(this);">2014(0/13)</span> 
+             <i class="arrow"></i> 
+             <div class="paper-monthes"> 
+              <span><input type="checkbox" class="check-style" name="2014" onclick="month_info(this)" monthvalue="01"/><label>1月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2014" onclick="month_info(this)" monthvalue="02"/><label>2月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2014" onclick="month_info(this)" monthvalue="03"/><label>3月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2014" onclick="month_info(this)" monthvalue="04"/><label>4月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2014" onclick="month_info(this)" monthvalue="05"/><label>5月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2014" onclick="month_info(this)" monthvalue="06"/><label>6月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2014" onclick="month_info(this)" monthvalue="07"/><label>7月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2014" onclick="month_info(this)" monthvalue="08"/><label>8月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2014" onclick="month_info(this)" monthvalue="09"/><label>9月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2014" onclick="month_info(this)" monthvalue="10"/><label>10月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2014" onclick="month_info(this)" monthvalue="11"/><label>11月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2014" onclick="month_info(this)" monthvalue="12"/><label>12月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2014" onclick="month_info(this)" monthvalue="13"/><label>合刊</label></span> 
+             </div> 
+            </div> 
+            <div class="all-year"> 
+             <span class="sel-box yearselect" onclick="year_info(this);">2015(0/13)</span> 
+             <i class="arrow"></i> 
+             <div class="paper-monthes"> 
+             <span><input type="checkbox" class="check-style" name="2015" onclick="month_info(this)" monthvalue="01"/><label>1月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2015" onclick="month_info(this)" monthvalue="02"/><label>2月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2015" onclick="month_info(this)" monthvalue="03"/><label>3月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2015" onclick="month_info(this)" monthvalue="04"/><label>4月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2015" onclick="month_info(this)" monthvalue="05"/><label>5月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2015" onclick="month_info(this)" monthvalue="06"/><label>6月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2015" onclick="month_info(this)" monthvalue="07"/><label>7月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2015" onclick="month_info(this)" monthvalue="08"/><label>8月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2015" onclick="month_info(this)" monthvalue="09"/><label>9月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2015" onclick="month_info(this)" monthvalue="10"/><label>10月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2015" onclick="month_info(this)" monthvalue="11"/><label>11月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2015" onclick="month_info(this)" monthvalue="12"/><label>12月刊</label></span> 
+              <span><input type="checkbox" class="check-style" name="2015" onclick="month_info(this)" monthvalue="13"/><label>合刊</label></span>  
+             </div> 
+            </div>
+           
+           </dd> 
+          </dl> </td> 
+        </tr> 
+        <tr> 
+         <th><em class="star">*</em>订阅数量：</th> 
+         <td> <input type="text" class="ipt-style w124" id="amountEachDate"/><span class="hinge1">本／期</span> </td> 
+        </tr> 
+        
+        <tr> 
+         <th>&nbsp;</th> 
+         <td> 
+         <a href="#" id="addOrderInfo"><input  type="button" class="oprt-btn" value="保存添加" /></a>
+         <a href="#TOPAREA" id="modifyOrderInfo" onclick="modifyRow();" style="display:none;"><input  type="button"  class="oprt-btn" value="修改选中订单" /></a> 
+         <a id="clearOrderInfo" href="javascript:void(0);" class="txt-btn empty">清&nbsp;空</a> 
+         <span id="errorInfoOrder" class="empty" style="color:red;"></span>
+         </td> 
+        </tr> 
+       </tbody>
+      </table> 
+     </div> 
+    </div> 
+    <div id="sendListStep" class="processing" style="display:none;"> 
+     <div class="info-box"> 
+      <h3 class="info-show-t">当前订阅序列：</h3> 
+      <div class="info-show mrg-b-25"> 
+       <table class="result-thead" cellspacing="0" cellpadding="0" border="0"> 
+        <tbody>
+         <tr> 
+          <th width="20%">订单号</th> 
+          <th width="20%">产品</th> 
+          <th width="16%">订阅周期</th> 
+          <th width="16%">订阅数(本/月)</th> 
+          <th>操作</th> 
+         </tr> 
+        </tbody>
+       </table> 
+       <table class="result-tb" cellspacing="0" cellpadding="0" border="0" id="orderHasSelectTbl"> 
+        <tbody>
+        </tbody>
+       </table> 
+      </div> 
+      <h3 class="info-show-t">配送单列表：</h3> 
+      <div class="info-show mrg-b-25"> 
+       <table class="result-thead" cellspacing="0" cellpadding="0" border="0"> 
+        <tbody>
+         <tr> 
+          
+          <th width="20%">收件地址</th> 
+          <th width="20%">收件人</th> 
+          <th width="20%">联系电话</th> 
+          <th width="20%">订阅数(本/月)</th> 
+          <th>操作</th> 
+         </tr> 
+        </tbody>
+       </table> 
+       <div class="result-tb-w" id="sendListDiv"> 
+        
+       </div> 
+       <div class="info-new">
+        <i></i>
+        <a href="#SEND_MIDDLE" onclick="showAddSendArea();"><span >添加配送单</span></a>
+       </div> 
+      </div> 
+      <table class="oprt-table" cellspacing="0" cellpadding="0" border="0"> 
+       <tbody>
+        <tr> 
+         <td colspan="2"> <a id="pre-step1" href="javascript:void(0);" class="blue-bdr-btn mrg-r-10 pre-step" onclick="nextOrPre('sendListStep','orderInfoStep');">上一步</a> <a href="javascript:void(0);" class="blue-btn" id="completeOrder">完成</a> </td> 
+        </tr> 
+       </tbody>
+      </table> 
+     </div> 
+     <div class="info-edit" id="addSendInfoArea" style="display:none;">
+      <h3 class="info-edit-title">添加配送单<a name="SEND_MIDDLE" id="SEND_MIDDLE" >&nbsp;</a></h3> 
+      <table class="oprt-table" cellspacing="0" cellpadding="0" border="0"> 
+       <tbody>
+        <tr> 
+         <th><em class="star">*</em>库存地址：</th> 
+         <td> 
+          <span class="sel-box sel-long sel-box-on whereProFrom" storeType="0">杂志社</span>
+          <span class="sel-box sel-long whereProFrom" storeType="1">邮局</span> 
+          <span class="sel-box sel-long whereProFrom" storeType="2">印刷厂</span>
+          <input type="hidden" value="0" id="whereProductFromId"/> 
+          </td> 
+        </tr> 
+        <tr> 
+         <th><em class="star">*</em>月配送量：</th> 
+         <td><input type="text" class="ipt-style w124" id='sendAmountPerMonth'/><span class="hinge">本</span><span class="tips">本订单剩余数量：<strong class="c69c" id="currentOrderLeftAmt">1500</strong>本</span></td> 
+        </tr> 
+        <tr> 
+         <th><em class="star">*</em>寄送方式：</th> 
+         <td> 
+         <span class="sel-box sel-long sel-box-on whoSendProd" sendway='0'>自提</span> 
+         <span class="sel-box sel-long whoSendProd" sendway='1'>邮局</span> 
+         <span class="sel-box sel-long whoSendProd" sendway='2'>中铁</span>
+          <span class="sel-box sel-long whoSendProd" sendway='3'>其他物流</span> 
+          <input type="hidden" value='0' id="whoSendProdid"/>
+          </td> 
+        </tr> 
+        <tr> 
+         <th><em class="star">*</em>寄送地址：</th> 
+         <td><input type="text" class="ipt-style w300" id='receiveAddrId'/></td> 
+        </tr> 
+        <tr> 
+         <th><em class="star">*</em>是否需要标签：</th> 
+         <td> 
+         <span class="sel-box sel-long  isNeedBookMark" needVal='1'>是</span>
+          <span class="sel-box sel-long sel-box-on isNeedBookMark" needVal='0'>否</span> </td>
+          <input type="hidden" value="0" id="isNeedBookMarkId"/> 
+        </tr> 
+        <tr style="display:none;" id="markContenttr"> 
+         <th><em class="star">*</em>标签内容：</th> 
+         <td><input type="text" class="ipt-style w300" id='markValueId'/></td> 
+        </tr> 
+        <tr> 
+         <th><em class="star">*</em>收件人姓名：</th> 
+         <td><input type="text" class="ipt-style w300" placeholder="自提用户非必填" id="receiveNameId"/></td> 
+        </tr> 
+        <tr> 
+         <th><em class="star">*</em>收件人电话：</th> 
+         <td><input type="text" class="ipt-style w300" placeholder="自提用户非必填" id='receivePhoneId'/></td> 
+        </tr> 
+        <tr> 
+         <th><em class="star">*</em>邮编：</th> 
+         <td><input type="text" class="ipt-style w142" id="postCodeId"/></td> 
+        </tr> 
+        <tr> 
+         <th>&nbsp;</th> 
+         <td> <a href="#" onclick="addSendInfo();"><input type="button" class="oprt-btn" value="保存配送单" /> </a>
+         <a href="javascript:void(0);" class="txt-btn empty">清&nbsp;空</a>
+          <span id='errorInfoSend' style="color:red;"></span>
+          </td> 
+        </tr> 
+       </tbody>
+      </table> 
+     </div> 
+    </div> 
+   </div> 
+  </div> 
+  <div id="customer-layer" class="layer customer-layer" style="display:none;"> 
+   <div class="layer-t"> 
+    <label>客户信息</label> 
+    <span class="layer-close">&times;</span> 
+   </div> 
+   <div class="layer-cont"> 
+    <div class="search-area">
+      <ul class="classify">
+        <li><label asmanner="0" class="searchCustManner on">按联系人</label></li>
+        <li><label asmanner="1" class="searchCustManner">按单位</label></li>
+        <li><label asmanner="2" class="searchCustManner">按电话</label></li>
+        <input id="searchCustMannerVal" type="hidden" value="0" />
+      </ul>
+      <div class="search-box">
+        <input type="text" class="search-ipt" id="searcustCondition"/>
+        <span class="searching" id="qryCustInfoButton"></span>
+      </div>
+    </div>
+    <div class="list-box" id="custInfoListDiv"> 
+     <!-- 客户信息 -->
+    </div> 
+    <div class="layer-btns"> 
+     <a href="javascript:void(0);" class="short-btn" id="selectCustFromListBtn">确定</a> 
+     <a href="javascript:void(0);" class="short-btn layer-cancel">取消</a> 
+    </div> 
+   </div> 
+  </div> 
+<!-- 切换订单 -->  
+<div id="orderListToChangeDiv" class="layer list-layer" style="display:none;">
+	<div class="layer-t">
+		<label>订单列表</label>
+		<span class="layer-close">×</span>
+	</div>
+	<div class="layer-cont">
+		<div class="order-list-box">
+			<table cellspacing="0" cellpadding="0" border="0" class="order-list-head">
+				<tr>
+					<th width="40">选择</th>
+					<th width="110">配送单号</th>
+					<th width="150">产品</th>
+					<th width="100">订阅周期</th>
+					<th width="90">订阅数(本／期)</th>
+					<th>已配配送单数</th>
+				</tr>
+			</table>
+			<div class="order-list-w">
+				<table  id="orderListToChangeTbl" cellspacing="0" cellpadding="0" border="0" class="order-list">
+					<tr>
+						<td width="40"><input type="radio" class="radio-style" name="page-order" /></td>
+						<td width="110">12347593475938</td>
+						<td width="150">中国书法专业版</td>
+						<td width="100">2011－01</td>
+						<td width="90">1500</td>
+						<td>0</td>
+					</tr>
+					<tr>
+						<td width="40"><input type="radio" class="radio-style" name="page-order" /></td>
+						<td width="110">12347593475938</td>
+						<td width="150">中国书法专业版</td>
+						<td width="100">2011－01</td>
+						<td width="90">1500本／期</td>
+						<td>0</td>
+					</tr>
+					
+				</table>
+			</div>
+		</div>
+		<div class="layer-btns">
+			<a href="javascript:void(0);" class="short-btn " onclick='choseOneOrder();'>确定</a>
+			<a href="javascript:void(0);" class="short-btn layer-cancel">取消</a>
+		</div>
+	</div>
+</div>
+<!-- 切换订单弹出层end -->
+<!-- 复制配送订单弹出层begin -->
+<div id="orderWithOutSendInfoDiv" class="layer list-layer" style="display:none;">
+	<div class="layer-t">
+		<label>订单列表</label>
+		<span class="layer-close">×</span>
+	</div>
+	<div class="layer-cont">
+		<div class="order-list-box">
+			<table cellspacing="0" cellpadding="0" border="0" class="order-list-head">
+				<tr>
+					<th width="50">选择</th>
+					<th width="110">订单号</th>
+					<th width="150">产品</th>
+					<th width="150">订阅周期</th>
+					<th>订阅数</th>
+				</tr>
+			</table>
+			<div class="order-list-w">
+				<table id="orderWithoutSendInfoTbl" cellspacing="0" cellpadding="0" border="0" class="order-list">
+					<tr>
+						<td width="50"><input type="checkbox" class="check-style" name="" /></td>
+						<td width="110">12347593475938</td>
+						<td width="150">中国书法专业版</td>
+						<td width="150">2011－01</td>
+						<td>1500</td>
+					</tr>
+					<tr>
+						<td width="50"><input type="checkbox" class="check-style" name="" /></td>
+						<td width="110">12347593475938</td>
+						<td width="150">中国书法专业版</td>
+						<td width="150">2011－01</td>
+						<td>1500</td>
+					</tr>
+					<tr>
+						<td width="50"><input type="checkbox" class="check-style" name="" /></td>
+						<td width="110">12347593475938</td>
+						<td width="150">中国书法专业版</td>
+						<td width="150">2011－01</td>
+						<td>1500</td>
+					</tr>
+					<tr>
+						<td width="50"><input type="checkbox" class="check-style" name="" /></td>
+						<td width="110">12347593475938</td>
+						<td width="150">中国书法专业版</td>
+						<td width="150">2011－01</td>
+						<td>1500</td>
+					</tr>
+					<tr>
+						<td width="50"><input type="checkbox" class="check-style" name="" /></td>
+						<td width="110">12347593475938</td>
+						<td width="150">中国书法专业版</td>
+						<td width="150">2011－01</td>
+						<td>1500</td>
+					</tr>
+					<tr>
+						<td width="50"><input type="checkbox" class="check-style" name="" /></td>
+						<td width="110">12347593475938</td>
+						<td width="150">中国书法专业版</td>
+						<td width="150">2011－01</td>
+						<td>1500</td>
+					</tr>
+				</table>
+			</div>
+			<div class="list-oprt">
+				<span class="check-all">
+					<input id="check-all" type="checkbox" class="check-style" />
+					<label for="check-all">全选</label>
+				</span>
+			</div>
+		</div>
+		<div class="layer-btns">
+			<a href="javascript:void(0);" class="short-btn " onclick="choseOrderToCopy();">确定</a>
+			<a href="javascript:void(0);" class="short-btn layer-cancel">取消</a>
+		</div>
+	</div>
+</div>
+<!-- 复制配送订单弹出层end -->
+<!-- 选择文件导入弹出层begin -->
+<div id="importSendList" class="layer list-layer" style="display:none;">
+	<div class="layer-t">
+		<label>订单列表</label>
+		<span class="layer-close">×</span>
+	</div>
+	<div class="layer-cont">
+		<div class="lead-in">
+			<p>1、文件须小于<em style="color: red">500</em>行。</p>
+			<p>2、请点击“浏览” 按钮选中需要上传的附件，然后点击“上传”按钮进行上传。</p>
+			<div class="choose-file">
+            <form action="#" th:action="@{/importAddress}" method="post" enctype="multipart/form-data" id="import_form">
+				<input type="file"  name="file" id="fileInfo"/>
+            </form>
+			</div>
+			<div class="lead-btns">
+				<a class="oprt-btn" href="javascript:void(0);" onclick="importSubmit();">确认导入</a>
+			</div>
+		</div>
+		<div class="result-tips"><i class="bulb"></i><label>导入结果展示：本次导入 <em id="result_info1">0</em> 条，成功 <em id="result_info2">0</em> 条，失败 <em id="result_info3">0</em> 条</label></div>
+		<div class="lead-tb-box">
+			<table cellspacing="0" cellpadding="0" border="0" class="lead-head">
+				<tr>
+					<th width="120">行数</th>
+					<th width="200">错误原</th>
+					<th>操作建议</th>
+				</tr>
+			</table>
+			<div class="lead-tb-w">
+				<table id="tal_error" cellspacing="0" cellpadding="0" border="0" class="lead-tb">
+					
+				</table>
+			</div>
+		</div>
+		<div class="layer-btns">
+			<a href="javascript:void(0);" class="short-btn layer-sure" onclick="importWhenNoError();">确定</a>
+		</div>
+	</div>
+</div>
+<!-- 选择文件导入弹出层end -->
+<!-- 成功提示层 begin -->
+<div id="succ_tips_layer" class="tips-layer">
+    <div class="tips-layer-t">
+        <label>信息提示</label>
+    </div>
+    <div class="tips-layer-cont">
+        <p class="tips-sec"><span class="success-icon"></span><label id="succ_tips_lable">成功成功成功成功成功成功成功成功成功成功</label></p>
+        <div class="tips-layer-btns">
+            <a href="javascript:void(0)" class="oprt-btn tips-layer-sure">确&nbsp;&nbsp;定</a>
+        </div>
+    </div>
+</div>
+<!-- 成功提示层 end -->
+
+<!-- 失败提示层 begin -->
+<div id="fail_tips_layer" class="tips-layer">
+    <div class="tips-layer-t">
+        <label>信息提示</label>
+    </div>
+    <div class="tips-layer-cont">
+        <p class="tips-sec"><span class="success-icon"></span><label id="fail_tips_lable">成功成功成功成功成功成功成功成功成功成功</label></p>
+        <div class="tips-layer-btns">
+            <a href="javascript:void(0)" class="oprt-btn tips-layer-sure">确&nbsp;&nbsp;定</a>
+        </div>
+    </div>
+</div>
+<!-- 失败提示层 end -->
+ </body>
+</html>

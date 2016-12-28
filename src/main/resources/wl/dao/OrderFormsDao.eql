@@ -1,0 +1,357 @@
+--[selectOrderSumInfoNew]
+select sum(t.PRODUCT_PER_COUNT) num
+from
+(select o.PRODUCT_PER_COUNT
+from 
+tf_b_distribut d,tf_b_order o,tf_b_subscribe s
+where s.SUBSCRIBE_ID=o.SUBSCRIBE_ID
+and o.ORDER_ID=d.ORDER_ID
+-- if subType == "3"
+and s.SUBSCRIBE_STATE='1'
+and ((s.FIRST_SEND='1' and s.CUSTOMER_TYPE <> '2')
+or s.CUSTOMER_TYPE in ('4','5')
+or (s.BEFORE_INVOICE='1'
+and s.BEFORE_INVOICE_TAG='1'))
+-- else if subType == "4"
+and s.SUBSCRIBE_STATE='3'
+-- else if subType == "1"
+and ((s.FIRST_SEND='2' and s.SUBSCRIBE_STATE='1')
+or (s.FIRST_SEND='1' and s.SUBSCRIBE_STATE='4'))
+and (s.SUBSCRIBE_STATE='1' and 
+(s.BEFORE_INVOICE='2'
+or (s.BEFORE_INVOICE='1'
+and s.BEFORE_INVOICE_TAG in ('2','3')
+)))
+and s.CUSTOMER_TYPE in ('1','2','3')
+-- else if subType == "2"
+and s.SUBSCRIBE_STATE='2'
+-- end
+-- isNotEmpty orderId
+     AND s.SUBSCRIBE_ID like CONCAT('%',#orderId#,'%')
+-- end
+-- isNotEmpty company
+     AND s.COMPANY like CONCAT('%',#company#,'%')
+-- end
+-- isNotEmpty startT
+ and  s.ACCEPT_TIME > STR_TO_DATE(#startT#, '%Y-%m-%d') 
+-- end
+-- isNotEmpty endT
+ and  s.ACCEPT_TIME < date_add(#endT#, interval 1 day)
+-- end
+-- iff staffType != "0"
+ and s.CUSTOMER_TYPE = #staffType#
+-- end
+-- isNotEmpty staffId
+ AND s.ACCEPT_STAFF like CONCAT('%',#staffId#,'%')
+-- end
+-- iff product != "0"
+ and o.PRODUCT_TYPE = #product#
+-- end
+-- isNotEmpty month
+ AND d.MONTH = #month#
+-- end
+-- isNotEmpty year
+ AND d.YEAR = #year#
+-- end
+group by o.ORDER_ID
+) t
+
+--[selectOrderSumInfo]
+select sum(t.money1) money,sum(t.num1) num
+from
+(select s.TOTAL_MONEY money1,s.TOTAL_COUNT num1
+from 
+-- isNotEmpty year
+tf_b_distribut d,
+-- end
+tf_b_order o,tf_b_subscribe s
+where s.SUBSCRIBE_ID=o.SUBSCRIBE_ID
+-- isNotEmpty year
+and o.ORDER_ID=d.ORDER_ID
+-- end
+-- if subType == "3"
+and s.SUBSCRIBE_STATE='1'
+and ((s.FIRST_SEND='1' and s.CUSTOMER_TYPE <> '2')
+or s.CUSTOMER_TYPE in ('4','5')
+or (s.BEFORE_INVOICE='1'
+and s.BEFORE_INVOICE_TAG='1'))
+-- else if subType == "4"
+and s.SUBSCRIBE_STATE='3'
+-- else if subType == "1"
+and ((s.FIRST_SEND='2' and s.SUBSCRIBE_STATE='1')
+or (s.FIRST_SEND='1' and s.SUBSCRIBE_STATE='4'))
+and (s.SUBSCRIBE_STATE='1' and 
+(s.BEFORE_INVOICE='2'
+or (s.BEFORE_INVOICE='1'
+and s.BEFORE_INVOICE_TAG in ('2','3')
+)))
+and s.CUSTOMER_TYPE in ('1','2','3')
+-- else if subType == "2"
+and s.SUBSCRIBE_STATE='2'
+-- end
+-- isNotEmpty orderId
+     AND s.SUBSCRIBE_ID like CONCAT('%',#orderId#,'%')
+-- end
+-- isNotEmpty company
+     AND s.COMPANY like CONCAT('%',#company#,'%')
+-- end
+-- isNotEmpty startT
+ and  s.ACCEPT_TIME > STR_TO_DATE(#startT#, '%Y-%m-%d') 
+-- end
+-- isNotEmpty endT
+ and  s.ACCEPT_TIME < date_add(#endT#, interval 1 day)
+-- end
+-- iff staffType != "0"
+ and s.CUSTOMER_TYPE = #staffType#
+-- end
+-- isNotEmpty staffId
+ AND s.ACCEPT_STAFF like CONCAT('%',#staffId#,'%')
+-- end
+-- iff product != "0"
+ and o.PRODUCT_TYPE = #product#
+-- end
+-- isNotEmpty month
+ AND d.MONTH = #month#
+-- end
+-- isNotEmpty year
+ AND d.YEAR = #year#
+-- end
+group by s.SUBSCRIBE_ID
+) t
+
+--[selectOrderInfo]
+select DISTINCT s.SUBSCRIBE_ID,s.ACCEPT_TIME,s.COMPANY,s.CUSTOMER_NAME,s.TOTAL_COUNT,s.TOTAL_MONEY,
+s.SUBSCRIBE_STATE,s.REMARK,s.FIRST_SEND,s.BEFORE_INVOICE,s.BEFORE_INVOICE_TAG,s.CUSTOMER_TYPE,o.PRODUCT_TYPE,o.PRODUCT_BEGIN,o.PRODUCT_END,o.CONTIN_MONTH
+from 
+-- isNotEmpty year
+tf_b_distribut d,
+-- end
+tf_b_order o,tf_b_subscribe s
+where s.SUBSCRIBE_ID=o.SUBSCRIBE_ID
+-- isNotEmpty year
+and o.ORDER_ID=d.ORDER_ID
+-- end 
+-- if subType == "3"
+and s.SUBSCRIBE_STATE='1'
+and ((s.FIRST_SEND='1' and s.CUSTOMER_TYPE <> '2')
+or s.CUSTOMER_TYPE in ('4','5')
+or (s.BEFORE_INVOICE='1'
+and s.BEFORE_INVOICE_TAG='1'))
+-- else if subType == "4"
+and s.SUBSCRIBE_STATE='3'
+-- else if subType == "1"
+and ((s.FIRST_SEND='2' and s.SUBSCRIBE_STATE='1')
+or (s.FIRST_SEND='1' and s.SUBSCRIBE_STATE='4'))
+and (s.SUBSCRIBE_STATE='1' and 
+(s.BEFORE_INVOICE='2'
+or (s.BEFORE_INVOICE='1'
+and s.BEFORE_INVOICE_TAG in ('2','3')
+)))
+and s.CUSTOMER_TYPE in ('1','2','3')
+-- else if subType == "2"
+and s.SUBSCRIBE_STATE='2'
+-- end
+-- isNotEmpty company
+     AND s.COMPANY like CONCAT('%',#company#,'%')
+-- end
+-- isNotEmpty orderId
+     AND s.SUBSCRIBE_ID like CONCAT('%',#orderId#,'%')
+-- end
+-- isNotEmpty startT
+ and  s.ACCEPT_TIME > STR_TO_DATE(#startT#, '%Y-%m-%d') 
+-- end
+-- isNotEmpty endT
+ and  s.ACCEPT_TIME < date_add(#endT#, interval 1 day)
+-- end
+-- iff staffType != "0"
+ and s.CUSTOMER_TYPE = #staffType#
+-- end
+-- isNotEmpty staffId
+ AND s.ACCEPT_STAFF like CONCAT('%',#staffId#,'%')
+-- end
+-- iff product != "0"
+ and o.PRODUCT_TYPE = #product#
+-- end
+-- isNotEmpty month
+ AND d.MONTH = #month#
+-- end
+-- isNotEmpty year
+ AND d.YEAR = #year#
+-- end
+order by s.SUBSCRIBE_ID
+
+--[selectSendSumInfo]
+select sum(d.DISTRIBUT_COUNT) num
+from tf_b_distribut d,tf_b_order o
+where o.ORDER_ID=d.ORDER_ID
+-- isNotEmpty custName
+     AND d.ADDRESSEE_NAME like CONCAT('%',#custName#,'%')
+-- end
+-- isNotEmpty exportInfo
+     AND d.EXPORT_FLAG = #exportInfo#
+-- end
+-- isNotEmpty orderId
+     AND o.SUBSCRIBE_ID like CONCAT('%',#orderId#,'%')
+-- end
+-- isNotEmpty startTime
+ and  d.EXPORT_TIME > STR_TO_DATE(#startTime#, '%Y-%m-%d') 
+-- end
+-- isNotEmpty endTime
+ and  d.EXPORT_TIME < date_add(#endTime#, interval 1 day)
+-- end
+-- iff productDis != "0"
+ and d.PRODUCT_TYPE = #productDis#
+-- end
+-- isNotEmpty month
+ AND d.MONTH = #month#
+-- end
+-- isNotEmpty year
+ AND d.YEAR = #year#
+-- end
+
+--[selectSendInfo]
+select d.DISTRIBUT_ID,d.ADDRESSEE_NAME,d.DISTRIBUT_ADDRESS,d.ADDRESSEE_PHONE,d.EXPORT_FLAG,d.PRODUCT_TYPE,d.YEAR,d.MONTH,d.DISTRIBUT_COUNT,
+date_format(d.EXPORT_TIME,'%Y-%c-%d') EXPORT_TIME,o.SUBSCRIBE_ID
+from tf_b_distribut d,tf_b_order o
+where o.ORDER_ID=d.ORDER_ID
+-- isNotEmpty custName
+     AND d.ADDRESSEE_NAME like CONCAT('%',#custName#,'%')
+-- end
+-- isNotEmpty exportInfo
+     AND d.EXPORT_FLAG = #exportInfo#
+-- end
+-- isNotEmpty orderId
+     AND o.SUBSCRIBE_ID like CONCAT('%',#orderId#,'%')
+-- end
+-- isNotEmpty startTime
+ and  d.EXPORT_TIME > STR_TO_DATE(#startTime#, '%Y-%m-%d') 
+-- end
+-- isNotEmpty endTime
+ and  d.EXPORT_TIME < date_add(#endTime#, interval 1 day)
+-- end
+-- iff productDis != "0"
+ and d.PRODUCT_TYPE = #productDis#
+-- end
+-- isNotEmpty month
+ AND d.MONTH = #month#
+-- end
+-- isNotEmpty year
+ AND d.YEAR = #year#
+-- end
+
+--[selectDetailOrderSumInfo]
+select sum(t.count1) count
+from 
+(select o.PRODUCT_PER_COUNT count1
+from 
+-- isNotEmpty year
+tf_b_distribut d,
+-- end
+tf_b_order o,tf_b_subscribe s
+where s.SUBSCRIBE_ID=o.SUBSCRIBE_ID
+-- isNotEmpty year
+and o.ORDER_ID=d.ORDER_ID
+-- end
+and o.CONTIN_MONTH='1'
+and o.PRODUCT_BEGIN like '%-01%'
+and o.PRODUCT_END like '%-12%'
+and substring(o.PRODUCT_BEGIN,1,4) = substring(o.PRODUCT_END,1,4)
+-- if subType == "3"
+and s.SUBSCRIBE_STATE='1'
+and ((s.FIRST_SEND='1' and s.CUSTOMER_TYPE <> '2')
+or s.CUSTOMER_TYPE in ('4','5')
+or (s.BEFORE_INVOICE='1'
+and s.BEFORE_INVOICE_TAG='1'))
+-- else if subType == "4"
+and s.SUBSCRIBE_STATE='3'
+-- else if subType == "1"
+and ((s.FIRST_SEND='2' and s.SUBSCRIBE_STATE='1')
+or (s.FIRST_SEND='1' and s.SUBSCRIBE_STATE='4'))
+and (s.SUBSCRIBE_STATE='1' and 
+(s.BEFORE_INVOICE='2'
+or (s.BEFORE_INVOICE='1'
+and s.BEFORE_INVOICE_TAG in ('2','3')
+)))
+and s.CUSTOMER_TYPE in ('1','2','3')
+-- else if subType == "2"
+and s.SUBSCRIBE_STATE='2'
+-- end
+-- isNotEmpty startT
+ and  s.ACCEPT_TIME > STR_TO_DATE(#startT#, '%Y-%m-%d') 
+-- end
+-- isNotEmpty endT
+ and  s.ACCEPT_TIME < date_add(#endT#, interval 1 day)
+-- end
+-- iff staffType != "0"
+ and s.CUSTOMER_TYPE = #staffType#
+-- end
+-- isNotEmpty staffId
+ AND s.ACCEPT_STAFF like CONCAT('%',#staffId#,'%')
+-- end
+-- iff product != "0"
+ and o.PRODUCT_TYPE = #product#
+-- end
+-- isNotEmpty year
+ AND d.YEAR = #year#
+ AND o.PRODUCT_BEGIN = CONCAT(#year#,'-01')
+ AND o.PRODUCT_END = CONCAT(#year#,'-12')
+-- end
+group by o.ORDER_ID
+) t
+
+--[selectDetailOrderInfo]
+select DISTINCT s.SUBSCRIBE_ID,s.COMPANY,s.CUSTOMER_NAME,o.PRODUCT_PER_COUNT,o.PRODUCT_TYPE,substring(o.PRODUCT_END,1,4) year,s.SUBSCRIBE_STATE,s.CUSTOMER_TYPE,s.FIRST_SEND
+from 
+-- isNotEmpty year
+tf_b_distribut d,
+-- end
+tf_b_order o,tf_b_subscribe s
+where s.SUBSCRIBE_ID=o.SUBSCRIBE_ID
+-- isNotEmpty year
+and o.ORDER_ID=d.ORDER_ID
+-- end
+and o.CONTIN_MONTH='1'
+and o.PRODUCT_BEGIN like '%-01%'
+and o.PRODUCT_END like '%-12%'
+and substring(o.PRODUCT_BEGIN,1,4) = substring(o.PRODUCT_END,1,4)
+-- if subType == "3"
+and s.SUBSCRIBE_STATE='1'
+and ((s.FIRST_SEND='1' and s.CUSTOMER_TYPE <> '2')
+or s.CUSTOMER_TYPE in ('4','5')
+or (s.BEFORE_INVOICE='1'
+and s.BEFORE_INVOICE_TAG='1'))
+-- else if subType == "4"
+and s.SUBSCRIBE_STATE='3'
+-- else if subType == "1"
+and ((s.FIRST_SEND='2' and s.SUBSCRIBE_STATE='1')
+or (s.FIRST_SEND='1' and s.SUBSCRIBE_STATE='4'))
+and (s.SUBSCRIBE_STATE='1' and 
+(s.BEFORE_INVOICE='2'
+or (s.BEFORE_INVOICE='1'
+and s.BEFORE_INVOICE_TAG in ('2','3')
+)))
+and s.CUSTOMER_TYPE in ('1','2','3')
+-- else if subType == "2"
+and s.SUBSCRIBE_STATE='2'
+-- end
+-- isNotEmpty startT
+ and  s.ACCEPT_TIME > STR_TO_DATE(#startT#, '%Y-%m-%d') 
+-- end
+-- isNotEmpty endT
+ and  s.ACCEPT_TIME < date_add(#endT#, interval 1 day)
+-- end
+-- iff staffType != "0"
+ and s.CUSTOMER_TYPE = #staffType#
+-- end
+-- isNotEmpty staffId
+ AND s.ACCEPT_STAFF like CONCAT('%',#staffId#,'%')
+-- end
+-- iff product != "0"
+ and o.PRODUCT_TYPE = #product#
+-- end
+-- isNotEmpty year
+ AND d.YEAR = #year#
+ AND o.PRODUCT_BEGIN = CONCAT(#year#,'-01')
+ AND o.PRODUCT_END = CONCAT(#year#,'-12')
+-- end
+order by o.PRODUCT_PER_COUNT desc

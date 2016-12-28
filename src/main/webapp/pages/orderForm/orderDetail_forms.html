@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>订单报表</title>
+
+<link rel="stylesheet" type="text/css" href="../css/base.css" th:href="@{/static/css/base.css}"/>
+<link rel="stylesheet" type="text/css" href="../css/distribution_export.css" th:href="@{/static/css/order_forms.css}"/>
+<script type="text/javascript" src="../js/jquery-1.8.js" th:src="@{/static/js/jquery-1.8.js}"></script>
+<script type="text/javascript" src="../static/js/common.js" th:src="@{/static/js/common.js}"></script>
+<script type="text/javascript" src="date/WdatePicker.js" th:src="@{/static/js/date/WdatePicker.js}"></script>
+<script type="text/javascript" src="../js/orderOut.js" th:src="@{/static/js/order_forms.js}"></script>
+<script src="../static/js/jquery.timers-1.2.js" th:src="@{/static/js/jquery.timers-1.2.js}"></script>
+<script src="../static/js/jq-overlay.js" th:src="@{/static/js/jq-overlay.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/jquery.json-2.4.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/jquery.form.min.js}"></script>
+</head>
+
+<body>
+<div class="w">
+	<div class="sec-box">
+		<div class="tabs-cont">
+			<div class="cont-sec">
+				<h3 class="sec-title" id="TOP">查询条件</h3>
+				<table class="oprt-table" cellspacing="0" cellpadding="0" border="0">
+					<tr>
+						<th>订单状态：</th>
+						<td>
+							<select class="select-style w145" id="subType">
+								<option value="0">所有</option>
+								<option value="1">待收款</option>
+								<option value="2">待配送</option>
+								<option value="3">待审批</option>
+								<option value="4">已完成</option> 
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<th>客户类型：</th>
+						<td>
+							<select class="select-style w145" id="staffType">
+								<option value="0">所有</option>
+								<option value="1">大客户</option>
+								<option value="2">批发商</option>
+								<option value="3">零售商</option>
+								<option value="4">赠刊</option>
+								<option value="5">样刊</option>
+								<option value="6">报刊发行局</option>
+								<option value="7">发行站</option>  
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<th>员工工号：</th>
+						<td><input type="text" class="ipt-style w300" id="staffId"/></td>
+					</tr>
+					<tr>
+						<th>产品类型：</th>
+						<td>
+							<select class="select-style w145" id="product">
+								<option value="0">所有</option>
+								<option value="1">中国书法专业版</option>
+								<option value="2">中国书法普及版</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<th>产品期刊：</th>
+						<td>
+							<input id="productPaper" type="text" class="ipt-style date" readonly="readonly" onfocus="WdatePicker({dateFmt:'yyyy'})" />
+						</td>
+					</tr>
+					<tr>
+						<th>下单时间：</th>
+						<td>
+							<input id="startT" type="text" class="ipt-style date" readonly="readonly" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'endT\',{d:-1})}',dateFmt:'yyyy-MM-dd'})" />
+							<span class="hinge">至</span>
+							<input id="endT" type="text" class="ipt-style date" readonly="readonly" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'startT\',{d:0})||\'%y-%M-%d-#{%H+1}\'}',dateFmt:'yyyy-MM-dd'})"/>
+						</td>
+					</tr>
+					
+					<tr>
+						<th>&nbsp;</th>
+						<td>
+							<a href="#RESULT" class="oprt-btn" onclick="checkOrderDetailInfo()">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="cont-sec">
+				<h3 class="sec-title" id="RESULT">查询结果</h3>
+				<div class="result-total">
+					<span id="count">订购总数：0（本）</span>
+				</div>
+				<div class="list-box">
+					<form action="#" th:action="@{/checkDetailForms}" th:object="${userMap}" method="post" 
+    				th:include="pages/orderForm/orderDetailFormslist" id="pagesList2">
+    				</form>			
+				</div>
+			</div>
+			<div style="padding-left:40px;margin-top:15px;font-size: 12px;">
+        		<a href="#TOP" style="color: blue;">返回顶部</a>
+       		</div>
+       		<div class="btns-box mrg-t-30" id="btn0" style="display: none;">
+				<form action="#" th:action="@{/exportAllDetailForms}"  method="post">
+					<input type="submit" class="blue-btn" value="全量导出"/>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,41 @@
+				<table class="list-tb" cellspacing="0" cellpadding="0" border="0" 
+				th:if="${results != null and not #lists.isEmpty(results)}" id="tal">
+					<thead>
+						<tr>
+							<th width="23">&nbsp;</th>
+							<th width="70">收件人</th>
+							<th width="90">联系电话</th>
+							<th width="220">邮寄地址</th>
+							<th width="170">邮寄刊物</th>
+							<th width="60">是否已导出</th>
+							<th>导出时间</th>
+							<th style="display: none;"></th>
+      						<th style="display: none;"></th>
+      						<th style="display: none;"></th>
+      						<th style="display: none;"></th>
+      						<th style="display: none;"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="cust,rowStat : ${results}">
+							<td><input type="checkbox" class="check-style" name="c" onclick="checkOutInfo(this)"/></td>
+							<td th:text="${cust[ADDRESSEE_NAME]}+'&nbsp;'">啦啦啦</td>
+							<td th:text="${cust[ADDRESSEE_PHONE]}+'&nbsp;'">15011111111</td>
+							<td th:text="${cust[DISTRIBUT_ADDRESS]}+'&nbsp;'">12412414124124444</td>
+							<td th:text="${cust[detail]}+'('+${cust[date]}+')'">专业版每期500本(2014-01,2014-02,2014-03)</td>
+							<td th:text="${cust[EXPORT_FLAG]=='1'?'否':'是'}">否</td>
+							<td th:text="${cust[EXPORT_TIME]}+'&nbsp;'">--</td>
+							<td  style="display: none;" th:text= "${cust[ORDER_ID]}"  />
+        					<td  style="display: none;" th:text= "${cust[DISTRIBUT_ID]}" />
+        					<td  style="display: none;" th:text= "${cust[date]}" />
+        					<td  style="display: none;" th:text= "${cust[LABEL_CONTENT]}" />
+        					<td  style="display: none;" th:text= "${cust[STOCK_ADDRESS]}" />
+						</tr>
+					</tbody>
+					<tfoot>
+						<td colspan="7">
+							<div th:include="pages/fragment/ajaxpager::ajaxpager"
+  								th:with="ajaxPageId='pagesList'" th:remove="tag"></div>
+						</td>
+					</tfoot>
+				</table>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>客户信息维护</title>
+<link rel="stylesheet" type="text/css" href="../css/base.css" th:href="@{/static/css/base.css}"/>
+<link rel="stylesheet" type="text/css" href="../css/print_paper_apply.css" th:href="@{/static/css/print_paper_apply.css}"/>
+<script type="text/javascript" src="../js/jquery.min.js" th:src="@{/static/js/jquery.min.js}"></script>
+<script src="../static/js/jquery-1.8.js"  th:src="@{/static/js/jquery-1.8.js}"></script>
+<script src="../static/js/jquery.form.min.js" th:src="@{/static/js/jquery.form.min.js}"></script>
+<script type="text/javascript" src="../js/common.js" th:src="@{/static/js/common.js}"></script>
+<script src="../static/js/jquery.timers-1.2.js" th:src="@{/static/js/jquery.timers-1.2.js}"></script>
+<script src="../static/js/jq-overlay.js" th:src="@{/static/js/jq-overlay.js}"></script>
+<script th:src="@{/static/js/jquery.json-2.4.js}"></script>
+<script th:src="@{/static/js/applyPrintEdit.js}"></script>
+</head>
+
+<body >
+<div class="w">
+    <div class="sec-box">
+        
+        <div class="cont-sec" id="list1" style="display: block;" th:each="printMap:${printPageList}">
+            <h3 class="sec-title" id="type1">2014年中国书法专业版第03期</h3>
+            <table class="oprt-table" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                    <th>北京市发行报刊局：</th>
+                    <td>
+                        <input type="text" class="ipt-style w300" onblur="totalInfo()" id="paper"/>
+                        <span style="display:none;" id="paperQry" th:text="${printMap['BJPAPER_COUNT']}"></span>
+                        <span style="display:none;" id="month" th:text="${printMap['MONTH']}"></span>
+                        <span style="display:none;" id="year" th:text="${printMap[YEAR]}"></span>
+                        <span style="display:none;" id="prodType" th:text="${printMap[PRODUCT_TYPE]}"></span>
+                        <span style="display:none;" id="printCode" th:text="${printMap[PRINT_CODE]}"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>国际图书公司：</th>
+                    <td>
+                       <input type="text" class="ipt-style w300" onblur="totalInfo()" id="book"/>
+                       <span style="display:none;" id="bookQry" th:text="${printMap[INTERBOOK_COUNT]}"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th><i class="pen"></i>批发商：</th>
+                    <td id="wholesale0">
+                      <input type="text" class="ipt-style w300" onblur="totalInfo()" id="machent"/>
+                      <span style="display:none;" id="machentQry" th:text="${printMap[AGENT_COUNT]}"></span>
+                    </td>
+                </tr>           
+                <tr>
+                    <th>大客户数量：</th>
+                    <td >
+                      <input type="text" class="ipt-style w300" onblur="totalInfo()" id="cust"/>
+                      <span style="display:none;" id="custQry" th:text="${printMap[CUSTOMER_COUNT]}"></span>
+                    </td>
+                   
+                </tr>           
+                <tr>
+                    <th>零售数量：</th>
+                    <td id="saleNew0">
+                      <input type="text" class="ipt-style w300" onblur="totalInfo()" id="saleNew"/>
+                      <span style="display:none;" id="saleNewQry" th:text="${printMap[RETAIL_COUNT]}"></span>
+                    </td>
+                    
+                </tr>
+                <tr>
+                    <th>赠刊样刊数量：</th>
+                    <td >
+                      <input type="text" class="ipt-style w300" onblur="totalInfo()" id="giveNew"/>
+                      <span style="display:none;" id="giveNewQry" th:text="${printMap[GIVE_COUNT]}"></span>
+                    </td>
+                    
+                </tr>
+                <tr>
+                    <th>预留：</th>
+                    <td>
+                        <input type="text" class="ipt-style w120" onblur="totalInfo()" id="save"/>
+                        <span style="display:none;" id="saveQry" th:text="${printMap[RESERVE_COUNT]}"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>总计：</th>
+                    <td id="total0" th:text="${printMap[TOTAL_COUNT]}">0</td>
+                </tr>
+            </table>
+            <div class="layer-btns">
+            <a href="javascript:void(0);" class="blue-btn" onclick="edit();">修改</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 成功提示层 begin -->
+<div id="succ_tips_layer" class="tips-layer">
+    <div class="tips-layer-t">
+        <label>信息提示</label>
+    </div>
+    <div class="tips-layer-cont">
+        <p class="tips-sec"><span class="success-icon"></span><label id="succ_tips_lable">成功成功成功成功成功成功成功成功成功成功</label></p>
+        <div class="tips-layer-btns">
+            <a href="javascript:void(0)" class="oprt-btn tips-layer-sure" onclick="closeLayer()">确&nbsp;&nbsp;定</a>
+        </div>
+    </div>
+</div>
+<!-- 成功提示层 end -->
+</body>
+</html>

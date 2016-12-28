@@ -1,0 +1,15 @@
+-- [selectStaffById]
+select * from tf_m_staff 
+where STAFF_CODE=#staff_id#;
+
+
+-- [selectRoleById]
+SELECT RF.ROLE_DESC,RF.ROLE_VALUE
+  FROM TF_M_ROLE_REF RF,TF_M_STAFF SF
+  WHERE RF.ROLE_ID=SF.ROLE_ID
+    AND SF.STAFF_CODE=#staff_id#;
+
+--[chagePassword]
+UPDATE tf_m_staff f 
+SET f.STAFF_PASSWORD=#newPassword#
+WHERE f.STAFF_CODE=#staffId#

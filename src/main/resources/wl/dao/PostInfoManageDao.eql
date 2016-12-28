@@ -1,0 +1,48 @@
+--[bindPostInfoToSend]
+UPDATE tf_b_distribut d 
+SET d.POST_ID=#postId#
+WHERE d.DISTRIBUT_ID=#sendId#
+
+--[selectSendWithPostInfo]
+SELECT 
+  d.DISTRIBUT_ADDRESS,
+  d.ADDRESSEE_NAME,
+  d.ADDRESSEE_PHONE,
+  d.DISTRIBUT_COUNT,
+  d.YEAR,
+  d.MONTH,
+  d.PRODUCT_TYPE,
+  d.POST_ID 
+FROM
+  tf_b_distribut d 
+WHERE 1=1
+-- isEmpty START_YEAR
+and d.YEAR=DATE_FORMAT(NOW(),'%Y')
+--end
+--isEmpty START_MON
+and d.MONTH=DATE_FORMAT(NOW(),'%m')
+--end
+-- isNotEmpty DISTRIBUT_ADDRESS
+ and  d.DISTRIBUT_ADDRESS  LIKE CONCAT('%',#DISTRIBUT_ADDRESS#,'%')
+-- end
+-- isNotEmpty ADDRESSEE_NAME
+ and  d.ADDRESSEE_NAME  LIKE CONCAT('%',#ADDRESSEE_NAME#,'%')
+-- end
+-- isNotEmpty ADDRESSEE_PHONE
+ and  d.ADDRESSEE_PHONE  LIKE CONCAT('%',#ADDRESSEE_PHONE#,'%')
+-- end
+-- isNotEmpty START_YEAR
+ and  d.YEAR >=#START_YEAR#
+-- end
+-- isNotEmpty END_YEAR
+ and  d.YEAR <=#END_YEAR#
+-- end
+-- isNotEmpty START_MON
+ and  d.MONTH >=#START_MON#
+-- end
+-- isNotEmpty END_MON
+ and  d.MONTH <=#END_MON#
+-- end
+  
+  
+  

@@ -1,0 +1,12 @@
+<tr> 
+         <th>申请单详细信息:</th> 
+         <td> 
+          <div class="apply-detail"> 
+           <ul> 
+            <li><label>印刷申请刊物：</label><span th:text="${prodMap['PRINT_CODE']}">--</span></li> 
+            <li><label>印刷数量：</label><span th:text="${prodMap['TOTAL_COUNT']}" id="applyTotalMnt">--</span></li> 
+            <li><label>申请人：</label><span th:text="${prodMap['UPDATE_STAFF']}">--</span></li> 
+            <li><label>申批通过时间：</label><span th:text="${prodMap['APPROVE_TIME']}">--</span></li> 
+           </ul> 
+          </div> </td> 
+        </tr> 

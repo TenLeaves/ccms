@@ -1,0 +1,52 @@
+
+<div class="cont-sec">
+  <h3 class="sec-title">订单列表</h3>
+  <div class="search-area-w">
+    <div class="search-area">
+      <ul class="classify">
+        <li class="orderQryType on" orderType='1' onclick="changeqryTypeOrder(this);">定单号</li>
+        <li class="orderQryType" orderType='2' onclick="changeqryTypeOrder(this);">订购单位</li>
+        <li class="orderQryType" orderType='3' onclick="changeqryTypeOrder(this);">联系人</li>
+        <li class="orderQryType" orderType='4' onclick="changeqryTypeOrder(this);">订单金额</li>
+        <li class="orderQryType" orderType='5' onclick="changeqryTypeOrder(this);">订单日期</li>
+        <input type="hidden" value="7" id="qryOrderTypeValId"/>
+      </ul>
+      <div class="search-box" id="qryorderNotimeDiv">
+        <input type="text" class="search-ipt" id="inputOrderQryKey"/> <span
+          class="searching" onclick="qryOrderInfo();"></span>
+      </div>
+      <div class="search-box" id="qryordertimeDiv" style="display:none;">
+        <input type="text" class="search-ipt date"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="inputOrderQryKeyTime"/> <span
+          class="searching" onclick="qryOrderInfo();"></span>
+      </div>
+    </div>
+  </div>
+  <div class="list-box" style="height: 250px; overflow: auto;">
+    <table border="0" cellspacing="0" cellpadding="0" class="list-tb">
+      <thead>
+        <tr>
+          <th width="40">选择</th>
+          <th width="130">订单号</th>
+          <th width="170">订购单位</th>
+          <th width="100">联系人</th>
+          <th width="100">订单金额</th>
+          <th width="80">订单数量</th>
+          <th>定单日期</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="eachOrder : ${orderList}">
+          <td><input type="radio" name="order-info"
+            class="check-style" /></td>
+          <td th:text="${eachOrder['SUBSCRIBE_ID']}">1000000000</td>
+          <td th:text="${eachOrder['COMPANY']}+'&nbsp;'">中国联通北京分公司</td>
+          <td th:text="${eachOrder['CUSTOMER_NAME']}">张白吃</td>
+          <td th:text="${eachOrder['TOTAL_MONEY']}">50000元</td>
+          <td th:text="${eachOrder['AMOUNT']}">10000本</td>
+          <td th:text="${eachOrder['UPDATE_TIME']}">2014-12-29</td>
+        </tr>
+      </tbody>
+      
+    </table>
+  </div>
+</div>

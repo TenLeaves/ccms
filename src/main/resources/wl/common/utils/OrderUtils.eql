@@ -1,0 +1,232 @@
+-- [selectOrderCommon]
+SELECT 
+  O.SUBSCRIBE_ID,
+  O.CUSTOMER_NAME,
+  O.CUSTOMER_PHONE,
+  O.CUSTOMER_TYPE,
+  O.COMPANY, 
+  O.FIXED_TELEPHONE,
+  O.CONTACT_NAME,
+  O.CONTACT_PHONE,
+  O.DISCOUNT_RATE,
+  O.UPDATE_STAFF,
+  date_format(O.UPDATE_TIME,'%Y-%c-%d %H:%i:%s') UPDATE_TIME,
+  O.APPROVAL_TIME,
+  O.SUBSCRIBE_STATE,
+  O.TOTAL_MONEY,
+  o.POST_MONEY,
+  O.TOTAL_COUNT,
+  O.PAY_FLAG,
+  O.REMARK,
+  o.FIRST_SEND,
+  o.NEED_INVOICE
+  
+FROM
+  TF_B_SUBSCRIBE O 
+ WHERE 1=1
+-- isNotEmpty SUBSCRIBE_ID
+ and  o.SUBSCRIBE_ID  LIKE CONCAT('%',#SUBSCRIBE_ID#,'%')
+-- end
+-- isNotEmpty CUST_TYPE
+ and  o.CUSTOMER_TYPE =#CUST_TYPE# 
+-- end
+-- isNotEmpty CUSTOMER_NAME
+ and  o.CUSTOMER_NAME LIKE CONCAT('%',#CUSTOMER_NAME#,'%')
+-- end
+-- isNotEmpty CUSTOMER_PHONE
+ and  o.CUSTOMER_PHONE LIKE CONCAT('%',#CUSTOMER_PHONE#,'%')
+-- end
+-- isNotEmpty COMPANY
+ and  o.COMPANY  LIKE CONCAT('%',#COMPANY#,'%')
+-- end
+-- isNotEmpty CONTACT_NAME
+ and  o.CONTACT_NAME  LIKE CONCAT('%',#CONTACT_NAME#,'%')
+-- end
+-- isNotEmpty OrderStartTime
+ and  DATE_FORMAT(o.UPDATE_TIME,'%Y-%m-%d')>= #OrderStartTime#
+-- end
+-- isNotEmpty OrderEndTime
+ and  DATE_FORMAT(o.UPDATE_TIME,'%Y-%m-%d')<= #OrderEndTime#
+-- end
+-- isNotEmpty SUBSCRIBE_STATE
+ and  o.SUBSCRIBE_STATE=#SUBSCRIBE_STATE#
+-- end
+-- isNotEmpty PAY_FLAG
+ and  o.PAY_FLAG=#PAY_FLAG#
+-- end
+-- isNotEmpty FIRST_SEND
+ and  o.FIRST_SEND=#FIRST_SEND#
+-- end
+-- isNotEmpty INVOICE_RECORD
+ and ( o.INVOICE_FLAG='1' and  ( (o.BEFORE_INVOICE = '2' and o.PAY_FLAG ='2')  or (o.BEFORE_INVOICE = '1' and o. BEFORE_INVOICE_TAG = '2'  ) ) )
+-- end
+--[selectChildOrderWithOutSendBySubscribleID]
+SELECT 
+  co.SUBSCRIBE_ID,
+  co.ORDER_ID,
+  co.ORDER_TYPE,
+  co.PRODUCT_TYPE,
+  co.PRODUCT_PER_COUNT,
+  co.PRODUCT_BEGIN,
+  co.PRODUCT_END,
+  co.CONTIN_MONTH,
+  co.UPDATE_STAFF,
+  co.UPDATE_TIME
+from tf_b_order co
+where 1=1
+-- isNotEmpty SUBSCRIBE_ID
+ and  co.SUBSCRIBE_ID  LIKE CONCAT('%',#SUBSCRIBE_ID#,'%')
+-- end
+
+-- [selectOrdersByParentIds]
+SELECT 
+  co.SUBSCRIBE_ID
+  co.ORDER_ID,
+  co.ORDER_TYPE,
+  co.PRODUCT_TYPE,
+  co.PRODUCT_PER_COUNT,
+  co.PRODUCT_BEGIN,
+  co.PRODUCT_END,
+  co.CONTIN_MONTH,
+  co.UPDATE_STAFF,
+  co.UPDATE_TIME,
+  d.DISTRIBUT_ID,
+  d.STOCK_ADDRESS,
+  d.DISTRIBUT_COUNT,
+  d.DISTRIBUT_TYPE,
+  d.DISTRIBUT_ADDRESS,
+  d.ADDRESSEE_NAME,
+  d.ADDRESSEE_PHONE,
+  d.ZIP_CODE,
+  d.NEED_LABEL_FLAG,
+  d.EXPORT_FLAG,
+  d.EXPORT_TIME,
+  d.STATUS,
+  d.REASON 
+FROM
+  tf_b_order co,
+  tf_b_distribut d 
+WHERE 1=1
+-- isNotEmpty SUBSCRIBE_ID
+ and  co.SUBSCRIBE_ID  LIKE CONCAT('%',#SUBSCRIBE_ID#,'%')
+-- end
+-- isNotEmpty ORDER_ID
+ and  co.ORDER_ID  LIKE CONCAT('%',#ORDER_ID#,'%')
+-- end
+-- isNotEmpty ORDER_TYPE
+ and  co.ORDER_TYPE  LIKE CONCAT('%',#ORDER_TYPE#,'%')
+-- end
+-- isNotEmpty PRODUCT_TYPE
+ and  co.PRODUCT_TYPE  LIKE CONCAT('%',#PRODUCT_TYPE#,'%')
+-- end
+-- isNotEmpty PRODUCT_BEGIN
+ and  DATE_FORMAT(o.PRODUCT_BEGIN,'%Y-%m-%d')>#PRODUCT_BEGIN#
+-- end
+-- isNotEmpty PRODUCT_END
+ and  DATE_FORMAT(o.PRODUCT_END,'%Y-%m-%d')< #PRODUCT_END#
+-- end
+-- isNotEmpty CONTIN_MONTH
+ and  co.CONTIN_MONTH=#CONTIN_MONTH#
+-- end
+-- isNotEmpty DISTRIBUT_ID
+ and  d.DISTRIBUT_ID=#DISTRIBUT_ID#
+-- end
+-- isNotEmpty STOCK_ADDRESS
+ and  d.STOCK_ADDRESS=#STOCK_ADDRESS#
+-- end
+-- isNotEmpty DISTRIBUT_COUNT
+ and  d.DISTRIBUT_COUNT=#DISTRIBUT_COUNT#
+-- end
+-- isNotEmpty DISTRIBUT_TYPE
+ and  d.DISTRIBUT_TYPE=#DISTRIBUT_TYPE#
+-- end
+-- isNotEmpty DISTRIBUT_ADDRESS
+ and  d.DISTRIBUT_ADDRESS  LIKE CONCAT('%',#DISTRIBUT_ADDRESS#,'%')
+-- end
+-- isNotEmpty ADDRESSEE_NAME
+ and  d.ADDRESSEE_NAME  LIKE CONCAT('%',#ADDRESSEE_NAME#,'%')
+-- end
+-- isNotEmpty ADDRESSEE_PHONE
+ and  d.ADDRESSEE_PHONE  LIKE CONCAT('%',#ADDRESSEE_PHONE#,'%')
+-- end
+-- isNotEmpty NEED_LABEL_FLAG
+ and  d.NEED_LABEL_FLAG=#NEED_LABEL_FLAG#
+-- end
+-- isNotEmpty EXPORT_FLAG
+ and  d.EXPORT_FLAG=#EXPORT_FLAG#
+-- end
+-- isNotEmpty STATUS
+ and  d.STATUS=#STATUS#
+-- end
+-- isNotEmpty PRODUCT_END
+ and  DATE_FORMAT(d.EXPORT_TIME,'%Y-%m-%d') <= #PRODUCT_END#
+-- end
+-- isNotNull parentIdList
+    and co.SUBSCRIBE_ID in
+    --for item=paymentId index=seq collection=parentIdList open=( separator=, close=)
+        #paymentId#
+    --end
+--end
+
+-- [selectChildOrderByChildId]
+SELECT 
+  O.SUBSCRIBE_ID,
+  O.ORDER_ID,
+  O.ORDER_TYPE,
+  o.PRODUCT_TYPE,
+  O.PRODUCT_PER_COUNT,
+  O.PRODUCT_BEGIN,
+  O.PRODUCT_END,
+  O.CONTIN_MONTH,
+  O.MONEY
+  FROM TF_B_ORDER O
+  where 1=1
+-- isNotNull orderIdList
+    and o.ORDER_ID in
+    --for item=orderId index=seq collection=orderIdList open=( separator=, close=)
+        #orderId#
+    --end
+--end
+-- isNotEmpty ORDER_ID
+ and  o.ORDER_ID= #ORDER_ID#
+-- end
+-- isNotEmpty SUBSCRIBE_ID
+ and  o.SUBSCRIBE_ID= #SUBSCRIBE_ID#
+-- end
+
+-- [selectSendInfo]
+SELECT 
+  D.ORDER_ID,
+  D.DISTRIBUT_ID,
+  D.STOCK_ADDRESS,
+  D.DISTRIBUT_COUNT,
+  D.DISTRIBUT_ADDRESS,
+  d.DISTRIBUT_TYPE,
+  D.ADDRESSEE_NAME,
+  D.ADDRESSEE_PHONE,
+  D.ZIP_CODE ,
+  D.NEED_LABEL_FLAG,
+  D.EXPORT_FLAG,
+  D.EXPORT_TIME,
+  D.STATUS,
+  D.PRODUCT_TYPE,
+  D.YEAR,
+  D.MONTH 
+FROM
+  TF_B_DISTRIBUT D 
+where 1=1
+-- isNotEmpty ORDER_ID
+ and  d.ORDER_ID= #ORDER_ID#
+-- end
+-- isNotEmpty EXPORT_FLAG
+ and  d.EXPORT_FLAG= #EXPORT_FLAG#
+-- end
+-- isNotEmpty CURRENT_MONTH
+ and  d.MONTH<= #CURRENT_MONTH#
+-- end
+-- isNotEmpty CURRENT_YEAR
+ and  d.YEAR<= #CURRENT_YEAR#
+-- end
+
+-- [deleteSendInfo]
+ DELETE  FROM  tf_b_distribut    WHERE DISTRIBUT_ID=#DISTRIBUT_ID#;

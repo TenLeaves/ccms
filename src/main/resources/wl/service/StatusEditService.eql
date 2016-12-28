@@ -1,0 +1,110 @@
+
+
+-- [selStatus]
+SELECT DISTINCT a.DISTRIBUT_ID  distributId,a.ORDER_ID orderId,a.ADDRESSEE_NAME name,a.ADDRESSEE_PHONE phone,a.DISTRIBUT_ADDRESS address,a.PRODUCT_TYPE productType,a.DISTRIBUT_TYPE type,
+CASE a.DISTRIBUT_TYPE
+WHEN '1' THEN '中铁'
+WHEN '2' THEN '邮局'
+ELSE '其他'
+END typeDes,
+a.STATUS status,
+CASE a.STATUS
+WHEN '1' THEN '正常'
+WHEN '2' THEN '暂停'
+ELSE ''
+END statusDes,
+CASE a.STATUS
+WHEN '1' THEN '暂停'
+WHEN '2' THEN '恢复'
+ELSE ''
+END operate,
+a.DISTRIBUT_COUNT count,a.YEAR year,
+a.MONTH month
+FROM tf_b_distribut a,tf_b_subscribe s,tf_b_order o
+WHERE s.SUBSCRIBE_ID=o.SUBSCRIBE_ID
+and o.ORDER_ID=a.ORDER_ID
+and a.STATUS in ('1','2')
+and a.EXPORT_FLAG = #exportInfo#
+and a.DISTRIBUT_TYPE = #type#
+-- isNotEmpty status
+and a.STATUS = #status#
+-- end
+-- isNotEmpty name
+and a.ADDRESSEE_NAME like CONCAT('%',#name#,'%')
+-- end
+-- isNotEmpty address
+and a.DISTRIBUT_ADDRESS like CONCAT('%',#address#,'%')
+-- end
+-- isNotEmpty phone
+and a.ADDRESSEE_PHONE like CONCAT('%',#phone#,'%')
+-- end
+-- isNotEmpty startTime
+and s.ACCEPT_TIME > STR_TO_DATE(#startTime#, '%Y-%m-%d')
+-- end
+-- isNotEmpty endTime
+and  s.ACCEPT_TIME < date_add(#endTime#, interval 1 day)
+-- end
+order by a.UPDATE_TIME desc
+
+-- [updateStatus]
+update tf_b_distribut a
+-- trim prefix=SET suffixOverrides=,
+-- iff true
+         a.STATUS = #updateStatus#,
+	 a.UPDATE_TIME=now(),
+	 a.UPDATE_STAFF=#staffId#,
+-- iff reason != null
+         a.REASON= #reason#,
+-- end
+WHERE a.DISTRIBUT_ID = #distributId#
+and a.ORDER_ID = #orderId#
+and a.EXPORT_FLAG = #exportInfo#
+and a.STATUS = #status#
+-- isNotEmpty year
+and a.YEAR = #year#
+-- end
+-- isNotEmpty month
+and a.MONTH = #month#
+-- end
+-- [updateStatusNew]
+update tf_b_distribut a
+-- trim prefix=SET suffixOverrides=,
+-- iff true
+         a.EXPORT_FLAG='1',
+	 a.UPDATE_TIME=now(),
+	 a.UPDATE_STAFF=#staffId#,
+-- iff reason != null
+         a.REASON= #reason#,
+-- end
+WHERE a.DISTRIBUT_ID = #distributId#
+and a.ORDER_ID = #orderId#
+and a.EXPORT_FLAG = #exportInfo#
+and a.STATUS = #status#
+-- isNotEmpty year
+and a.YEAR = #year#
+-- end
+-- isNotEmpty month
+and a.MONTH = #month#
+-- end
+
+--[selectStatusNew]
+select a.STOCK_ADDRESS,a.PRODUCT_TYPE,a.YEAR,a.MONTH,a.DISTRIBUT_COUNT
+from tf_b_distribut a
+WHERE a.DISTRIBUT_ID = #distributId#
+and a.ORDER_ID = #orderId#
+and a.EXPORT_FLAG = #exportInfo#
+and a.STATUS = #status#
+-- isNotEmpty year
+and a.YEAR = #year#
+-- end
+-- isNotEmpty month
+and a.MONTH = #month#
+-- end
+
+--[updateStock]
+update tf_m_stock a
+set a.REMAIN_COUNT=a.REMAIN_COUNT+#DISTRIBUT_COUNT#,
+    a.UPDATE_TIME=now(),
+    a.UPDATE_STAFF=#staffId#
+WHERE a.PRINT_CODE=#printCode#
+  and a.STOCK_TYPE=#STOCK_ADDRESS#

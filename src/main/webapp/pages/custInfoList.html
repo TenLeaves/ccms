@@ -1,0 +1,33 @@
+<table class="list-thead" cellspacing="0" cellpadding="0" border="0">
+  <tbody>
+    <tr>
+      <th width="50">&nbsp;</th>
+      <th width="120">联系人</th>
+      <th width="300">单位</th>
+      <th width="120">电话</th>
+      <th>客户类型</th>
+    </tr>
+  </tbody>
+</table>
+<div class="list-tb-w" >
+  <table class="list-tb" cellspacing="0" cellpadding="0" border="0">
+    <tbody>
+      <tr th:each="custInfo:${custInfoList}">
+        <td width="50"><input type="radio" class="radio-style"
+          name="customer-info" /></td>
+        <td width="120" th:text="${custInfo.name}">张达开</td>
+        <td width="300" th:text="${custInfo.complany}"> 中国联通北京分公司</td>
+        <td width="120" th:text="${custInfo.phone}"> 110101010100101</td>
+        <td style="display:none;" th:text="${custInfo.custType}"></td>
+        <td style="display:none;" th:text="${custInfo.discount}"></td>
+        <td style="display:none;" th:text="${custInfo.contactName}"></td>
+        <td style="display:none;" th:text="${custInfo.contactPhone}"></td>
+        <td style="display:none;" th:text="${custInfo.remark}"></td>
+        <td style="display:none;" th:text="${custInfo.custId}"></td>
+        <td style="display:none;" th:text="${custInfo.fixedPhone}"></td>
+        <td width="100" th:text="${custInfo.custType=='1'?'大客户':'批发商'}"></td>
+      </tr>
+      
+    </tbody>
+  </table>
+</div>

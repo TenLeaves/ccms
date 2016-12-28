@@ -1,0 +1,60 @@
+-- [printCheckInfo]
+ select PRINT_CODE,UPDATE_STAFF,ACCEPT_TIME,APPROVE_STATUS,APPROVE_TIME,TOTAL_COUNT from tf_m_print_page
+where APPROVE_STATUS='1'
+order by UPDATE_TIME desc
+
+-- [supplementInfo]
+SELECT DISTINCT 
+  s.SUBSCRIBE_ID,
+  s.CUSTOMER_TYPE,
+  s.COMPANY,
+  s.CUSTOMER_NAME,
+  SUM(o.PRODUCT_PER_COUNT) total,
+  s.UPDATE_STAFF,
+  s.UPDATE_TIME,
+  s.APPROVAL_TIME,
+  s.SUBSCRIBE_STATE,
+  s.BEFORE_INVOICE,
+  s.BEFORE_INVOICE_TAG 
+FROM
+  tf_b_subscribe s,
+  tf_b_order o 
+WHERE (
+    (
+      (
+        s.CUSTOMER_TYPE IN ('4', '5') 
+        OR (
+          s.FIRST_SEND = '1' 
+          AND s.CUSTOMER_TYPE not in( '2','6','7')
+        )
+      ) 
+      
+    ) 
+    OR (
+      s.BEFORE_INVOICE = '1' 
+      AND s.BEFORE_INVOICE_TAG = '1'
+    )
+  ) 
+AND s.SUBSCRIBE_STATE = '1'
+AND s.SUBSCRIBE_ID = o.SUBSCRIBE_ID 
+GROUP BY s.SUBSCRIBE_ID 
+ORDER BY s.UPDATE_TIME DESC 
+
+
+-- [updateLdAppSuc]
+update tf_b_subscribe set SUBSCRIBE_STATE='2',APPROVAL_TIME=now(),UPDATE_TIME=now(),UPDATE_STAFF=## where SUBSCRIBE_ID=##
+
+-- [updateLdAppSuc1]
+update tf_b_subscribe set BEFORE_INVOICE_TAG='2',APPROVAL_TIME=now(),UPDATE_TIME=now(),UPDATE_STAFF=## where SUBSCRIBE_ID=##
+
+-- [updatePageAppSuc]
+update tf_m_print_page set APPROVE_STATUS='2',APPROVE_TIME=now(),APPROVE_STAFF=##,UPDATE_TIME=now() where PRINT_CODE=##
+
+-- [updateLdAppErr]
+update tf_b_subscribe set SUBSCRIBE_STATE='4',APPROVAL_TIME=now(),APPROVAL_REASON=##,UPDATE_TIME=now(),UPDATE_STAFF=## where SUBSCRIBE_ID=##
+
+-- [updateLdAppErr1]
+update tf_b_subscribe set BEFORE_INVOICE_TAG='3',APPROVAL_TIME=now(),APPROVAL_REASON=##,UPDATE_TIME=now(),UPDATE_STAFF=## where SUBSCRIBE_ID=##
+
+-- [updatePageAppErr]
+update tf_m_print_page set APPROVE_STATUS='3',APPROVE_TIME=now(),APPROVE_STAFF=##,APPROVAL_REASON=##,UPDATE_TIME=now() where PRINT_CODE=##

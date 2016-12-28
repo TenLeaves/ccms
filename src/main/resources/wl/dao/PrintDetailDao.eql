@@ -1,0 +1,31 @@
+-- [selectPageDetail]
+select
+PRINT_ID,
+PRODUCT_TYPE,
+YEAR,
+MONTH,
+CUSTOMER_COUNT,
+AGENT_COUNT,
+RETAIL_COUNT,
+GIVE_COUNT,
+BJPAPER_COUNT,
+RESERVE_COUNT,
+TOTAL_COUNT,
+INTERBOOK_COUNT
+from tf_m_print_page
+where
+PRINT_CODE=##
+-- [selectCustInfo]
+select 
+p.COUNT,
+c.CUSTOMER_NAME
+from
+tf_m_customer c,tf_b_customer_page p
+where p.CUSTOMER_ID=c.CUSTOMER_ID
+and p.PRINT_ID=##
+
+
+
+
+
+

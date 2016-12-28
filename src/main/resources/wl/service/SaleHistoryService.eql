@@ -1,0 +1,35 @@
+-- [selSale]
+select distinct a.DISTRIBUT_ID,
+a.PRODUCT_TYPE,
+a.YEAR,
+a.MONTH,
+a.DISTRIBUT_COUNT,
+a.STOCK_ADDRESS,
+CASE a.STOCK_ADDRESS  WHEN '1' THEN '印刷厂' WHEN '2' THEN '邮局' WHEN '3' THEN '杂志社' ELSE '其他' END STOCK_ADDRESS_DES,
+c.CUSTOMER_NAME,
+c.SUBSCRIBE_ID,
+date_format(c.ACCEPT_TIME,'%Y-%c-%d %H:%i:%s') ACCEPT_TIME,
+d.name STAFF_NAME
+from  tf_b_distribut a,
+tf_b_order b, tf_b_subscribe c, tf_m_emp d
+where a.ORDER_ID = b.ORDER_ID
+and b.SUBSCRIBE_ID = c.SUBSCRIBE_ID
+and c.UPDATE_STAFF = d.id
+and a.EXPORT_FLAG = '2'
+and a.PRODUCT_TYPE = #PRODUCT_TYPE#
+and a.STOCK_ADDRESS = #STOCK_ADDRESS#
+-- isNotEmpty DISTRIBUT_ID
+and a.DISTRIBUT_ID like CONCAT('%',#DISTRIBUT_ID#,'%')
+-- end
+-- isNotEmpty beginTime
+ and  EXPORT_TIME > STR_TO_DATE(#beginTime#, '%Y-%m-%d') 
+-- end
+-- isNotEmpty endTime
+ and  EXPORT_TIME < date_add(#endTime#, interval 1 day)
+-- end
+-- isNotEmpty SUBSCRIBE_ID
+and c.SUBSCRIBE_ID like CONCAT('%',#SUBSCRIBE_ID#,'%')
+-- end
+-- isNotEmpty CUSTOMER_NAME
+and c.CUSTOMER_NAME like CONCAT('%',#CUSTOMER_NAME#,'%')
+-- end

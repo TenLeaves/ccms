@@ -1,0 +1,106 @@
+
+-- [addPay]
+INSERT INTO tf_b_payment
+(
+PAYMENT_ID,
+PAYMENT_NAME,
+PAYMENT_VALUE,
+PAYMENT_FLAG,
+POST_COMPANY,
+REMARK,
+UPDATE_STAFF,
+UPDATE_TIME,
+ACCEPT_TIME,
+ACCEPT_STAFF,
+PAYMENT_TIME,
+PAYMENT_PHONE,
+PAYMENT_ADDRESS,
+POST_CODE,
+BUY_COUNT
+)
+VALUES
+(
+#paymentId#,
+#paymentName#,
+#paymentValue#,
+#paymentFlag#,
+#postCompany#,
+#remark#,
+#updateStaff#,
+now(),
+now(),
+#updateStaff#,
+#paymentTime#,
+#paymentPhone#,
+#paymentAddress#,
+#postCode#,
+#buyCount#
+)
+
+-- [updatePay]
+update tf_b_payment
+-- trim prefix=SET suffixOverrides=,
+-- iff paymentName != null
+         PAYMENT_NAME=#paymentName#,
+-- iff paymentTime != null
+         PAYMENT_TIME=#paymentTime#,
+-- iff paymentPhone != null
+         PAYMENT_PHONE=#paymentPhone#,
+-- iff paymentAddress != null
+         PAYMENT_ADDRESS=#paymentAddress#,
+-- iff buyCount != null
+         BUY_COUNT=#buyCount#,
+-- iff postCode != null
+         POST_CODE=#postCode#,
+-- iff paymentValue != null
+         PAYMENT_VALUE=#paymentValue#,
+-- iff remark != null
+         REMARK=#remark#,
+-- iff updateStaff != null
+         UPDATE_STAFF =#updateStaff#,
+-- iff true
+         UPDATE_TIME = now(),
+-- end
+WHERE PAYMENT_ID = #paymentId#
+
+-- [selPay]
+SELECT
+a.PAYMENT_ID paymentId,
+a.PAYMENT_NAME paymentName,
+a.PAYMENT_VALUE paymentValue,
+a.BIND_FLAG bindFlag,
+IF(a.BIND_FLAG = '1', '未绑定', '已绑定') bindFlagDes,
+a.UPDATE_STAFF updateStaff,
+date_format(ACCEPT_TIME,'%Y-%c-%d') updateTime,
+date_format(PAYMENT_TIME,'%Y-%c-%d') paymentTime,
+a.REMARK remark,
+a.PAYMENT_PHONE paymentPhone,
+a.PAYMENT_ADDRESS paymentAddress,
+a.BUY_COUNT buyCount,
+IF(a.PAYMENT_FLAG = '1', '已收到', '未收到') paymentFlag,
+IF(a.POST_COMPANY = '1', '邮局', '银行') postCompany,
+a.POST_CODE postCode
+ FROM tf_b_payment a
+WHERE 1 = 1
+-- isNotEmpty paymentId
+AND a.PAYMENT_ID like CONCAT('%',#paymentId#,'%')
+-- end
+-- isNotEmpty paymentName
+AND a.PAYMENT_NAME like CONCAT('%',#paymentName#,'%')
+-- end
+-- isNotEmpty bindFlag
+AND a.BIND_FLAG = #bindFlag#
+-- end
+-- isNotEmpty remark
+AND a.REMARK like CONCAT('%',#remark#,'%')
+-- end
+-- isNotEmpty paymentValue
+AND a.PAYMENT_VALUE like CONCAT('%',#paymentValue#,'%')
+-- end
+-- isNotEmpty updateTime
+AND a.PAYMENT_TIME between  STR_TO_DATE(#updateTime#, '%Y-%m-%d')  and date_add(#updateTime#, interval 1 day)
+-- end
+order by a.UPDATE_TIME desc
+
+--[deletePayMentById]
+DELETE FROM tf_b_payment WHERE PAYMENT_ID=#PAYMENT_ID#

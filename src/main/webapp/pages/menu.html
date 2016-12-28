@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+ <head> 
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+  <title>导航栏</title> 
+  <link rel="stylesheet" type="text/css" th:href="@{/static/css/base.css}" href="../css/base.css" /> 
+  <link rel="stylesheet" type="text/css" th:href="@{/static/css/navigator.css}" href="../css/navigator.css" /> 
+  <script type="text/javascript" th:src="@{/static/js/jquery-1.8.js}" src="../js/jquery.min.js"></script> 
+  <script type="text/javascript" th:src="@{/static/js/navigator.js}" src="../js/navigator.js"></script> 
+ </head> 
+ <body> 
+  <div class="navs"> 
+   <dl class="nav"> 
+    <dt>
+     <i class="fill-ico"></i>
+     <label>订单管理</label>
+    </dt> 
+    <dd class="sub-navs">
+      
+     <a th:each="menu1: ${menuList1}" th:href="${menu1['location']}"  target="main-content"><b>&gt;</b><i></i><span th:text="${menu1['name']}">订阅订单信息填写</span></a> 
+     
+     
+    </dd> 
+   </dl> 
+   <dl class="nav"> 
+    <dt>
+     <i class="store-ico"></i>
+     <label>库存管理</label>
+    </dt> 
+    <dd class="sub-navs"> 
+    <a th:each="menu2: ${menuList2}" th:href="${menu2['location']}"  target="main-content"><b>&gt;</b><i></i><span th:text="${menu2['name']}">订阅订单信息填写</span></a> 
+      
+    </dd> 
+   </dl> 
+   <dl class="nav"> 
+    <dt>
+     <i class="fee-ico"></i>
+     <label>财务管理</label>
+    </dt> 
+    <dd class="sub-navs"> 
+         <a th:each="menu3: ${menuList3}" th:href="${menu3['location']}"  target="main-content"><b>&gt;</b><i></i><span th:text="${menu3['name']}">订阅订单信息填写</span></a> 
+     
+    </dd> 
+   </dl> 
+   <dl class="nav"> 
+    <dt>
+     <i class="examine-ico"></i>
+     <label>审批管理</label>
+    </dt> 
+    <dd class="sub-navs"> 
+         <a th:each="menu4: ${menuList4}" th:href="${menu4['location']}"  target="main-content"><b>&gt;</b><i></i><span th:text="${menu4['name']}">订阅订单信息填写</span></a> 
+ 
+    </dd> 
+   </dl> 
+   <dl class="nav"> 
+    <dt>
+     <i class="report-ico"></i>
+     <label>报表管理</label>
+    </dt> 
+    <dd class="sub-navs"> 
+         <a th:each="menu5: ${menuList5}" th:href="${menu5['location']}"  target="main-content"><b>&gt;</b><i></i><span th:text="${menu5['name']}">订阅订单信息填写</span></a> 
+ 
+    </dd> 
+   </dl> 
+  </div>   
+ </body>
+</html>

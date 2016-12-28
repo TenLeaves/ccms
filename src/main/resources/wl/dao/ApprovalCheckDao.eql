@@ -1,0 +1,61 @@
+-- [printCheckInfo]
+ select PRINT_CODE,UPDATE_STAFF,ACCEPT_TIME,APPROVE_STATUS,APPROVE_TIME,TOTAL_COUNT from tf_m_print_page
+where APPROVE_STATUS=#appState#
+-- iff staffRight == "0"
+and UPDATE_STAFF=#staff_id#
+-- end
+order by UPDATE_TIME desc
+
+-- [printAllCheckInfo]
+ select PRINT_CODE,UPDATE_STAFF,ACCEPT_TIME,APPROVE_STATUS,APPROVE_TIME,TOTAL_COUNT from tf_m_print_page
+-- iff staffRight == "0"
+where UPDATE_STAFF=#staff_id#
+-- end
+order by UPDATE_TIME desc
+
+-- [supplementInfo]
+ select DISTINCT s.SUBSCRIBE_ID,s.CUSTOMER_TYPE,s.COMPANY,s.CUSTOMER_NAME,SUM(o.PRODUCT_PER_COUNT) total,s.UPDATE_STAFF,s.UPDATE_TIME,s.APPROVAL_TIME,s.SUBSCRIBE_STATE
+ from tf_b_subscribe s,tf_b_order o
+ where s.CUSTOMER_TYPE='4' and s.SUBSCRIBE_ID=o.SUBSCRIBE_ID
+-- iff appState != "0"
+and s.SUBSCRIBE_STATE=#appState#
+-- iff staffRight == "0"
+and s.UPDATE_STAFF=#staff_id#
+-- end
+and SUBSCRIBE_STATE <> '3'
+group by s.SUBSCRIBE_ID
+order by s.UPDATE_TIME desc
+
+-- [bookInfo]
+ select DISTINCT s.SUBSCRIBE_ID,s.CUSTOMER_TYPE,s.COMPANY,s.CUSTOMER_NAME,SUM(o.PRODUCT_PER_COUNT) total,s.UPDATE_STAFF,s.UPDATE_TIME,s.APPROVAL_TIME,s.SUBSCRIBE_STATE
+ from tf_b_subscribe s,tf_b_order o
+ where s.CUSTOMER_TYPE='5' and s.SUBSCRIBE_ID=o.SUBSCRIBE_ID
+-- iff appState != "0"
+and s.SUBSCRIBE_STATE=#appState#
+-- iff staffRight == "0"
+and s.UPDATE_STAFF=#staff_id#
+-- end
+and SUBSCRIBE_STATE <> '3'
+group by s.SUBSCRIBE_ID
+order by s.UPDATE_TIME desc
+
+--[sendFeeInfo] 
+ select SUBSCRIBE_ID,COMPANY,CUSTOMER_NAME,UPDATE_STAFF,UPDATE_TIME,SUBSCRIBE_STATE,APPROVAL_TIME 
+from tf_b_subscribe
+where FIRST_SEND = '1'
+-- iff appState != "0"
+and SUBSCRIBE_STATE=#appState#
+-- iff staffRight == "0"
+and UPDATE_STAFF=#staff_id#
+-- end
+and SUBSCRIBE_STATE <> '3'
+and CUSTOMER_TYPE <> '2'
+
+-- [sendInvoiceInfo]
+select SUBSCRIBE_ID,COMPANY,CUSTOMER_NAME,UPDATE_STAFF,UPDATE_TIME,SUBSCRIBE_STATE,APPROVAL_TIME,BEFORE_INVOICE_TAG from tf_b_subscribe where BEFORE_INVOICE='1'
+-- iff appState != "0"
+and BEFORE_INVOICE_TAG=#appState#
+-- iff staffRight == "0"
+and UPDATE_STAFF=#staff_id#
+-- end
+and SUBSCRIBE_STATE <> '3'

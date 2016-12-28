@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+ <head> 
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />  
+   
+  <title>发票管理</title> 
+  <link rel="stylesheet" th:href="@{/static/css/base.css}" type="text/css" /> 
+  <link rel="stylesheet" th:href="@{/static/css/receipt_manage.css}" type="text/css" /> 
+  <script type="text/javascript" th:src="@{/static/js/jquery-1.8.js}"></script> 
+  <script type="text/javascript" th:src="@{/static/js/base.js}"></script> 
+  <script type="text/javascript" th:src="@{/static/js/invoiceEntry.js}"></script> 
+  <script type="text/javascript" th:src="@{/static/js/jquery.json-2.4.js}"></script> 
+    <script  th:src="@{/static/js/date/WdatePicker.js}"></script>
+  <script type="text/javascript" th:src="@{/static/js/jquery.form.min.js}"></script> 
+    <script th:src="@{/static/js/jq-overlay.js}"></script>
+  <script th:src="@{/static/js/jquery.timers-1.2.js}"></script>
+ </head> 
+ <body> 
+  <div class="w"> 
+   <div class="tabs"> 
+    <ul id="tablist" class="tablist"> 
+     <li class="on">发票录入</li> 
+     <li>打印查询</li> 
+    </ul> 
+   </div> 
+   <div class="sec-box"> 
+    <div class="tabs-cont"> 
+     <div class="cont-sec"> 
+     <h3 class="sec-title">查询条件<a id="TOP" name="TOP" >&nbsp;</a></h3>
+      <table class="oprt-table" cellspacing="0" cellpadding="0" border="0"> 
+       <tbody> 
+        <tr> 
+         <th>订单编号：</th> 
+         <td> <input type="text" class="ipt-style w124" id="orderIdInput" /> </td> 
+        </tr> 
+        
+        <tr> 
+         <th>下单时间：</th> 
+         <td> <input id="orderTimeStartInput" type="text" class="ipt-style date" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'orderTimeEndInput\')}',dateFmt:'yyyy-MM-dd'})" /><span class="hinge">至</span> <input id="orderTimeEndInput" type="text" class="ipt-style date" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'orderTimeStartInput\')}',dateFmt:'yyyy-MM-dd'})" /> </td> 
+        </tr> 
+        <tr> 
+         <th>联系人姓名：</th> 
+         <td><input type="text" class="ipt-style w124" id="orderContactInput" /></td> 
+        </tr> 
+        <tr> 
+         <th>联系人地址：</th> 
+         <td><input type="text" class="ipt-style w300" id="orderAddrInput" /></td> 
+        </tr> 
+        <tr> 
+         <th>&nbsp;</th> 
+         <td> <a href="#RESULT" class="oprt-btn" id="searchInvoiceBtn">查&nbsp;&nbsp;&nbsp;&nbsp;询</a> </td> 
+        </tr> 
+       </tbody> 
+      </table> 
+     </div> 
+     <div class="cont-sec" id="resultArea" style="display:none;"> 
+     <h3 class="sec-title">查询结果<a name="RESULT" id="RESULT" >&nbsp;</a></h3>
+      <div class="list-box"> 
+       <form id="invoiceInfoTable" method="post" th:action="@{/searchOdersInvoice}" th:include="pages/invoice/invoiceFrag"> 
+        <!-- 此处展示的是需要分页的部分 连同分页组件一起 --> 
+       </form>
+       <div style="padding-left:40px;margin-top:15px;">
+        <a href="#TOP" color="blue;">返回顶部</a>
+       </div> 
+      </div> 
+     </div> 
+    </div> 
+    <div class="tabs-cont" style="display:none;"> 
+     <div class="cont-sec"> 
+      <h3 class="sec-title">查询条件</h3> 
+      <table class="oprt-table" cellspacing="0" cellpadding="0" border="0"> 
+       <tbody> 
+        <tr> 
+         <th>打印状态：</th> 
+         <td> 
+           <span class="sel-box sel-long sel-box-on invoiceState" invoicestate="1">已打印</span> 
+           <span class="sel-box sel-long invoiceState" invoicestate="0">未打印</span>
+           <input type="hidden" value="1" id="usrSelectOrderInvoiceSta"/> 
+         </td> 
+        </tr> 
+        <tr> 
+         <th>打印时间：</th> 
+         <td> <input id="invoiceStartTime" type="text" class="ipt-style date" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'invoiceEndTime\')}',dateFmt:'yyyy-MM-dd'})" /><span class="hinge">至</span> <input id="invoiceEndTime" type="text" class="ipt-style date" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'invoiceStartTime\')}',dateFmt:'yyyy-MM-dd'})" /> </td> 
+        </tr> 
+        <tr> 
+         <th>&nbsp;</th> 
+         <td> <a href="javascript:void(0);" class="oprt-btn" onclick="invoiceSearch();">查&nbsp;&nbsp;&nbsp;&nbsp;询</a> </td> 
+        </tr> 
+       </tbody> 
+      </table> 
+     </div> 
+     <div class="cont-sec"> 
+      <h3 class="sec-title">查询结果</h3> 
+      <div class="list-box"> 
+       <form id="typedInvoiceInfoTable" method="post" th:action="@{/searchInvoiceToType}" th:include="pages/invoice/invoiceTypedFrag"> 
+        <!-- 此处展示的是需要分页的部分 连同分页组件一起 --> 
+       </form>
+      </div> 
+     </div> 
+    </div> 
+   </div> 
+  </div>  
+ </body>
+</html>

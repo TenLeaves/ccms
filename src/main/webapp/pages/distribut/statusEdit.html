@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:th="http://www.thymeleaf.org" >
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>配送单状态修改</title>
+<link rel="stylesheet" type="text/css" href="../css/base.css" th:href="@{/static/css/base.css}"/>
+<link th:href="@{/static/css/bgoverlay.css}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="../css/dispatch_status_edit.css" th:href="@{/static/css/dispatch_status_edit.css}"/>
+<script type="text/javascript" src="../js/jquery.min.js" th:src="@{/static/js/jquery.min.js}"></script>
+<script type="text/javascript" src="../js/common.js" th:src="@{/static/js/Salecommon.js}"></script>
+<script src="../static/js/jquery-1.8.js"  th:src="@{/static/js/jquery-1.8.js}"></script>
+<script src="../static/js/jquery.form.min.js" th:src="@{/static/js/jquery.form.min.js}"></script>
+<script src="../static/js/jquery.json-2.4.js" th:src="@{/static/js/jquery.json-2.4.js}"></script>
+<script type="text/javascript" src="../js/common.js" th:src="@{/static/js/common.js}"></script>
+<script src="../static/js/jquery.timers-1.2.js" th:src="@{/static/js/jquery.timers-1.2.js}"></script>
+<script src="../static/js/jq-overlay.js" th:src="@{/static/js/jq-overlay.js}"></script>
+<script src="../static/js/statusEdit.js" th:src="@{/static/js/statusEdit.js}"></script>
+<script src="date/WdatePicker.js" th:src="@{/static/js/date/WdatePicker.js}"></script>
+</head>
+
+<body>
+<div class="w">
+<div id="bgOver" class="bg_overlay"></div>
+	<div class="sec-box">
+		<div class="cont-sec">
+			<h3 class="sec-title" id="TOP">查询条件</h3>
+			<table class="oprt-table" cellspacing="0" cellpadding="0" border="0">
+				<tr>
+					<th>收件人：</th>
+					<td>
+						<input type="text" class="ipt-style w124" id="name"/>
+					</td>
+				</tr>
+				<tr>
+					<th>联系电话：</th>
+					<td>
+						<input type="text" class="ipt-style w124" id="phone"/>
+					</td>
+				</tr>
+				<tr>
+					<th>快递公司：</th>
+					<td>
+						<span class="sel-box sel-long sel-box-on" id="postType3">中铁</span>
+						<span class="sel-box sel-long" id="postType2">邮局</span>
+						<span class="sel-box sel-long" id="postType4">其它</span>
+					</td>
+				</tr>
+				<tr>
+					<th>邮寄地址：</th>
+					<td><input type="text" class="ipt-style w300" id="address"/></td>
+				</tr>
+				<tr>
+            		<th>下单时间：</th>
+					<td>
+						<input type="text" class="ipt-style w124 date" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'endTime\',{d:-1})}',dateFmt:'yyyy-MM-dd'})" readonly="readonly" id="startTime"/><span class="hinge">至</span>
+						<input type="text" class="ipt-style w124 date"  readonly="readonly" id="endTime" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'startTime\',{d:0})||\'%y-%M-%d-#{%H+1}\'}',dateFmt:'yyyy-MM-dd'})"/>
+					</td>
+        		</tr>
+				<tr>
+					<th>导出状态：</th>
+					<td>
+						<span class="sel-box sel-long sel-box-on" id="export1" onclick="changeStatus(1);">未导出</span>
+						<span class="sel-box sel-long" id="export2" onclick="changeStatus(2);">已导出</span>
+					</td>
+				</tr>			
+				<tr style="display:table-row;" id="statusInfo">
+					<th>状态：</th>
+					<td>
+						<span class="sel-box sel-long sel-box-on" id="status1">正常</span>
+						<span class="sel-box sel-long" id="status2">暂停</span>
+					</td>
+				</tr>
+				<tr>
+					<th>&nbsp;</th>
+					<td>
+						<a href="#RESULT" class="oprt-btn" onclick="selStatus();">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="cont-sec">
+			<h3 class="sec-title" id="RESULT">查询结果</h3>
+			<div class="list-box">
+				<form action="#" th:action="@{/selStatus}"  method="post" 
+                            th:include="pages/distribut/statuslist" id="statusList">
+           		</form> 
+			</div>
+		</div>
+		<div style="padding-left:40px;margin-top:15px;font-size: 12px;">
+        	<a href="#TOP" style="color: blue;">返回顶部</a>
+       </div>
+	</div>
+</div>
+<!-- 退货弹出层begin -->
+<div id="returnReason" class="layer return-layer" style="display:none;">
+	<div class="layer-cont">
+		<dl class="layer-line">
+			<dt>不通过原因：</dt>
+			<dd><textarea class="text-style" id="ret_reason"></textarea></dd>
+		</dl>
+		<div class="layer-btns">
+		    <input id="ret_distributId" class="hidden" />
+            <input id="ret_orderId" class="hidden" />
+            <input id="ret_status" class="hidden" />
+            <input id="ret_date" class="hidden" />
+			<a href="javascript:void(0);" class="short-btn layer-shut" onclick="closeDiv('returnReason','bgOver');">关闭</a>
+			<a href="javascript:void(0);" class="short-btn layer-sure" onclick="updateReturn();">确定</a>
+		</div>
+	</div>
+</div>
+<!-- 退货弹出层end -->
+<!-- 成功提示层 begin -->
+<div id="succ_tips_layer" class="tips-layer">
+    <div class="tips-layer-t">
+        <label>信息提示</label>
+    </div>
+    <div class="tips-layer-cont">
+        <p class="tips-sec"><span class="success-icon"></span><label id="succ_tips_lable">成功成功成功成功成功成功成功成功成功成功</label></p>
+        <div class="tips-layer-btns">
+            <a href="javascript:void(0)" class="oprt-btn tips-layer-sure">确&nbsp;&nbsp;定</a>
+        </div>
+    </div>
+</div>
+<!-- 成功提示层 end -->
+</body>
+</html>

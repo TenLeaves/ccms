@@ -1,0 +1,42 @@
+<table class="list-tb" cellspacing="0" cellpadding="0" border="0">
+                    <thead>
+                        <tr>
+                            <th>项目编号</th>
+                            <th>项目类容</th>
+                            <th>申请时间</th>
+                            <th>审批状态</th>
+                        </tr>
+                    </thead>
+                    <tbody  >
+                        <tr th:each="each:${ldtoDo}">
+                            <td th:text="${each['ITEMID']}">LP2234653215</td>
+                            <td th:text="${each['ITEMNAME']}">未付款先发货</td>
+                            <td th:text="${each['ACCEPT_TIME']}">2014年5月10日 11:23:43</td>
+                            <td th:text="${'未审批'}">未审批</td> 
+                        </tr>
+                        <tr th:remove="all">
+                            <td>1</td>
+                            <td>1111111111000000</td>
+                            <td>张达开</td>
+                            <td>9000元</td>
+                        </tr>
+                        <tr th:remove="all">
+                            <td>1</td>
+                            <td>1111111111000000</td>
+                            <td>张达开</td>
+                            <td>9000元</td>
+                        </tr>
+                        <tr th:remove="all">
+                            <td>1</td>
+                            <td>1111111111000000</td>
+                            <td>张达开</td>
+                            <td>9000元</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <td colspan="4">
+                            <div th:include="pages/fragment/ajaxpager::ajaxpager"
+  th:with="ajaxPageId='lingdaoTodoTable'" th:remove="tag"></div>
+                        </td>
+                    </tfoot>
+                </table>

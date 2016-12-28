@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>库存明细查询</title>
+<link th:href="@{/static/css/base.css}" href="../static/css/base.css" rel="stylesheet" type="text/css" />
+<link th:href="@{/static/css/home.css}" href="../static/css/base.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" th:src="@{/static/js/jquery-1.8.js}" src="../js/jquery.min.js"></script> 
+<script type="text/javascript" th:src="@{/static/js/fxkg.js}" src="../js/jquery.min.js"></script> 
+    <script th:src="@{/static/js/jquery.form.min.js}"></script>
+
+</head>
+
+<body>
+<div class="w">
+	<div class="center-cont">
+		<div class="section-box undo-work">
+			<h3 class="section-title">待处理工作</h3>
+			<div class="tabs">
+				<ul class="tablist" id="tablist">
+                    <li  class="on todoCss" todoVal='1'>汇款单绑定</li>
+					<li class="todoCss" todoVal="2">印刷确认入库</li>
+				</ul>
+			</div>
+            <div id="bindPayDivId">
+    			<div class="list-box" >
+                    <from id="faxingTodoTable" method="post" th:action="@{/showFxtoDoInfo}" th:include="pages/content/fx/fxtodoFrag">
+                  
+                    </from>
+    				
+    			</div>
+    			<div class="oprt-box">
+    				<a class="oprt-btn" href="/ccms1/toOrdPayBind" target="main-content">立即处理</a>
+    			</div>
+           </div>
+            <div id="printInDivId" style="display:none;">
+    			<div class="list-box" >
+                    <from id="kuguanTodoTable" method="post" th:action="@{/showPrintTobeIn}" th:include="pages/content/kg/kgtodoFrag">
+              
+                </from>
+    				
+    			</div>
+    			<div class="oprt-box">
+    				<a class="oprt-btn" href="/ccms1/toConfirmPrint" target="main-content">立即处理</a>
+    			</div>
+           </div>
+		</div>
+		<div class="section-box work-status">
+			<h3 class="section-title">相关工作状态</h3>
+			<div class="tabs">
+				<ul class="tablist" id="tablist">
+					<li class="on relateCss" relateVal='1'>待领导审批</li>
+                    <li class="relateCss" relateVal='2'>待财务收款</li>
+                    <li class="relateCss" relateVal='3'>发票打印状态</li>
+				</ul>
+			</div>
+			<div class="list-box" id="fxrelateld">
+            <from id="fxlingdaoshenpi" method="post" th:action="@{/showFxLdVerify}" th:include="pages/content/fx/fxrelateLd">
+            </from>
+            </div>
+      
+            <div class="list-box" id="fxrelatecw" style="display:none;">
+            <from id="fxcaiwushoukuan" method="post" th:action="@{/showFxcwVerify}" th:include="pages/content/fx/fxrelateCw">
+            </from>
+            </div>
+            
+            <div class="list-box" style="display:none;" id="kgrelate">
+                <from id="kgrelateTable" method="post" th:action="@{/showTypedInvoice}" th:include="pages/content/kg/kgrelate">
+                    <!-- 库管相关  发票是否打印 -->
+                </from>
+            </div>
+			
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+.w{overflow:hidden;zoom:1;}
+.center-cont{float:left;width:600px;}
+.section-box{margin-top:15px;padding:10px 20px;border:1px solid #e3e3e3;}
+.section-title{height:24px;line-height:24px;margin-bottom:10px;padding-left:25px;background:url(../images/home_icons.png) no-repeat;font-size:14px;font-weight:bold;}
+.undo-work{background:#eff3f3;}
+.undo-work .sec-title{background-position:0 0;}
+.work-status .sec-title{background-position:0 -24px;}
+.tabs{margin-bottom:10px;border-bottom:2px solid #69c;font-size:14px;font-weight:bold;}
+.tablist{overflow:hidden;zoom:1;}
+.tablist li{cursor:pointer;float:left;width:184px;height:33px;line-height:33px;border:1px solid #e7e7e7;border-width:1px 1px 0 1px;text-align:center;background:#f7f7f7;}
+.tablist li.on{color:#fff;background:#69c;border-color:#69c;}
+.list-box{padding:15px;background:#fff;}
+.list-tb{width:100%;font-size:12px;}
+.list-tb thead th{background:#f5f5f5;padding:10px 0;text-align:center;font-weight:bold;}
+.list-tb tbody td{padding:10px 0;border-bottom:1px solid #f5f5f5;text-align:center;word-wrap:break-word;word-break:break-all;}
+.list-tb tfoot td{background:#f5f5f5;padding:7px 10px;}
+.list-tb tfoot td .paging{float:right;}
+.work-status{background:#f8ede8;}
+.work-status .tabs{border-bottom-color:#e0b8a7;}
+.work-status .tablist li{background:#f7f7f7;}
+.work-status .tablist li.on{background:#e0b8a7;border-color:#e0b8a7;}
+.oprt-box{line-height:30px;margin-top:10px;overflow:hidden;zoom:1;padding:0 15px 0 20px;text-align:right;}
+.result-text{float:left;font-size:14px;}
+.work-status .oprt-btn{background:#e0b8a7;}
+.chart-w{float:right;width:310px;padding-top:10px;padding-bottom:20px;text-align:center;}

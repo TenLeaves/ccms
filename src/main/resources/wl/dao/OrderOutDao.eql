@@ -1,0 +1,114 @@
+--[selectAllInfo]
+select DISTINCT d.DISTRIBUT_ID,d.ORDER_ID,d.ADDRESSEE_NAME,d.ADDRESSEE_PHONE,d.DISTRIBUT_ADDRESS,d.EXPORT_FLAG,d.EXPORT_TIME,d.DISTRIBUT_COUNT,d.PRODUCT_TYPE,d.STOCK_ADDRESS,d.LABEL_CONTENT
+from tf_b_distribut d,tf_b_order o,tf_b_subscribe s
+where d.STATUS='1'
+and s.SUBSCRIBE_ID=o.SUBSCRIBE_ID
+and o.ORDER_ID=d.ORDER_ID
+and ( (d.YEAR = #year# and d.MONTH <= #month#) ||   d.YEAR  < #year#)
+AND DISTRIBUT_TYPE = #myselfWay#
+-- end
+-- isNotEmpty sendWay
+     AND d.DISTRIBUT_TYPE=#sendWay#
+-- end
+-- isNotEmpty custName
+     AND d.ADDRESSEE_NAME like #custName#
+-- end
+-- isNotEmpty phone
+     AND d.ADDRESSEE_PHONE like #phone#
+-- end
+-- isNotEmpty address
+     AND d.DISTRIBUT_ADDRESS like #address#
+-- end
+-- isNotEmpty exportTime
+     AND d.EXPORT_TIME between  STR_TO_DATE(#exportTime#, '%Y-%m-%d') and date_add(#exportTime#, interval 1 day)
+-- end
+-- isNotEmpty flag
+     AND d.EXPORT_FLAG = #flag#
+-- iff flag == "1"
+and (s.SUBSCRIBE_STATE='2'
+or s.CUSTOMER_TYPE in ('2','6','7'))
+-- end
+-- iff flag == "2"
+and (s.SUBSCRIBE_STATE in ('2','3')
+or s.CUSTOMER_TYPE in ('2','6','7'))
+-- end
+order by d.ORDER_ID,d.DISTRIBUT_ID
+
+-- [selStatusDetail]
+SELECT a.DISTRIBUT_ID,a.ORDER_ID,
+a.YEAR,
+a.MONTH
+FROM tf_b_distribut a
+WHERE a.DISTRIBUT_ID = #distributId#
+and a.ORDER_ID=#orderId#
+and a.STATUS='1'
+and ( (a.YEAR = #year# and a.MONTH <= #month#) ||   a.YEAR  < #year#)
+-- isNotEmpty exportTime
+     AND a.EXPORT_TIME between  STR_TO_DATE(#exportTime#, '%Y-%m-%d') and date_add(#exportTime#, interval 1 day)
+-- end
+-- isNotEmpty flag
+     AND a.EXPORT_FLAG = #flag#
+-- end
+
+--[updateExport]
+update tf_b_distribut set EXPORT_FLAG='2',EXPORT_TIME=now(),UPDATE_TIME=now(),UPDATE_STAFF=#staffId# where ORDER_ID=#orderId# and DISTRIBUT_ID=#distributId#
+and STATUS='1'
+and ( (YEAR = #year# and MONTH <= #month#) ||   YEAR  < #year#)
+and EXPORT_FLAG='1'
+
+--[updateStock]
+update tf_m_stock set UPDATE_TIME=now(),UPDATE_STAFF=#staffId#,REMAIN_COUNT=REMAIN_COUNT-#count#,OCCUPY_AMOUNT=OCCUPY_AMOUNT-#count# where PRINT_CODE=#printCode#
+and STOCK_TYPE=#stockType#
+
+--[selectSub]
+select s.SUBSCRIBE_ID,s.CUSTOMER_TYPE 
+from tf_b_order o,tf_b_subscribe s
+where o.ORDER_ID=##
+and s.SUBSCRIBE_ID=o.SUBSCRIBE_ID
+
+--[selectFinish]
+select count(*)
+from tf_b_distribut d,tf_b_order o
+where o.ORDER_ID=d.ORDER_ID
+and d.EXPORT_FLAG='1'
+and o.SUBSCRIBE_ID=##
+
+--[updateSub]
+UPDATE tf_b_subscribe
+SET SUBSCRIBE_STATE = '3',UPDATE_TIME=now(),UPDATE_STAFF=##
+WHERE
+	SUBSCRIBE_ID = ##
+
+
+--[selectAllInfoNew]
+select DISTINCT d.DISTRIBUT_ID,d.ORDER_ID,d.ADDRESSEE_NAME,d.ADDRESSEE_PHONE,d.DISTRIBUT_ADDRESS,d.EXPORT_FLAG,d.EXPORT_TIME,
+d.DISTRIBUT_COUNT,d.PRODUCT_TYPE,d.STOCK_ADDRESS,d.LABEL_CONTENT,d.YEAR,d.MONTH
+from tf_b_distribut d,tf_b_order o,tf_b_subscribe s
+where d.STATUS='1'
+and s.SUBSCRIBE_ID=o.SUBSCRIBE_ID
+and o.ORDER_ID=d.ORDER_ID
+and ( (d.YEAR = #year# and d.MONTH <= #month#) ||   d.YEAR  < #year#)
+AND DISTRIBUT_TYPE = #myselfWay#
+-- isNotEmpty custName
+     AND d.ADDRESSEE_NAME like #custName#
+-- end
+-- isNotEmpty phone
+     AND d.ADDRESSEE_PHONE like #phone#
+-- end
+-- isNotEmpty address
+     AND d.DISTRIBUT_ADDRESS like #address#
+-- end
+-- isNotEmpty exportTime
+     AND d.EXPORT_TIME between  STR_TO_DATE(#exportTime#, '%Y-%m-%d') and date_add(#exportTime#, interval 1 day)
+-- end
+-- isNotEmpty flag
+     AND d.EXPORT_FLAG = #flag#
+-- iff flag == "1"
+and (s.SUBSCRIBE_STATE='2'
+or s.CUSTOMER_TYPE = '2')
+-- end
+-- iff flag == "2"
+and (s.SUBSCRIBE_STATE in ('2','3')
+or s.CUSTOMER_TYPE = '2')
+-- end
+order by d.ORDER_ID,d.DISTRIBUT_ID

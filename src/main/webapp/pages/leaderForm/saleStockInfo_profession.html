@@ -1,0 +1,51 @@
+<table class="list-tb" cellspacing="0" cellpadding="0" border="0" id="saleStockInfoTabl">
+<thead>
+  <tr class="bg-f5f5f5">
+    <th >2014年</th>
+    <th colspan="9">中国书法学术版</th>
+  </tr>
+  <tr class="bg-f5f5f5">
+    <th rowspan="2">期数</th>
+    <th rowspan="2">发行局</th>
+    <th colspan="6">自办发行</th>
+    <th rowspan="2">单月合计</th>
+    <th rowspan="2">月库存</th>
+  </tr>
+  <tr class="bg-f5f5f5">
+    <th>大客户</th>
+    <th>批发商</th>
+    <th>发行站</th>
+    <th>零售</th>
+    <th>赠阅</th>
+    <th>其他</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="info,rowStat:${results}">
+  
+    <td class="bg-fafafa" th:text="${info[MONTH]}">400</td>
+    <td class="faxingju" th:text="${info[FAXINGJU]}">400</td>
+    <td class="dakehu" th:text="${info[BIG_CUST]}">500</td>
+    <td class="pifashang" th:text="${info[WHOLE_SALER]}">600</td>
+    <td class="faxingzhan" th:text="${info[FAXINGZHAN]}">400</td>
+    <td class="lignshou" th:text="${info[SALER]}">500</td>
+    <td class="zengkan" th:text="${info[SEND_PROD]}">600</td>
+    <td class="yangkan" th:text="${info[SHOW_PROD]}">600</td>
+    <td>0</td>
+    <td class="kucun" th:text="${info[STOCK]}">500</td>
+    
+  </tr>
+  <tr style="font-weight:bold;font-size:14px;">
+    <td class="bg-fafafa" >总量合计</td>
+    <td id="faxingjuTotal">0</td>
+    <td id="dakehuTotal">0</td>
+    <td id="pifashangTotal">0</td>
+    <td id="faxingzhanTotal">0</td>
+    <td id="lignshouTotal">0</td>
+    <td id="zengkanTotal">0</td>
+    <td >0</td>
+    <td id="allInAll">0</td>
+    <td id="stockAll">500</td>
+  </tr>
+  </tbody>
+</table>

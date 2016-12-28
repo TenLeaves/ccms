@@ -1,0 +1,33 @@
+.w200{width:200px;}
+.w80{width:80px;}
+.w168{width:168px;}
+.w124{width:124px;}
+.tabs{margin:30px 35px 10px 0;border-bottom:2px solid #69c;font-size:14px;font-weight:bold;}
+.tablist{overflow:hidden;}
+.tablist li{cursor:pointer;float:left;width:150px;height:33px;line-height:33px;border:1px solid #e7e7e7;border-width:1px 1px 0 1px;text-align:center;background:#f7f7f7;}
+.tablist li.on{color:#fff;background:#69c;border-color:#69c;}
+.sec-box{height:1035px;padding:20px 0;margin:0 35px 0 0;border:1px solid #d3d3d3;background:#eff3f3;overflow-y: auto;}
+.oprt-table{width:850px;margin:0 0 0 20px;font-size:14px;}
+.oprt-table th,.oprt-table td{padding:10px 0;}
+.oprt-table th{width:135px;line-height:32px;padding-right:5px;vertical-align:top;text-align:right;}
+.sec-title{line-height:35px;margin:0 20px 15px 40px;border-bottom:1px dashed #ccc;font-size:14px;font-weight:bold;}
+.sel-auto{width:210px;}
+.mrg-r-15{margin-right:15px;}
+.mrg-t-30{margin-top:30px;}
+.date{width:155px;background:#fff url(../images/date.png) no-repeat 150px center;}
+.apply-detail{width:640px;background:#fff;}
+.apply-detail h4{font-weight:bold;margin-bottom:10px;}
+.apply-detail ul{overflow:hidden;}
+.apply-detail li{float:left;width:320px;line-height:20px;}
+.apply-detail li label,.apply-detail li span{display:inline-block;vertical-align:middle;}
+.apply-list{display:inline-block;*display:inline;zoom:1;width:215px;margin:0 10px 10px 0;vertical-align:top;}
+.apply-list-on{position:relative;}
+.apply-detail{display:;left:0;width:640px;padding:10px 20px;*padding-bottom:20px;overflow:hidden;zoom:1;background:#fff;}
+.arrow{display:none;position:absolute;width:0;height:0;margin:-8px 0 0 100px;font-size:0;border-width:12px 6px;border-color:transparent transparent #fff transparent;border-style:solid;_border-color:tomato tomato #fff tomato;_filter:chroma(color=tomato);}
+.apply-list-on .apply-detail,.apply-list-on .arrow{display:block;}
+.apply-list .sel-box{display:block;float:none;}
+
+.list-box{margin:0 15px 25px 40px;padding:15px;font-size:14px;}
+.list-box p{float:left;width:250px;overflow:hidden;}
+.list-box p label,.list-box p span{float:left;line-height:32px;}
+.list-box p label{font-weight:bold;}

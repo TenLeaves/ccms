@@ -1,0 +1,37 @@
+.w300{width:300px;}
+.w80{width:80px;}
+.w168{width:168px;}
+.w124{width:124px;}
+.w145{width:145px;}
+.tabs{margin:30px 35px 10px 0;border-bottom:2px solid #69c;font-size:14px;font-weight:bold;}
+.tablist{overflow:hidden;}
+.tablist li{cursor:pointer;float:left;width:150px;height:33px;line-height:33px;border:1px solid #e7e7e7;border-width:1px 1px 0 1px;text-align:center;background:#f7f7f7;}
+.tablist li.on{color:#fff;background:#69c;border-color:#69c;}
+.sec-box{height:1035px;padding:20px 0;margin:0 35px 0 0;border:1px solid #d3d3d3;background:#eff3f3;overflow-y: auto;}
+.oprt-table{width:850px;margin:0 0 0 20px;font-size:14px;}
+.oprt-table th,.oprt-table td{padding:10px 0;}
+.oprt-table th{width:120px;line-height:32px;padding-right:5px;vertical-align:top;text-align:right;}
+.star{color:#a40000;margin-right:5px;}
+.hinge{display:inline-block;width:30px;line-height:32px;font-size:14px;vertical-align:middle;text-align:center;}
+.sec-title{line-height:35px;margin:0 20px 15px 40px;border-bottom:1px dashed #ccc;font-size:14px;font-weight:bold;}
+.list-box{margin:0 15px 0 40px;padding:15px;background:#fff;overflow-x:auto;}
+.list-tb{width:1500px;font-size:12px;}
+.list-tb thead th{background:#f5f5f5;padding:10px 0;text-align:center;font-weight:bold;}
+.list-tb tbody td{padding:15px 0;border-bottom:1px solid #f5f5f5;text-align:center;word-wrap:break-word;word-break:break-all;}
+.list-tb tfoot td{background:#f5f5f5;padding:7px 10px;}
+.list-tb tfoot td .paging{float:right;}
+.add-btn{margin-right:5px;}
+.date{width:124px;background:#fff url(../images/date.png) no-repeat 118px center;}
+.icon1,.icon2,.icon3,.icon4{display:inline-block;width:16px;height:16px;margin-right:6px;background:url(../images/status.png) no-repeat;vertical-align:middle;}
+.icon1{background-position:0 0;}
+.icon2{background-position:0 -16px;}
+.icon3{background-position:0 -32px;}
+.icon4{background-position:0 -48px;}
+.status{display:inline-block;vertical-align:middle;line-height:16px;}
+
+.list-box1{margin:0 15px 0 40px;padding:15px;background:#fff;overflow-x:auto;}
+.list-tb1{width:1200px;font-size:12px;}
+.list-tb1 thead th{background:#f5f5f5;padding:10px 0;text-align:center;font-weight:bold;}
+.list-tb1 tbody td{padding:15px 0;border-bottom:1px solid #f5f5f5;text-align:center;word-wrap:break-word;word-break:break-all;}
+.list-tb1 tfoot td{background:#f5f5f5;padding:7px 10px;}
+.list-tb1 tfoot td .paging{float:right;}

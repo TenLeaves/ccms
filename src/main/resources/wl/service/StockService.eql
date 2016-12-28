@@ -1,0 +1,25 @@
+-- [selStock]
+SELECT
+a.PRODUCT_TYPE productType,
+b.STOCK_TYPE stockType,
+CASE b.STOCK_TYPE  WHEN '1' THEN '杂志社' WHEN '2' THEN '邮局'  WHEN '3' THEN '邮局' ELSE '未定义' END stockName,
+a.YEAR ye,
+a.MONTH mo,
+b.REMAIN_COUNT remainCount,
+date_format(b.UPDATE_TIME,'%Y-%c-%d %H:%i:%s') updateTime
+ FROM tf_m_print_page a, tf_m_stock b
+WHERE a.PRINT_CODE = b.PRINT_CODE
+-- iff productType != "0"
+   and a.PRODUCT_TYPE = #productType#
+-- iff year != "0"
+   and a.YEAR = #year#
+-- iff stockType != "0"
+   and b.STOCK_TYPE = #stockType#
+-- end
+-- isNotEmpty monthlist
+   AND a.MONTH in 
+-- for item=monthId index=seq collection=monthlist open=( separator=, close=)
+   #monthId#
+-- end
+-- end
+

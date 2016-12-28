@@ -1,0 +1,30 @@
+--[selectPrint]
+select TOTAL_COUNT,PRODUCT_TYPE,MONTH
+from tf_m_print_page
+where YEAR=##
+order by MONTH,PRODUCT_TYPE
+
+--[selectOrder]
+select t.PRODUCT_TYPE,sum(t.PRODUCT_PER_COUNT) PRODUCT_PER_COUNT,t.MONTH
+from 
+(select o.PRODUCT_PER_COUNT,d.PRODUCT_TYPE,d.MONTH
+from tf_b_distribut d,tf_b_order o
+where d.ORDER_ID=o.ORDER_ID
+and d.YEAR=##
+group by d.MONTH,d.PRODUCT_TYPE,o.ORDER_ID)t
+group by t.MONTH,t.PRODUCT_TYPE
+order by t.MONTH,t.PRODUCT_TYPE
+
+--[selectDistribut]
+select d.PRODUCT_TYPE,d.MONTH,sum(d.DISTRIBUT_COUNT) DISTRIBUT_COUNT
+from tf_b_distribut d
+where d.YEAR=##
+and d.EXPORT_FLAG='2'
+group by d.MONTH,d.PRODUCT_TYPE
+
+--[selectStock]
+select substring(PRINT_CODE,5,2) month,substring(PRINT_CODE,7,1) productType,sum(REMAIN_COUNT) REMAIN_COUNT
+from tf_m_stock
+where substring(PRINT_CODE,1,4)=##
+group by substring(PRINT_CODE,5,2),substring(PRINT_CODE,7,1)
+order by substring(PRINT_CODE,5,2),substring(PRINT_CODE,7,1)

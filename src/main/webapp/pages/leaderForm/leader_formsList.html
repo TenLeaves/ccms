@@ -1,0 +1,36 @@
+				<table class="list-tb" cellspacing="0" cellpadding="0" border="0"
+				th:if="${results != null and not #lists.isEmpty(results)}" id="tal">
+					<thead>
+						<tr class="bg-f5f5f5">
+							<th id="userSelectYearId">2014年</th>
+							<th colspan="2">印刷数</th>
+							<th colspan="2">征订数</th>
+							<th colspan="2">配送数</th>
+							<th colspan="2" class="bdr-r-none">库存数</th>
+						</tr>
+						<tr class="bg-fafafa">
+							<th>月份</th>
+							<th>专业版</th>
+							<th>普及版</th>
+							<th>专业版</th>
+							<th>普及版</th>
+							<th>专业版</th>
+							<th>普及版</th>
+							<th>专业版</th>
+							<th class="bdr-r-none">普及版</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="cust,rowStat : ${results}">
+							<td class="bg-fafafa" th:text="${cust[month]}"></td>
+							<td th:text="${cust[totalCount1]}"></td>
+							<td th:text="${cust[totalCount2]}"></td>
+							<td th:text="${cust[orderCount1]}"></td>
+							<td th:text="${cust[orderCount2]}"></td>
+							<td th:text="${cust[distributCount1]}"></td>
+							<td th:text="${cust[distributCount2]}"></td>
+							<td th:text="${cust[remainCount1]}"></td>
+							<td class="bdr-r-none" th:text="${cust[remainCount2]}"></td>
+						</tr>
+					</tbody>
+				</table>

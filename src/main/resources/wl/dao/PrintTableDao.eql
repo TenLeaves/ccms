@@ -1,0 +1,149 @@
+-- [selectTableInfo]
+select sum(t.PRODUCT_PER_COUNT) num,t.CUSTOMER_TYPE
+from
+(select o.PRODUCT_PER_COUNT,s.CUSTOMER_TYPE
+from tf_b_distribut d,tf_b_order o,tf_b_subscribe s
+where s.SUBSCRIBE_ID=o.SUBSCRIBE_ID
+and o.ORDER_ID=d.ORDER_ID
+and d.YEAR = #year#
+and d.MONTH = #month#
+and s.CUSTOMER_TYPE in ('1','3','4','5')
+and d.PRODUCT_TYPE=#type#
+and s.SUBSCRIBE_STATE='2'
+group by s.SUBSCRIBE_ID) t
+group by t.CUSTOMER_TYPE
+-- [selectCustomer]
+select CUSTOMER_ID,CUSTOMER_NAME
+from tf_m_customer
+where CUSTOMER_TYPE='2'
+-- [selectPage]
+select PRINT_ID,PRINT_CODE,RETAIL_COUNT,GIVE_COUNT
+from tf_m_print_page
+where YEAR=#year#
+and MONTH=#month#
+and PRODUCT_TYPE=#type#
+-- [selectPageDetail]
+select DISTINCT d.DISTRIBUT_ADDRESS,d.DISTRIBUT_COUNT,d.DISTRIBUT_TYPE,s.CUSTOMER_TYPE
+from tf_b_distribut d,tf_b_order o,tf_b_subscribe s
+where s.SUBSCRIBE_ID=o.SUBSCRIBE_ID
+and o.ORDER_ID=d.ORDER_ID
+and d.YEAR=#year#
+and d.MONTH=#month#
+and d.PRODUCT_TYPE=#type#
+and d.PRINT_FLAG='1'
+-- [insertPrintPage]
+ INSERT INTO tf_m_print_page (
+	PRINT_ID,
+	PRINT_CODE,
+	PRODUCT_TYPE,
+	YEAR,
+	MONTH,
+	CUSTOMER_COUNT,
+	AGENT_COUNT,
+	RETAIL_COUNT,
+	GIVE_COUNT,
+	BJPAPER_COUNT,
+        INTERBOOK_COUNT,
+	RESERVE_COUNT,
+	TOTAL_COUNT,
+	UPDATE_STAFF,
+	ACCEPT_TIME,
+	APPROVE_STATUS,
+	APPROVE_STAFF,
+	APPROVE_TIME,
+        UPDATE_TIME
+)
+VALUES
+(#printId#,
+#printCode#,
+#type#,
+#year#,
+#month#,
+#cusCount#,
+#agentCount#,
+#retailCount#,
+#giftCount#,
+#bjPaperCount#,
+#interBookCount#,
+#reserveCount#,
+#total#,
+#staffId#,
+now(),
+'2',
+'zhupe',
+now(),
+now())
+-- [insertCustPage]
+ INSERT INTO tf_b_customer_page (
+	PRINT_ID,
+	CUSTOMER_ID,
+	COUNT
+)
+VALUES
+(#printId#,
+#custId#,
+#count#)
+-- [seq]
+ select func_nextval(##)
+ 
+--[selectPrintApply]
+SELECT 
+p.PRINT_CODE,
+if(p.PRODUCT_TYPE='1','专业版','普及版') PRODUCT_TYPE,
+p.CUSTOMER_COUNT,
+p.AGENT_COUNT,
+p.RETAIL_COUNT,
+p.GIVE_COUNT,
+p.BJPAPER_COUNT,
+p.RESERVE_COUNT,
+p.TOTAL_COUNT,
+if(p.STATUS='1','未入库','已入库') STATUS_DESC,
+p.STATUS,
+p.MONTH,
+p.YEAR,
+p.APPROVE_STATUS 
+FROM  tf_m_print_page p 
+WHERE 1=1
+-- isNotEmpty YEAR
+and p.YEAR=#YEAR#
+--end
+-- isNotEmpty MONTH
+AND p.MONTH=#MONTH#
+--end
+--if prodType != "0"
+AND p.PRODUCT_TYPE=#prodType#
+--end 
+
+--[selectPrintByPrintCode]
+select
+p.PRINT_CODE,
+p.CUSTOMER_COUNT,
+p.AGENT_COUNT,
+p.RETAIL_COUNT,
+p.GIVE_COUNT,
+p.BJPAPER_COUNT,
+p.RESERVE_COUNT,
+p.INTERBOOK_COUNT,
+p.TOTAL_COUNT,
+p.PRODUCT_TYPE,
+p.MONTH,
+p.YEAR
+FROM  tf_m_print_page p 
+where 
+p.PRINT_CODE=##
+
+--[updatePrintTblByPrintCode]
+UPDATE tf_m_print_page p
+SET p.CUSTOMER_COUNT=#CUSTOMER_COUNT#,
+p.AGENT_COUNT=#AGENT_COUNT#,
+p.RETAIL_COUNT=#RETAIL_COUNT#,
+p.GIVE_COUNT=#GIVE_COUNT#,
+p.BJPAPER_COUNT=#BJPAPER_COUNT#,
+p.RESERVE_COUNT=#RESERVE_COUNT#,
+p.TOTAL_COUNT=#TOTAL_COUNT#,
+p.INTERBOOK_COUNT=#INTERBOOK_COUNT#
+WHERE p.PRINT_CODE=#PRINT_CODE#
+
+
+
+

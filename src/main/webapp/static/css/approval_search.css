@@ -1,0 +1,16 @@
+.w300{width:300px;}
+.w124{width:124px;}
+.sec-box{height:1110px;padding:20px 0;margin:0 35px 0 0;border:1px solid #d3d3d3;background:#eff3f3;overflow-y: auto;}
+.oprt-table{width:850px;margin:0 0 0 20px;font-size:14px;}
+.oprt-table .sel-box{float:none;display:inline-block;}
+.oprt-table .sel-long{*margin-right:23px;}
+.oprt-table th,.oprt-table td{padding:10px 0;}
+.oprt-table th{width:120px;line-height:32px;padding-right:5px;vertical-align:top;text-align:right;}
+.sec-title{line-height:35px;margin:0 20px 15px 40px;border-bottom:1px dashed #ccc;font-size:14px;font-weight:bold;}
+.list-box{margin:0 15px 0 40px;padding:15px;background:#fff;}
+.list-tb{width:100%;font-size:12px;}
+.list-tb thead th{background:#f5f5f5;padding:10px 0;text-align:center;}
+.list-tb tbody td{line-height:18px;padding:15px 0;border-bottom:1px solid #f5f5f5;text-align:center;word-wrap:break-word;word-break:break-all;}
+.list-tb tfoot td{background:#f5f5f5;padding:7px 10px;}
+.list-tb tfoot td .paging{float:right;}
+.detail-btn{margin:0 5px;}

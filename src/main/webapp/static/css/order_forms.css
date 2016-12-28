@@ -1,0 +1,29 @@
+.w145{width:145px;}
+.w300{width:300px;}
+.tabs{margin:30px 35px 10px 0;border-bottom:2px solid #69c;font-size:14px;font-weight:bold;}
+.tablist{overflow:hidden;zoom:1;}
+.tablist li{cursor:pointer;float:left;width:150px;height:33px;line-height:33px;border:1px solid #e7e7e7;border-width:1px 1px 0 1px;text-align:center;background:#f7f7f7;}
+.tablist li.on{color:#fff;background:#69c;border-color:#69c;}
+.sec-box{height:1035px;padding:20px 0;margin:0 35px 0 0;border:1px solid #d3d3d3;background:#eff3f3;overflow-y:auto; }
+.oprt-table{width:850px;margin:0 0 0 20px;font-size:14px;}
+.oprt-table th,.oprt-table td{padding:10px 0;}
+.oprt-table th{width:120px;line-height:32px;padding-right:5px;vertical-align:top;text-align:right;}
+.star{color:#a40000;margin-right:5px;}
+.hinge{display:inline-block;width:30px;line-height:32px;font-size:14px;vertical-align:middle;text-align:center;}
+.sec-title{line-height:35px;margin:0 20px 15px 40px;border-bottom:1px dashed #ccc;font-size:14px;font-weight:bold;}
+.list-box{margin:0 15px 0 40px;padding:15px;background:#fff;overflow-x:auto;}
+.list-tb{width:100%;font-size:12px;}
+.list-tb thead th{background:#f5f5f5;padding:10px 0;border:1px dashed #ccc;border-width:0 1px 1px 0;text-align:center;font-weight:bold;}
+.list-tb tbody td{padding:15px 0;border:1px dashed #ccc;border-width:0 1px 1px 0;text-align:center;word-wrap:break-word;word-break:break-all;}
+.list-tb thead th.bdr-r-none,.list-tb tbody td.bdr-r-none{border-right:none;}
+.list-tb-fanace{width:1500px;font-size:12px;}
+.list-tb-fanace thead th{background:#f5f5f5;padding:10px 0;border:1px dashed #ccc;border-width:0 1px 1px 0;text-align:center;font-weight:bold;}
+.list-tb-fanace tbody td{padding:15px 0;border:1px dashed #ccc;border-width:0 1px 1px 0;text-align:center;word-wrap:break-word;word-break:break-all;}
+.list-tb-fanace thead th.bdr-r-none,.list-tb tbody td.bdr-r-none{border-right:none;}
+.paging-box{margin-top:10px;background:#f5f5f5;padding:7px 10px;overflow:hidden;zoom:1;}
+.paging-box .paging{float:right;}
+.date{width:124px;background:#fff url(../images/date.png) no-repeat 118px center;}
+.bg-f5f5f5{background:#f5f5f5;}
+.bg-fafafa{background:#fafafa;}
+.result-total{margin:0 20px 15px 40px;font-size:12px;font-weight:bold;}
+.result-total span{display:inline-block;vertical-align:middle;margin-right:45px;}

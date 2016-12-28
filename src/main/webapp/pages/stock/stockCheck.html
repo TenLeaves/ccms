@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>库存明细查询</title>
+<link rel="stylesheet" type="text/css" href="../css/base.css" th:href="@{/static/css/base.css}"/>
+<link rel="stylesheet" type="text/css" href="../css/store_detail_search.css" th:href="@{/static/css/store_detail_search.css}"/>
+<script type="text/javascript" src="../js/jquery.min.js" th:src="@{/static/js/jquery.min.js}"></script>
+<script src="../static/js/jquery-1.8.js"  th:src="@{/static/js/jquery-1.8.js}"></script>
+<script src="../static/js/jquery.form.min.js" th:src="@{/static/js/jquery.form.min.js}"></script>
+<script type="text/javascript" src="../js/common.js" th:src="@{/static/js/common.js}"></script>
+<script src="../static/js/jquery.json-2.4.js" th:src="@{/static/js/jquery.json-2.4.js}"></script>
+<script src="../static/js/jquery.timers-1.2.js" th:src="@{/static/js/jquery.timers-1.2.js}"></script>
+<script src="../static/js/jq-overlay.js" th:src="@{/static/js/jq-overlay.js}"></script>
+<script src="../static/js/stockCheck.js" th:src="@{/static/js/stockCheck.js}"></script>
+<script language="javascript" type="text/javascript" src="date/WdatePicker.js" th:src="@{/static/js/date/WdatePicker.js}"></script>
+</head>
+
+<body>
+<div class="w">
+	<div class="sec-box">
+		<div class="cont-sec">
+			<h3 class="sec-title" id="TOP">查询条件</h3>
+			<table class="oprt-table" cellspacing="0" cellpadding="0" border="0">
+				<tr>
+					<th>选择刊物：</th>
+					<td>
+						<span class="sel-box sel-long sel-box-on" id="productType0">所有</span>
+						<span class="sel-box sel-long" id="productType1">专业版</span>
+						<span class="sel-box sel-long" id="productType2">普及版</span>
+					</td>
+				</tr>			
+				<tr>
+					<th>选择期刊：</th>
+					<td class="paper-years">
+						<div class="all-year sel-all all-year-on">
+							<input type="text" class="ipt-style date" onclick="WdatePicker({dateFmt:'yyyy'})" id="updateTime" readonly="readonly" onchange="changeDate()"/>
+						</div>
+						<div class="all-year all-year-on" style="display: none;" id="changeYear">
+							<span class="sel-box sel-box-on" id="year">2010年</span>
+							<i class="arrow"></i>
+							<div class="paper-monthes" style="left: -180px;">
+								<span><input type="checkbox" class="check-style" name="month" value="1"/><label>1月刊</label></span>
+								<span><input type="checkbox" class="check-style" name="month" value="2"/><label>2月刊</label></span>
+								<span><input type="checkbox" class="check-style" name="month" value="3"/><label>3月刊</label></span>
+								<span><input type="checkbox" class="check-style" name="month" value="4"/><label>4月刊</label></span>
+								<span><input type="checkbox" class="check-style" name="month" value="5"/><label>5月刊</label></span>
+								<span><input type="checkbox" class="check-style" name="month" value="6"/><label>6月刊</label></span>
+								<span><input type="checkbox" class="check-style" name="month" value="7" /><label>7月刊</label></span>
+								<span><input type="checkbox" class="check-style" name="month" value="8"/><label>8月刊</label></span>
+								<span><input type="checkbox" class="check-style" name="month" value="9"/><label>9月刊</label></span>
+								<span><input type="checkbox" class="check-style" name="month" value="10"/><label>10月刊</label></span>
+								<span><input type="checkbox" class="check-style" name="month" value="11"/><label>11月刊</label></span>
+								<span><input type="checkbox" class="check-style" name="month" value="12"/><label>12月刊</label></span>
+								<span><input type="checkbox" class="check-style" name="month" value="13"/><label>合刊</label></span>
+							</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th>选择仓库：</th>
+					<td>
+						<span class="sel-box sel-long sel-box-on" id="stockType0">所有</span>
+						<span class="sel-box sel-long" id="stockType1">杂志社</span>
+						<span class="sel-box sel-long" id="stockType2">邮局</span>
+						<span class="sel-box sel-long" id="stockType3">印刷厂</span>
+					</td>
+				</tr>
+				<tr>
+					<th>&nbsp;</th>
+					<td>
+						<a href="#RESULT" class="oprt-btn" onclick="sel();">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="cont-sec">
+			<h3 class="sec-title" id="RESULT">查询结果</h3>
+			<div class="list-box">
+				<form action="#" th:action="@{/selStock}"  method="post" th:include="pages/stock/stocklist" id="stockList">
+            	</form>
+			</div>
+		</div>
+		<div style="padding-left:40px;margin-top:15px;font-size: 12px;">
+        	<a href="#TOP" style="color: blue;">返回顶部</a>
+       </div>
+	</div>
+</div>
+</body>
+</html>

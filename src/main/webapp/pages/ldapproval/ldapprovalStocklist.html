@@ -1,0 +1,29 @@
+				<table class="list-tb" cellspacing="0" cellpadding="0" border="0"
+				th:if="${results != null and not #lists.isEmpty(results)}" id="tal">
+					<thead>
+					<tr>
+						<th style="display: none;"></th>
+						<th width="140">申请类型</th>
+						<th width="200">审批</th>
+						<th width="160">提交申请人</th>
+						<th width="160">提交申请时间</th>
+						<th>操作</th>
+					</tr>
+					</thead>
+					<tbody>
+						<tr th:each="cust,rowStat : ${results}">
+							<td th:text="${cust[key]}" style="display: none;"></td>
+							<td th:text="${cust[stateName]}">未付款先发货</td>
+							<td>
+								<p><u th:text="${cust[detail]}">山西武警中队王中光申请先发货 </u>
+								<a href="javascript:void(0);" class="c36c detail-btn" onclick="showDetail(this)">[详情...]</a></p>
+                        		<p th:text="${cust[count]}">申请原因：上级款项末到位</p></td>
+							<td th:text="${cust[staffId]}">某某某</td>
+							<td th:text="${cust[updateTime]}">2014-04-15</td>
+							<td>
+								<a href="javascript:void(0);" class="c69c fb no-pass-btn" onclick="appError(this)">不通过</a>
+								<a href="javascript:void(0);" class="c69c fb pass-btn" onclick="appSucc1(this)">通过</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>

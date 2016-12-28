@@ -1,0 +1,65 @@
+<div class="cont-sec">
+                <h3 class="sec-title">查询结果</h3>
+                <div class="list-box">
+                    
+                    <table class="list-thead" cellspacing="0" cellpadding="0" border="0">
+                        <tr>
+                            <td class="hidden"></td>
+                            <td class="hidden"></td>
+                            <td class="hidden"></td>
+                            <td class="hidden"></td>
+                            <td class="hidden"></td>
+                            <td class="hidden"></td>
+                            <td class="hidden"></td>
+                            <th width="200">订购单位</th>
+                            <th width="100">单位联系人</th>
+                            <th width="100">客户类别</th>
+                            <th width="110">联系人手机号</th>
+                            <th width="120">更新时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </table>
+                    <div class="list-tb-w">
+                        <table class="list-tb" cellspacing="0" cellpadding="0" border="0" th:if="${results != null and not #lists.isEmpty(results)}" >
+                            <tr th:each="cust,rowStat : ${results}">
+                                <td  style="display:none" th:text= "${cust.custId}"  />
+                                <td  style="display:none" th:text= "${cust.custType}" />
+                                <td  style="display:none" th:text= "${cust.discount}" />
+                                <td  style="display:none" th:text= "${cust.fixedPhone}" />
+                                <td  style="display:none" th:text= "${cust.contactName}" />
+                                <td  style="display:none" th:text= "${cust.contactPhone}" />
+                                <td  style="display:none" th:text= "${cust.remark}" />
+                                <td width="200" th:text="${cust.complany}">金融街联通大厦物资采购部</td>
+                                <td width="100" th:text="${cust.name}">姚</td>
+                                <td width="100" th:text="${cust.custTypeDes}">大客户</td>
+                                <td width="110" th:text="${cust.phone}">18567678981</td>
+                                <td width="120" th:text="${cust.updateTime}">2012-9-12</td>
+                                <td>
+                                    <a href="javascript:void(0);" class="c69c fb detail-btn" onclick="showDetails('customer-layer', 'bgOver',this)">详情</a>
+                                    <a href="javascript:void(0);" class="c69c fb detail-btn" onclick="showModify('customer-edit', 'bgOver', this)">修改</a>
+                                    <a href="javascript:void(0);" class="c69c fb edit-btn" onclick="showRemove(this)" style="color:red">删除</a>
+                                </td>
+                            </tr>
+                            
+                            <tr th:remove="all">
+                                <td width="200">亚信联创科技南京有限公</td>
+                                <td width="100">张1111</td>
+                                <td width="100">大客户</td>
+                                <td width="110">18500000001</td>
+                                <td width="120">2014-4-04 14:53:42</td>
+                                <td>
+                                    <a href="javascript:void(0);" class="c69c fb detail-btn">详情</a>
+                                    <a href="javascript:void(0);" class="c69c fb edit-btn">修改</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+<div class="list-box">
+<div th:include="pages/fragment/ajaxpager::ajaxpager"
+  th:with="ajaxPageId='pagesList'" th:remove="tag"></div>
+</div>
+
+

@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+ <head> 
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+  <title>中国书法杂志社信息管理系统
+  
+  </title>
+  <link th:href="@{/static/images/title.ico}" rel="SHORTCUT ICON" />
+  <link th:href="@{/static/css/com.css}" rel="stylesheet" type="text/css" /> 
+  <link th:href="@{/static/css/login.css}" rel="stylesheet" type="text/css" /> 
+  <script type="text/javascript" th:src="@{/static/js/jquery-1.8.js}"></script>
+  <script type="text/javascript" th:src="@{/static/js/login.js}"></script>
+  <script>
+  function toTop(){
+    if(window != top){  
+            top.location.href = location.href;   
+        }
+  }
+          
+  </script>
+ </head> 
+ <body onload="toTop();"> 
+  <div class="box"> 
+   <div class="login"> 
+    <form action="#" method="post" th:object="${logUser}" th:action="@{/login}" onsubmit="return checkInfo()"> 
+     <ul id="oul"> 
+      <li><span class="name"></span><input type="text" th:field="*{staff_id}" placeholder="请输入用户名" id="username"/></li> 
+      <li><span class="pwd"></span><input type="password" th:field="*{password}" placeholder="请输入密码" /></li> 
+     </ul> 
+     <div id="check" th:if="${passErrorTimes&gt;=3}"> 
+      <span class="reg"></span> 
+      <input type="text"  class="reg1" th:field="*{checkcode}" onblur="num_check()" id="num_reg"/> 
+      <img th:src="@{/checkcode}" id="checkcodeImage" onclick="changeCode();"/>
+      <a href="#" style="color:blue;" onclick="changeCode();">换一张</a> 
+     </div> 
+     <input type="submit" value="" class="btn" id="btn" />
+     <p id="errorInfo" style="color:red;" th:text="${errorInfo}"></p> 
+    </form> 
+   </div> 
+  </div> 
+  <div class="footer"> 
+   <p>WWW.ZHONGGUOSHUFA.COM</p> 
+   <p class="p1">Copright &copy; 2006-20013 京ICP证130164号</p> 
+  </div>   
+ </body>
+</html>

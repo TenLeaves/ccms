@@ -1,0 +1,57 @@
+--[selectSubInfo]
+select DISTINCT s.SUBSCRIBE_ID,s.COMPANY,s.CUSTOMER_NAME,s.TOTAL_COUNT,s.CUSTOMER_TYPE,
+SUM(d.DISTRIBUT_COUNT) num,s.ACCEPT_TIME,s.SUBSCRIBE_STATE,s.FIRST_SEND,s.TOTAL_MONEY
+from tf_b_distribut d,tf_b_order o,tf_b_subscribe s
+where s.SUBSCRIBE_ID=o.SUBSCRIBE_ID
+and o.ORDER_ID=d.ORDER_ID
+-- iff staffRight == "0"
+and s.ACCEPT_STAFF=#staff_id#
+-- end
+-- isNotEmpty orderSeq
+     AND s.SUBSCRIBE_ID like #orderSeq#
+-- end
+-- isNotEmpty custName
+     AND s.CUSTOMER_NAME like #custName#
+-- end
+-- isNotEmpty address
+     AND s.COMPANY like #address#
+-- end
+-- isNotEmpty startTime
+ and  s.ACCEPT_TIME > STR_TO_DATE(#startTime#, '%Y-%m-%d') 
+-- end
+-- isNotEmpty endTime
+ and  s.ACCEPT_TIME < date_add(#endTime#, interval 1 day)
+-- end
+-- if subType == "3"
+and s.SUBSCRIBE_STATE='1'
+and ((s.FIRST_SEND='1' and s.CUSTOMER_TYPE <> '2') 
+or s.CUSTOMER_TYPE in ('4','5')
+or s.BEFORE_INVOICE='1')
+-- else if subType == "4"
+and s.SUBSCRIBE_STATE='3'
+-- else if subType == "1"
+and s.SUBSCRIBE_STATE='1'
+and s.FIRST_SEND='2'
+and s.BEFORE_INVOICE='2'
+and s.CUSTOMER_TYPE in ('1','2','3','6','7')
+-- else if subType == "2"
+and s.SUBSCRIBE_STATE='2'
+-- end
+group by s.SUBSCRIBE_ID
+order by s.UPDATE_TIME desc
+
+--[deleteSubscrible]
+DELETE FROM TF_B_SUBSCRIBE  WHERE SUBSCRIBE_ID=#SUBSCRIBE_ID#
+
+--[deleteChildOrder]
+DELETE FROM tf_b_order  WHERE SUBSCRIBE_ID=#SUBSCRIBE_ID#
+
+--[deleteDistribute]
+DELETE FROM TF_B_DISTRIBUT  
+WHERE ORDER_ID IN 
+  (SELECT  O.ORDER_ID 
+     FROM  TF_B_ORDER O,
+          TF_B_SUBSCRIBE S 
+     WHERE O.SUBSCRIBE_ID = S.SUBSCRIBE_ID 
+      AND S.SUBSCRIBE_ID = #SUBSCRIBE_ID#
+  )

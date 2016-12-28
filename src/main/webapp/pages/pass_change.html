@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>密码修改</title>
+<link rel="stylesheet" th:href="@{/static/css/base.css}" href="../css/base.css" /> 
+  <link rel="stylesheet" type="text/css" th:href="@{/static/css/order_input.css}" href="../css/order_input.css" /> 
+  <script type="text/javascript" th:src="@{/static/js/jquery-1.8.js}" src="../js/jquery.min.js"></script> 
+  <script type="text/javascript" th:src="@{/static/js/passChange.js}" src="../js/jquery.min.js"></script> 
+  <script type="text/javascript" th:src="@{/static/js/common.js}" src="../js/jquery.min.js"></script> 
+
+</head>
+
+<body>
+<div class="w">
+	
+	<div class="sec-box">
+		<div id="process0" class="processing">
+			<table class="oprt-table" cellspacing="0" cellpadding="0" border="0">
+				<tr>
+					<th><em class="star">*</em>原密码：</th>
+					<td><input type="text" id="prePassId" class="ipt-style w300" /></td>
+				</tr>
+				<tr>
+					<th><em class="star">*</em>新密码：</th>
+					<td><input type="password" id="newPassId" class="ipt-style w300" /></td>
+				</tr>
+				<tr>
+					<th><em class="star">*</em>再次输入新密码：</th>
+					<td><input type="password" id="passconfirm" class="ipt-style w300" /></td>
+				</tr>
+				<tr>
+					<th>&nbsp;</th>
+					<td>
+						<a id="next-step1" href="javascript:void(0);" class="blue-btn next-step" onclick="changePass();">修改</a>
+						<a id="exitBtn" href="javascript:void(0);" style="display:none;" class="blue-btn next-step" onclick="closeThisWin();">关闭</a>
+                        <span style="color:red;display:none;" id="errorId"></span>
+					</td>
+				</tr>
+			</table>
+		</div>
+    </div>
+    </div>
+	<div id="succ_tips_layer" class="tips-layer" style="top:220px;left:300px;">
+    <div class="tips-layer-t">
+        <label>信息提示</label>
+    </div>
+    <div class="tips-layer-cont">
+        <p class="tips-sec"><span class="success-icon"></span><label id="succ_tips_lable">成功成功成功成功成功成功成功成功成功成功</label></p>
+        <div class="tips-layer-btns">
+            <a href="javascript:void(0)" class="oprt-btn tips-layer-sure">确&nbsp;&nbsp;定</a>
+        </div>
+    </div>
+</div>
+<!-- 成功提示层 end -->	
+</body>
+</html>

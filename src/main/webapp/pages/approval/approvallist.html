@@ -1,0 +1,34 @@
+				<table class="list-tb" cellspacing="0" cellpadding="0" border="0"
+				th:if="${results != null and not #lists.isEmpty(results)}" id="tal">
+					<thead>
+						<tr>
+							<th style="display: none;"></th>
+							<th width="120">审批类型</th>
+							<th width="250">审批事项</th>
+							<th width="100">提交申请人</th>
+							<th width="120">提交申请时间</th>
+							<th width="80">审批状态</th>
+							<th>领导审批时间</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="cust,rowStat : ${results}">
+							<td style="display: none;" th:text="${cust[SUBSCRIBE_ID]}"></td>
+							<td th:text="${cust[stateName]}">末付款先发货</td>
+							<td><p><u th:text="${cust[detail]}">山西武警中队王中光申请先发货 </u>
+							<a class="c36c detail-btn" href="javascript:void(0);" onclick="showDetail(this)">详情</a></p>
+							<p th:text="${cust[count]}">申请原因：上级款项末到位</p>
+							</td>
+							<td th:text="${cust[staffId]}">aaa</td>
+							<td th:text="${cust[updateTime]}">2014-4-10</td>
+							<td th:text="${cust[appState]}">未审批</td>
+							<td th:text="${cust[appTime]}+'&nbsp;'">2014-4-10 17:49:19</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<td colspan="6">
+							<div th:include="pages/fragment/ajaxpager::ajaxpager"
+  								th:with="ajaxPageId='pagesList'" th:remove="tag"></div>
+						</td>
+					</tfoot>
+				</table>

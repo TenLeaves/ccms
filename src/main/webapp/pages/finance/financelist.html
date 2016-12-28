@@ -1,0 +1,31 @@
+  <table class="list-tb" cellspacing="0" cellpadding="0" border="0" th:if="${results != null and not #lists.isEmpty(results)}"> 
+   <thead> 
+    <tr> 
+     <th width="120">订单编号</th> 
+     <th width="80">联系人</th> 
+     <th width="100">订单数量</th> 
+     <th width="100">订单金额（元）</th> 
+     <th width="100">订单邮费（元）</th> 
+     <th width="140">下单时间</th> 
+     <th>操作</th> 
+    </tr> 
+   </thead> 
+   <tbody> 
+    <tr th:each="subscribe,rowStat : ${results}"> 
+     <td style='display:none;' th:text="${subscribe[SUBSCRIBE_STATE]}"></td> 
+     <td width="120" th:text="${subscribe[SUBSCRIBE_ID]}">订单编号</td> 
+     <td width="80" th:text="${subscribe[CUSTOMER_NAME]}">联系人</td> 
+     <td width="100" th:text="${subscribe[TOTAL_COUNT]}">订购数量</td> 
+     <td width="100" th:text="${subscribe[TOTAL_MONEY]}">订单金额</td> 
+     <td width="60" th:text="${subscribe[POST_MONEY]}">订单邮费</td> 
+     <td width="140" th:text="${subscribe[UPDATE_TIME]}">下单时间</td> 
+     <td> <a href="javascript:void(0);" class="c69c fb detail-btn" onclick="showDetail(this)">详情</a> <a href="javascript:void(0);" class="c69c fb sure-btn" onclick="financeConfirm(this)" th:if="${subscribe[SUBSCRIBE_STATE] == '1'}">确认</a> </td> 
+    </tr> 
+   </tbody> 
+   <tfoot> 
+    <tr>
+     <td colspan="8"> 
+      <div th:include="pages/fragment/ajaxpager::ajaxpager" th:with="ajaxPageId='financeList'" th:remove="tag"></div> </td> 
+    </tr>
+   </tfoot> 
+  </table>

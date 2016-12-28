@@ -1,0 +1,329 @@
+--[selectSumInfobank]
+SELECT SUM(p.PAYMENT_VALUE) TOTALMONEY,p.BIND_FLAG FROM tf_b_payment p
+where 1=1
+and p.POST_COMPANY='2'
+--isNotEmpty PAYMENT_ID
+AND   p.PAYMENT_ID  LIKE CONCAT('%',#PAYMENT_ID#,'%')
+--end
+--isNotEmpty PAYMENT_NAME
+AND   p.PAYMENT_NAME  LIKE CONCAT('%',#PAYMENT_NAME#,'%')
+--end
+--isNotEmpty PAYMENT_NAME 
+AND   p.PAYMENT_NAME  LIKE CONCAT('%',#PAYMENT_NAME#,'%') 
+--end 
+--isNotEmpty START_TIME
+AND  p.PAYMENT_TIME >= STR_TO_DATE(#START_TIME#, '%Y-%m-%d')
+--end
+--isNotEmpty END_TIME
+AND  p.PAYMENT_TIME <= STR_TO_DATE(#END_TIME#, '%Y-%m-%d')
+--end
+--isNotEmpty BIND_FLAG
+AND  p.BIND_FLAG =#BIND_FLAG#
+--end
+GROUP BY p.BIND_FLAG
+
+--[selectSumInfoOffice]
+SELECT SUM(p.PAYMENT_VALUE) TOTALMONEY,p.BIND_FLAG FROM tf_b_payment p
+where 1=1
+and p.POST_COMPANY='1'
+--isNotEmpty PAYMENT_ID
+AND   p.PAYMENT_ID  LIKE CONCAT('%',#PAYMENT_ID#,'%')
+--end
+--isNotEmpty PAYMENT_NAME
+AND   p.PAYMENT_NAME  LIKE CONCAT('%',#PAYMENT_NAME#,'%')
+--end
+--isNotEmpty PAYMENT_NAME 
+AND   p.PAYMENT_NAME  LIKE CONCAT('%',#PAYMENT_NAME#,'%') 
+--end 
+--isNotEmpty START_TIME
+AND  p.PAYMENT_TIME >= STR_TO_DATE(#START_TIME#, '%Y-%m-%d')
+--end
+--isNotEmpty END_TIME
+AND  p.PAYMENT_TIME <= STR_TO_DATE(#END_TIME#, '%Y-%m-%d')
+--end
+--isNotEmpty START_TIME1
+AND  p.ACCEPT_TIME >= STR_TO_DATE(#START_TIME1#, '%Y-%m-%d')
+--end
+--isNotEmpty END_TIME1
+AND  p.ACCEPT_TIME <= STR_TO_DATE(#END_TIME1#, '%Y-%m-%d')
+--end
+--isNotEmpty BIND_FLAG
+AND  p.BIND_FLAG =#BIND_FLAG#
+--end
+GROUP BY p.BIND_FLAG
+
+--[selectSumInfoCash]
+SELECT 
+  SUM(s.TOTAL_MONEY) TOTALMONEY,
+  '2' SUBSCRIBE_STATE 
+FROM
+  tf_b_subscribe s
+WHERE s.PAY_FLAG ='2'
+and s.SUBSCRIBE_STATE in ('2','3')
+--isNotEmpty ORDER_START
+AND  s.ACCEPT_TIME >= STR_TO_DATE(#ORDER_START#, '%Y-%m-%d')
+--end
+--isNotEmpty ORDER_END
+AND  s.ACCEPT_TIME <= STR_TO_DATE(#ORDER_END#, '%Y-%m-%d')
+--end
+
+--[qryNoneCashPaymentInfo]
+select * from (
+SELECT 
+p.PAYMENT_ID,
+p.PAYMENT_NAME,
+p.PAYMENT_ADDRESS,
+p.PAYMENT_PHONE,
+p.POST_CODE,
+p.PAYMENT_VALUE,
+p.BUY_COUNT,
+IF(p.POST_COMPANY = '2', '银行', '邮局') POST_COMPANY,
+DATE_FORMAT(P.PAYMENT_TIME,'%Y-%m-%d') PAYMENT_TIME,
+DATE_FORMAT(P.ACCEPT_TIME,'%Y-%m-%d') ACCEPT_TIME,
+'未绑定' BIND_FLAG,
+'' SUBSCRIBE_ID,
+'' CUSTOMER_NAME,
+0 TOTAL_MONEY,
+p.REMARK
+FROM tf_b_payment p
+WHERE 1=1
+AND p.BIND_FLAG='1'
+--isNotEmpty PAY_TYPE
+AND p.POST_COMPANY=#PAY_TYPE#
+--end
+--isNotEmpty PAYMENT_ID
+AND   p.PAYMENT_ID  LIKE CONCAT('%',#PAYMENT_ID#,'%')
+--end
+--isNotEmpty PAYMENT_NAME
+AND   p.PAYMENT_NAME  LIKE CONCAT('%',#PAYMENT_NAME#,'%')
+--end
+--isNotEmpty PAYMENT_NAME 
+AND   p.PAYMENT_NAME  LIKE CONCAT('%',#PAYMENT_NAME#,'%') 
+--end 
+--isNotEmpty START_TIME
+AND  p.PAYMENT_TIME >= STR_TO_DATE(#START_TIME#, '%Y-%m-%d')
+--end
+--isNotEmpty END_TIME
+AND  p.PAYMENT_TIME <= STR_TO_DATE(#END_TIME#, '%Y-%m-%d')
+--end
+--isNotEmpty START_TIME1
+AND  p.ACCEPT_TIME >= STR_TO_DATE(#START_TIME1#, '%Y-%m-%d')
+--end
+--isNotEmpty END_TIME1
+AND  p.ACCEPT_TIME <= STR_TO_DATE(#END_TIME1#, '%Y-%m-%d')
+--end
+union
+SELECT 
+p.PAYMENT_ID,
+p.PAYMENT_NAME,
+p.PAYMENT_ADDRESS,
+p.PAYMENT_PHONE,
+p.POST_CODE,
+p.PAYMENT_VALUE,
+p.BUY_COUNT,
+IF(p.POST_COMPANY = '2', '银行', '邮局') POST_COMPANY,
+DATE_FORMAT(P.PAYMENT_TIME,'%Y-%m-%d') PAYMENT_TIME,
+DATE_FORMAT(P.ACCEPT_TIME,'%Y-%m-%d') ACCEPT_TIME,
+'已绑定' BIND_FLAG,
+p.SUBSCRIBE_ID,
+s.CUSTOMER_NAME,
+s.TOTAL_MONEY,
+p.REMARK
+ FROM tf_b_payment p,tf_b_subscribe s
+WHERE 1=1
+AND p.BIND_FLAG='2'
+--isNotEmpty PAY_TYPE
+AND p.POST_COMPANY=#PAY_TYPE#
+--end
+AND p.SUBSCRIBE_ID=s.SUBSCRIBE_ID
+--isNotEmpty PAYMENT_ID
+AND   p.PAYMENT_ID  LIKE CONCAT('%',#PAYMENT_ID#,'%')
+--end
+--isNotEmpty PAYMENT_NAME
+AND   p.PAYMENT_NAME  LIKE CONCAT('%',#PAYMENT_NAME#,'%')
+--end
+--isNotEmpty PAYMENT_NAME 
+AND   p.PAYMENT_NAME  LIKE CONCAT('%',#PAYMENT_NAME#,'%') 
+--end 
+--isNotEmpty START_TIME
+AND  p.PAYMENT_TIME >= STR_TO_DATE(#START_TIME#, '%Y-%m-%d')
+--end
+--isNotEmpty END_TIME
+AND  p.PAYMENT_TIME <= STR_TO_DATE(#END_TIME#, '%Y-%m-%d')
+--end
+--isNotEmpty START_TIME1
+AND  p.ACCEPT_TIME >= STR_TO_DATE(#START_TIME1#, '%Y-%m-%d')
+--end
+--isNotEmpty END_TIME1
+AND  p.ACCEPT_TIME <= STR_TO_DATE(#END_TIME1#, '%Y-%m-%d')
+--end
+) t
+order by t.PAYMENT_TIME desc
+
+
+
+
+
+
+--[qryNoneCashPayentInfoNoBind]
+SELECT 
+p.PAYMENT_ID,
+p.PAYMENT_NAME,
+p.PAYMENT_ADDRESS,
+p.PAYMENT_PHONE,
+p.POST_CODE,
+p.PAYMENT_VALUE,
+p.BUY_COUNT,
+IF(p.POST_COMPANY = '2', '银行', '邮局') POST_COMPANY,
+DATE_FORMAT(P.PAYMENT_TIME,'%Y-%m-%d') PAYMENT_TIME,
+DATE_FORMAT(P.ACCEPT_TIME,'%Y-%m-%d') ACCEPT_TIME,
+'未绑定' BIND_FLAG,
+'' SUBSCRIBE_ID,
+'' CUSTOMER_NAME,
+0 TOTAL_MONEY,
+p.REMARK
+FROM tf_b_payment p
+WHERE 1=1
+AND p.BIND_FLAG='1'
+--isNotEmpty PAY_TYPE
+AND p.POST_COMPANY=#PAY_TYPE#
+--end
+--isNotEmpty PAYMENT_ID
+AND   p.PAYMENT_ID  LIKE CONCAT('%',#PAYMENT_ID#,'%')
+--end
+--isNotEmpty PAYMENT_NAME
+AND   p.PAYMENT_NAME  LIKE CONCAT('%',#PAYMENT_NAME#,'%')
+--end
+--isNotEmpty PAYMENT_NAME 
+AND   p.PAYMENT_NAME  LIKE CONCAT('%',#PAYMENT_NAME#,'%') 
+--end 
+--isNotEmpty START_TIME
+AND  p.PAYMENT_TIME >= STR_TO_DATE(#START_TIME#, '%Y-%m-%d')
+--end
+--isNotEmpty END_TIME
+AND  p.PAYMENT_TIME <= STR_TO_DATE(#END_TIME#, '%Y-%m-%d')
+--end
+--isNotEmpty START_TIME1
+AND  p.ACCEPT_TIME >= STR_TO_DATE(#START_TIME1#, '%Y-%m-%d')
+--end
+--isNotEmpty END_TIME1
+AND  p.ACCEPT_TIME <= STR_TO_DATE(#END_TIME1#, '%Y-%m-%d')
+--end
+order by p.PAYMENT_TIME desc
+
+
+--[qryNoneCashPayentInfoBind]
+SELECT 
+p.PAYMENT_ID,
+p.PAYMENT_NAME,
+p.PAYMENT_ADDRESS,
+p.PAYMENT_PHONE,
+p.POST_CODE,
+p.PAYMENT_VALUE,
+p.BUY_COUNT,
+IF(p.POST_COMPANY = '2', '银行', '邮局') POST_COMPANY,
+DATE_FORMAT(P.PAYMENT_TIME,'%Y-%m-%d') PAYMENT_TIME,
+DATE_FORMAT(P.ACCEPT_TIME,'%Y-%m-%d') ACCEPT_TIME,
+'已绑定' BIND_FLAG,
+p.SUBSCRIBE_ID,
+s.CUSTOMER_NAME,
+s.TOTAL_MONEY,
+p.REMARK
+ FROM tf_b_payment p,tf_b_subscribe s
+WHERE 1=1
+AND p.BIND_FLAG='2'
+--isNotEmpty PAY_TYPE
+AND p.POST_COMPANY=#PAY_TYPE#
+--end
+AND p.SUBSCRIBE_ID=s.SUBSCRIBE_ID
+--isNotEmpty PAYMENT_ID
+AND   p.PAYMENT_ID  LIKE CONCAT('%',#PAYMENT_ID#,'%')
+--end
+--isNotEmpty PAYMENT_NAME
+AND   p.PAYMENT_NAME  LIKE CONCAT('%',#PAYMENT_NAME#,'%')
+--end
+--isNotEmpty PAYMENT_NAME 
+AND   p.PAYMENT_NAME  LIKE CONCAT('%',#PAYMENT_NAME#,'%') 
+--end 
+--isNotEmpty START_TIME
+AND  p.PAYMENT_TIME >= STR_TO_DATE(#START_TIME#, '%Y-%m-%d')
+--end
+--isNotEmpty END_TIME
+AND  p.PAYMENT_TIME <= STR_TO_DATE(#END_TIME#, '%Y-%m-%d')
+--end
+--isNotEmpty START_TIME1
+AND  p.ACCEPT_TIME >= STR_TO_DATE(#START_TIME1#, '%Y-%m-%d')
+--end
+--isNotEmpty END_TIME1
+AND  p.ACCEPT_TIME <= STR_TO_DATE(#END_TIME1#, '%Y-%m-%d')
+--end
+order by p.PAYMENT_TIME desc
+
+
+
+--[qryCashPayentInfo]
+SELECT 
+  s.SUBSCRIBE_ID,
+  s.COMPANY,
+  s.CUSTOMER_NAME,
+  s.CUSTOMER_PHONE,
+  s.TOTAL_MONEY ,
+ '已付款' SUBSCRIBE_STATE,
+  date_format(s.ACCEPT_TIME,'%Y-%m-%d') UPDATE_TIME,
+  date_format(s.PAY_TIME,'%Y-%m-%d') PAY_TIME
+FROM
+  tf_b_subscribe s 
+WHERE (s.SUBSCRIBE_STATE='2' or s.SUBSCRIBE_STATE='3') and s.PAY_FLAG ='2'
+and s.SUBSCRIBE_ID NOT IN 
+  (SELECT DISTINCT 
+    p.SUBSCRIBE_ID 
+  FROM
+    tf_b_payment p 
+  WHERE p.BIND_FLAG = '2')
+--isNotEmpty ORDER_START
+AND  s.ACCEPT_TIME >= STR_TO_DATE(#ORDER_START#, '%Y-%m-%d')
+--end
+--isNotEmpty ORDER_END
+AND  s.ACCEPT_TIME <= STR_TO_DATE(#ORDER_END#, '%Y-%m-%d')
+--end
+
+
+
+--[qryProdInfoById]
+SELECT
+  S.SUBSCRIBE_ID,
+  CONCAT(
+    D.YEAR,
+    D.MONTH,
+    D.PRODUCT_TYPE
+  ) PRINT_CODE 
+FROM
+  TF_B_SUBSCRIBE S,
+  TF_B_ORDER O,
+  TF_B_DISTRIBUT D 
+WHERE S.SUBSCRIBE_ID = O.SUBSCRIBE_ID 
+  AND O.ORDER_ID = D.ORDER_ID 
+  AND S.SUBSCRIBE_ID = #SUBSCRIBE_ID#
+
+--[qryInvoiceMoneyAllById]
+SELECT 
+  SUM(I.INVOICE_AMOUNT) TOTALMONEY,
+  S.SUBSCRIBE_ID 
+FROM
+  TF_B_SUBSCRIBE S,
+  TF_B_INVOICE I 
+WHERE S.SUBSCRIBE_ID = I.SUBSCRIBE_ID 
+  AND I.INVOICE_STATE = '1' 
+  AND I.SUBSCRIBE_ID = #SUBSCRIBE_ID# ;
+
+--[qrySendInfoByParentId]
+SELECT d.YEAR,d.MONTH ,d.PRODUCT_TYPE ,o.CONTIN_MONTH,o.PRODUCT_PER_COUNT FROM tf_b_distribut d ,tf_b_order o 
+WHERE o.ORDER_ID=d.ORDER_ID
+AND o.SUBSCRIBE_ID=#SUBSCRIBE_ID#
+ORDER BY d.YEAR ,d.MONTH
+
+--[qrySendInfoByOrderId]
+SELECT d.YEAR,d.MONTH ,d.PRODUCT_TYPE ,o.CONTIN_MONTH,o.PRODUCT_PER_COUNT FROM tf_b_distribut d ,tf_b_order o 
+WHERE o.ORDER_ID=d.ORDER_ID
+AND o.ORDER_ID=#ORDER_ID#
+ORDER BY d.YEAR ,d.MONTH

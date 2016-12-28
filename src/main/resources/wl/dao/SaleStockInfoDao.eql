@@ -1,0 +1,38 @@
+--[qrySaleinfoAsCustType]
+SELECT 
+  t.PRODUCT_TYPE,
+  SUM(t.PRODUCT_PER_COUNT) PRODUCT_PER_COUNT,
+  t.MONTH,
+  custType 
+FROM
+  (SELECT 
+    o.PRODUCT_PER_COUNT,
+    d.PRODUCT_TYPE,
+    d.MONTH,
+    (SELECT 
+      s.CUSTOMER_TYPE 
+    FROM
+      tf_b_subscribe s 
+    WHERE SUBSCRIBE_ID = o.SUBSCRIBE_ID) custType 
+  FROM
+    tf_b_distribut d,
+    tf_b_order o 
+  WHERE d.ORDER_ID = o.ORDER_ID 
+    AND d.YEAR = #YEAR# 
+    AND d.PRODUCT_TYPE = #prodType# 
+  GROUP BY d.MONTH,
+    o.ORDER_ID) t 
+GROUP BY t.MONTH,
+  t.custType 
+ORDER BY t.MONTH,
+  t.custType 
+  
+--[qryStockInfoAsMonth]
+SELECT 
+  s.PRINT_CODE,
+  SUM(s.REMAIN_COUNT) stockAmt 
+FROM
+  tf_m_stock s 
+WHERE SUBSTR(s.PRINT_CODE, 7, 1) = #prodType# 
+and SUBSTR(s.PRINT_CODE, 1, 4) = #YEAR#
+GROUP BY s.PRINT_CODE 

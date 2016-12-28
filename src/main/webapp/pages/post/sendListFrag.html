@@ -1,0 +1,62 @@
+<table class="list-tb" cellspacing="0" cellpadding="0" border="0"> 
+        <thead> 
+         <tr> 
+          <th width="200">收货地址</th> 
+          <th width="100">收件人</th> 
+          <th width="100">收件人电话</th> 
+          <th width="130">产品</th> 
+          <th width="100">数量</th> 
+          <th>物流单号</th> 
+         </tr> 
+        </thead> 
+        <tbody> 
+         <tr th:each="eachSend:${sendList}"> 
+          <td width="200" th:text="${eachSend['DISTRIBUT_ADDRESS']}">亚信联创科技南京有限公</td> 
+          <td width="100" th:text="${eachSend['ADDRESSEE_NAME']}">张1111</td> 
+          <td width="100" th:text="${eachSend['ADDRESSEE_PHONE']}">18500000000</td> 
+          <td width="130" th:text="${eachSend['PRODUCT_DESC']}">2012专业班第三期</td> 
+          <td width="100" th:text="${eachSend['DISTRIBUT_COUNT']}">50</td> 
+          <td th:text="${eachSend['POST_ID']}"> </td> 
+         </tr> 
+         <tr th:remove="all"> 
+          <td>亚信联创科技南京有限公</td> 
+          <td>张1111</td> 
+          <td>大客户</td> 
+          <td>18500000001</td> 
+          <td>2014-4-04 14:53:42</td> 
+          <td> <a href="javascript:void(0);" class="c69c fb detail-btn">详情</a> <a href="javascript:void(0);" class="c69c fb edit-btn">修改</a> </td> 
+         </tr> 
+         <tr th:remove="all"> 
+          <td>亚信联创科技南京有限公</td> 
+          <td>张1111</td> 
+          <td>大客户</td> 
+          <td>18500000001</td> 
+          <td>2014-4-04 14:53:42</td> 
+          <td> <a href="javascript:void(0);" class="c69c fb detail-btn">详情</a> <a href="javascript:void(0);" class="c69c fb edit-btn">修改</a> </td> 
+         </tr> 
+         <tr th:remove="all"> 
+          <td>亚信联创科技南京有限公</td> 
+          <td>张1111</td> 
+          <td>大客户</td> 
+          <td>18500000001</td> 
+          <td>2014-4-04 14:53:42</td> 
+          <td> <a href="javascript:void(0);" class="c69c fb detail-btn">详情</a> <a href="javascript:void(0);" class="c69c fb edit-btn">修改</a> </td> 
+         </tr> 
+         <tr th:remove="all"> 
+          <td>亚信联创科技南京有限公</td> 
+          <td>张1111</td> 
+          <td>大客户</td> 
+          <td>18500000001</td> 
+          <td>2014-4-04 14:53:42</td> 
+          <td> <a href="javascript:void(0);" class="c69c fb detail-btn">详情</a> <a href="javascript:void(0);" class="c69c fb edit-btn">修改</a> </td> 
+         </tr> 
+        </tbody> 
+        <tfoot> 
+         <tr>
+          <td colspan="6">
+          <div th:include="pages/fragment/ajaxpager::ajaxpager"
+  th:with="ajaxPageId='sendListInfoTbl'" th:remove="tag"></div> 
+           </td> 
+         </tr>
+        </tfoot> 
+       </table> 

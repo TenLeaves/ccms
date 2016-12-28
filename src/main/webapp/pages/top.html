@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+ <head> 
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+  <title>头部</title> 
+  <link th:href="@{/static/css/base.css}" rel="stylesheet" type="text/css" /> 
+  <link th:href="@{/static/css/header.css}" rel="stylesheet" type="text/css" /> 
+    <script type="text/javascript" th:src="@{/static/js/jquery-1.8.js}"></script> 
+  <script>
+function exitBtn(){
+	jQuery.ajax({
+		   url: "/ccms1/deleteSession",
+		   success: function(){
+				window.parent.location.href="/ccms1/";
+		   }
+	});
+}
+
+function modifyPass(){
+    window.showModalDialog("/ccms1/passModify",window,"dialogWidth=800px;dialogHeight=500px");
+}
+</script>
+ </head> 
+ <body> 
+  <div class="header"> 
+   <a class="logo" href="#"> <img th:src="@{/static/images/logo.png}" src="../images/logo.png" alt="logo" /> <span class="logo-desp">— 互联网征订发行管理系统</span> </a> 
+   <div class="user-info"> 
+    <span class="user">当前用户：<strong th:text="${username}"></strong></span> 
+    <span class="role">岗位：<strong th:text="${roleName}">发行</strong></span> 
+    <a href="#" class="quit" onclick="modifyPass();">修改密码</a> 
+    <a href="javascript:void(0);" class="quit" onclick="exitBtn()">退出</a> 
+   </div> 
+  </div>   
+ </body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>审批查询</title>
+<link rel="stylesheet" type="text/css" href="../css/base.css" th:href="@{/static/css/base.css}"/>
+<link rel="stylesheet" type="text/css" href="../css/approval_search.css" th:href="@{/static/css/approval_search.css}"/>
+<script type="text/javascript" src="../js/jquery.min.js" th:src="@{/static/js/jquery.min.js}"></script>
+<script type="text/javascript" src="./js/jquery-1.8.js" th:src="@{/static/js/jquery-1.8.js}"></script>
+<script src="../static/js/jquery.timers-1.2.js" th:src="@{/static/js/jquery.timers-1.2.js}"></script>
+<script src="../static/js/jq-overlay.js" th:src="@{/static/js/jq-overlay.js}"></script>
+<script type="text/javascript" src="./js/approvalCheck.js" th:src="@{/static/js/approvalCheck.js}"></script>
+<script th:src="@{/static/js/jquery.json-2.4.js}"></script>
+<script type="text/javascript" src="../js/common.js" th:src="@{/static/js/common.js}"></script>
+<script th:src="@{/static/js/jquery.form.min.js}"></script>
+</head>
+<body>
+<div class="w">
+	<div class="sec-box">
+		<div class="cont-sec">
+			<h3 class="sec-title" id="TOP">查询条件</h3>
+			<form action="#" th:action="@{/approvalCheckInfo}" th:object="${customer}" method="post" id="selCusts"> 
+			<table class="oprt-table" cellspacing="0" cellpadding="0" border="0">
+				<tr>
+					<th>审批状态：</th>
+					<td>
+						<span class="sel-box sel-long sel-box-on" id="appWay0">所有</span>
+						<span class="sel-box sel-long" id="appWay1">未审批</span>
+						<span class="sel-box sel-long" id="appWay2">审批通过</span>
+						<span class="sel-box sel-long" id="appWay3">审批不通过</span>
+					</td>
+				</tr>
+				<tr>
+					<th>审批类型：</th>
+					<td>
+						<span class="sel-box sel-long sel-box-on" id="appType1">印刷量审批</span>
+						<span class="sel-box sel-long" id="appType2">赠刊领用</span>
+						<span class="sel-box sel-long" id="appType3">样刊领用</span>
+						<span class="sel-box sel-long" id="appType0">未付款先发货</span>
+						<span class="sel-box sel-long" id="appType4" style="margin-top: 20px;">预开发票</span>
+					</td>
+				</tr>
+				<tr>
+					<th>&nbsp;</th>
+					<td>
+						<a href="#RESULT" class="oprt-btn" onclick="selectBtn()">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
+					</td>
+				</tr>
+			</table>
+			</form>
+		</div>
+		<div class="cont-sec">
+			<h3 class="sec-title" id="RESULT">查询结果</h3>
+			<div class="list-box">
+				<form action="#" th:action="@{/approvalInfo}" th:object="${customer}" method="post" 
+    			th:include="pages/approval/approvallist" id="pagesList">
+    			</form>
+			</div>
+		</div>
+	 <div style="padding-left:40px;margin-top:15px;font-size: 12px;">
+        <a href="#TOP" style="color: blue;">返回顶部</a>
+       </div>
+	</div>
+</div>
+</body>
+</html>

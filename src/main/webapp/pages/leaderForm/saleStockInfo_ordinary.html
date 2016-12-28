@@ -1,0 +1,37 @@
+<table class="list-tb" cellspacing="0" cellpadding="0" border="0" id="saleStockInfoTabl">
+<thead>
+  <tr class="bg-f5f5f5">
+    <th >2014年</th>
+    <th colspan="6">中国书法普及版</th>
+  </tr>
+  <tr class="bg-f5f5f5">
+    <th >期数</th>
+    <th >发行局</th>
+    <th >自办发行</th>
+    <th >赠阅</th>
+    <th >其他</th>
+    <th >单月合计</th>
+    <th >月库存</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="info,rowStat:${results}">
+    <td class="bg-fafafa" th:text="${info[MONTH]}">400</td>
+    <td class="fxj_ordinary" th:text="${info[FAXINGJU]}">500</td>
+    <td class="zbfx_ordinary" th:text="${info[ZIBANFAXING]}">600</td>
+    <td class="send_ordinary" th:text="${info[SEND_PROD]}">400</td>
+    <td>0</td>
+    <td>600</td>
+    <td class="stock_ordinary" th:text="${info[STOCK]}">600</td>
+  </tr>
+  </tbody>
+  <tr style="font-weight:bold;font-size:14px;">
+    <td class="bg-fafafa" >总量合计</td>
+    <td id="fxj_ordinary">500</td>
+    <td id="zbfx_ordinary">600</td>
+    <td id="send_ordinary">400</td>
+    <td id="">0</td>
+    <td id="allInall_ordinary">600</td>
+    <td id="stock_ordinary_all">600</td>
+  </tr>
+</table>

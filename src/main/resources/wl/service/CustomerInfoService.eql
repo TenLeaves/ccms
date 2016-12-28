@@ -1,0 +1,155 @@
+-- [addCustomerInfo]
+INSERT INTO tf_m_customer
+(
+CUSTOMER_NAME,
+CUSTOMER_PHONE,
+CUSTOMER_TYPE,
+FIXED_TELEPHONE,
+COMPANY,
+DISCOUNT_RATE,
+CONTACT_NAME,
+CONTACT_PHONE,
+REMARK,
+UPDATE_STAFF,
+UPDATE_TIME
+)
+VALUES
+(
+#name#,
+#phone#,
+#custType#,
+#fixedPhone#,
+#complany#,
+#discount#,
+#contactName#,
+#contactPhone#,
+#remark#,
+#updateStaff#,
+now()
+)
+
+-- [addErrorInfo]
+INSERT INTO tf_m_custerror_temp
+(
+line,
+error,
+right_operate,
+update_date
+)
+VALUES
+(
+#line#,
+#error#,
+#right#,
+now()
+)
+
+-- [updateCustomerInfo]
+update tf_m_customer
+-- trim prefix=SET suffixOverrides=,
+-- iff name != null
+         CUSTOMER_NAME=#name#,
+-- iff phone != null
+         CUSTOMER_PHONE=#phone#,
+-- iff custType != null
+         CUSTOMER_TYPE=#custType#,
+-- iff fixedPhone != null
+         FIXED_TELEPHONE=#fixedPhone#,
+-- iff fixedPhone != null
+         FIXED_TELEPHONE=#fixedPhone#,
+-- iff complany != null
+         COMPANY =#complany#,
+-- iff discount != null
+         DISCOUNT_RATE=#discount#,
+-- iff contactName != null
+         CONTACT_NAME=#contactName#,
+-- iff contactPhone != null
+         CONTACT_PHONE=#contactPhone#,
+-- iff remark != null
+         REMARK =#remark#,
+-- iff updateStaff != null
+         UPDATE_STAFF =#updateStaff#,
+-- iff true
+         UPDATE_TIME = now(),
+-- end
+WHERE CUSTOMER_ID = #custId#
+
+-- [selCust]
+SELECT
+a.CUSTOMER_ID custId,
+a.CUSTOMER_NAME name,
+a.CUSTOMER_PHONE phone,
+a.COMPANY complany,
+a.CUSTOMER_TYPE custType,
+CASE a.CUSTOMER_TYPE 
+    WHEN '1' 
+    THEN '大客户' 
+    WHEN '2' 
+    THEN '批发商' 
+    WHEN '6' 
+    THEN a.COMPANY 
+    WHEN '7' 
+    THEN a.COMPANY 
+    END
+    custTypeDes,
+a.DISCOUNT_RATE discount,
+a.FIXED_TELEPHONE fixedPhone,
+a.CONTACT_NAME contactName,
+a.CONTACT_PHONE contactPhone,
+a.UPDATE_STAFF updateStaff,
+date_format(UPDATE_TIME,'%Y-%c-%d %H:%i:%s') updateTime,
+a.REMARK remark
+ FROM tf_m_customer a
+WHERE 1 = 1
+
+-- isNotEmpty complany
+AND a.COMPANY like CONCAT('%',#complany#,'%')
+-- end
+-- isNotEmpty name
+AND a.CUSTOMER_NAME like CONCAT('%',#name#,'%')
+-- end
+-- isNotEmpty custType
+AND a.CUSTOMER_TYPE = #custType#
+-- end
+-- isNotEmpty phone
+AND a.CUSTOMER_PHONE like CONCAT('%',#phone#,'%')
+-- end
+-- isNotEmpty contactName
+AND a.CONTACT_NAME like CONCAT('%',#contactName#,'%')
+-- end
+
+-- [selCustError]
+SELECT
+a.line line,
+a.error error,
+a.right_operate right_operate
+FROM tf_m_custerror_temp a
+
+-- end
+
+-- [delCustError]
+delete from tf_m_custerror_temp
+-- end
+
+--[deleteCust]
+delete from tf_m_customer
+where CUSTOMER_ID=##
+
+-- [selCustExist]
+SELECT
+a.CUSTOMER_ID custId,
+a.CUSTOMER_NAME name,
+a.CUSTOMER_PHONE phone,
+a.COMPANY complany,
+a.CUSTOMER_TYPE custType,
+IF(a.CUSTOMER_TYPE = '1', '大客户', '批发商') custTypeDes,
+a.DISCOUNT_RATE discount,
+a.FIXED_TELEPHONE fixedPhone,
+a.CONTACT_NAME contactName,
+a.CONTACT_PHONE contactPhone,
+a.UPDATE_STAFF updateStaff,
+date_format(UPDATE_TIME,'%Y-%c-%d %H:%i:%s') updateTime,
+a.REMARK remark
+ FROM tf_m_customer a
+WHERE a.COMPANY = #complany#
+AND a.CUSTOMER_NAME = #name#

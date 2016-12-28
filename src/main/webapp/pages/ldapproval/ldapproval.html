@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>领导审批</title>
+<link rel="stylesheet" type="text/css" href="../css/base.css" th:href="@{/static/css/base.css}"/>
+<link rel="stylesheet" type="text/css" href="../css/leader_approval.css" th:href="@{/static/css/leader_approval.css}"/>
+<script type="text/javascript" src="../js/jquery.min.js" th:src="@{/static/js/jquery.min.js}"></script>
+<script type="text/javascript" src="./js/jquery-1.8.js" th:src="@{/static/js/jquery-1.8.js}"></script>
+<script src="../static/js/jquery.timers-1.2.js" th:src="@{/static/js/jquery.timers-1.2.js}"></script>
+<script src="../static/js/jq-overlay.js" th:src="@{/static/js/jq-overlay.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/jquery.json-2.4.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/jquery.form.min.js}"></script>
+<script type="text/javascript" src="../js/common.js" th:src="@{/static/js/common.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/ldapproval.js}"></script>
+</head>
+
+<body  onload="selectBtn()">
+<div class="w">
+	<div class="sec-box">
+		<div class="cont-sec">
+			<form action="#" th:action="@{/ldapprovalStockCheckInfo}"  method="post" id="selStockCusts"> 
+			<h3 class="sec-title">印刷单申请审批</h3>
+			</form>
+			<div class="list-box" id="talStock">
+				
+			</div>
+		</div>
+		<div class="cont-sec">
+			<form action="#" th:action="@{/ldapprovalCheckInfo}"  method="post" id="selCusts"> 
+			<h3 class="sec-title">订单审批</h3>
+			</form>
+			<div class="list-box">
+				<form action="#" th:action="@{/ldapprovalInfo}" th:object="${userMap}" method="post" 
+    			th:include="pages/ldapproval/ldapprovallist" id="pagesList">
+    			</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 不通过弹出层begin -->
+<div id="no-pass-layer" class="layer no-pass-layer" style="display:none;">
+	<div class="layer-cont">
+		<dl class="layer-line">
+			<dt>不通过原因：</dt>
+			<dd><textarea class="text-style" id="boxInfo"></textarea></dd>
+		</dl>
+		<div class="layer-btns">
+			<a href="javascript:void(0);" class="short-btn layer-shut" onclick="closeBox()">关闭</a>
+			<a href="javascript:void(0);" class="short-btn layer-sure" onclick="sureBtn()">确定</a>
+		</div>
+	</div>
+</div>
+<!-- 不通过弹出层end -->
+</body>
+</html>

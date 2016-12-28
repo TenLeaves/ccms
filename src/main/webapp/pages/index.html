@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+ <head> 
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+  <title>首页</title>
+  <link th:href="@{/static/images/title.ico}" rel="SHORTCUT ICON" />
+  <link th:href="@{/static/css/base.css}" rel="stylesheet" type="text/css" /> 
+ </head> 
+ <body> 
+  <div class="wrapper"> 
+   <div class="top">
+    <iframe th:src="@{/top.html}" frameborder="0" width="100%" height="113" scrolling="no"></iframe>
+   </div> 
+   <div class="content"> 
+    <div class="left">
+     <iframe th:src="@{/menu.html}" frameborder="0" width="100%" height="1200" scrolling="auto"></iframe>
+    </div> 
+    <div class="right">
+     <iframe name="main-content" th:src="@{/initIndexAfterLogIn.html}" frameborder="0" width="100%" height="1200" scrolling="no" align="right"></iframe>
+    </div> 
+   </div> 
+  </div>   
+ </body>
+</html>

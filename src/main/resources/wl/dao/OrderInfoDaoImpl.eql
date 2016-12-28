@@ -1,0 +1,217 @@
+-- [selectCustInfo]
+SELECT
+C.CUSTOMER_ID, 
+  C.CUSTOMER_NAME,
+  C.COMPANY,
+  C.CUSTOMER_PHONE,
+  C.CUSTOMER_TYPE,
+  C.FIXED_TELEPHONE,
+  C.DISCOUNT_RATE,
+  C.CONTACT_NAME,
+  C.CONTACT_PHONE,
+  C.REMARK 
+FROM
+  TF_M_CUSTOMER C
+  where 1=1
+
+-- isNotEmpty CUST_NAME
+ and   CUSTOMER_NAME like #CUST_NAME#
+--end
+-- isNotEmpty CUST_COMPLANY
+and COMPANY like #CUST_COMPLANY#
+--end
+-- isNotEmpty CUST_PHONE
+and CUSTOMER_PHONE like #CUST_PHONE#
+--end
+
+-- [selectCertainCust]
+SELECT 
+c.CUSTOMER_ID,
+  C.CUSTOMER_NAME,
+  C.CUSTOMER_PHONE,
+  C.CUSTOMER_TYPE,
+  C.FIXED_TELEPHONE,
+  C.COMPANY,
+  C.DISCOUNT_RATE,
+  C.CONTACT_NAME,
+  C.CONTACT_PHONE, 
+  C.REMARK
+FROM
+  TF_M_CUSTOMER C 
+WHERE 1=1
+--isNotEmpty custId
+and C.CUSTOMER_ID=#custId# 
+--end
+-- isNotEmpty CUSTOMER_NAME
+ and   CUSTOMER_NAME = #CUSTOMER_NAME#
+--end
+-- isNotEmpty COMPANY
+and COMPANY = #COMPANY#
+--end
+
+-- [insertParentOrder]
+INSERT INTO TF_B_SUBSCRIBE (
+  SUBSCRIBE_ID,
+  SUBSCRIBE_STATE,
+  CUSTOMER_NAME,
+  FIRST_SEND,
+  NEED_INVOICE,
+  CUSTOMER_PHONE,
+  CUSTOMER_TYPE,
+  FIXED_TELEPHONE,
+  UPDATE_STAFF,
+  UPDATE_TIME,
+  REMARK,
+  TOTAL_COUNT,
+  COMPANY,
+  DISCOUNT_RATE,
+  ACCEPT_TIME,
+  CONTACT_NAME,
+  BEFORE_INVOICE,
+  CONTACT_PHONE,
+  TOTAL_MONEY,
+  ACCEPT_STAFF
+) 
+VALUES
+  (#subscribeId#,
+  #SUBSCRIBE_STATE#,
+  #username#,
+  #sendFirst#,
+  #isNeedTicket#,
+  #telephone#,
+  #custType#,
+  #fixedTel#,
+  #staffId#,
+  now(),
+  #textInfo#,
+  #sum#,
+  #company#,
+  #discount#,
+  now(),
+  #contactName#,
+  #isTypeFirst#,
+  #contactPhone#,
+  #totalMoney#,
+  #staffId#)
+  
+-- [selectPayment]
+SELECT  
+P.PAYMENT_ID,
+P.PAYMENT_NAME,
+P.PAYMENT_VALUE,
+P.UPDATE_TIME,
+date_format(P.PAYMENT_TIME,'%Y-%m-%d') PAYMENT_TIME,
+IF(p.POST_COMPANY = '2', '银行', '邮局') POST_COMPANY
+
+FROM TF_B_PAYMENT P
+where 
+P.BIND_FLAG='1'
+-- isNotEmpty keyWords
+-- switch qryType
+-- case 1
+   and  p.PAYMENT_ID like CONCAT('%',#keyWords#,'%')
+-- case 2
+   and  p.PAYMENT_NAME like CONCAT('%',#keyWords#,'%')
+-- case 3
+   and  p.PAYMENT_VALUE like CONCAT('%',#keyWords#,'%')
+-- case 4
+   and date_format(P.PAYMENT_TIME,'%Y-%m-%d') like CONCAT('%',#keyWords#,'%')
+--end
+--end
+and PAYMENT_FLAG='1'
+and REMARK NOT LIKE '%批发商%' 
+and REMARK NOT LIKE '%发行局%' 
+and REMARK NOT LIKE '%发行站%'
+order by P.UPDATE_TIME desc
+
+-- [selectOrdertoBind]
+SELECT  S.SUBSCRIBE_ID,
+S.COMPANY,
+S.CUSTOMER_NAME,
+TOTAL_MONEY,
+TOTAL_COUNT AMOUNT,
+S.UPDATE_TIME
+FROM TF_B_SUBSCRIBE S
+where 1=1
+-- switch qryType
+-- case 1
+    and S.SUBSCRIBE_ID like CONCAT('%',#keyWords#,'%')
+-- case 2
+    and S.COMPANY like CONCAT('%',#keyWords#,'%')
+-- case 3
+    and S.CUSTOMER_NAME like CONCAT('%',#keyWords#,'%')
+-- case 4
+    and 1=1
+-- case 5
+    and date_format(S.UPDATE_TIME,'%Y-%m-%d') like CONCAT('%',#keyWords#,'%')
+-- default
+    and 1=1
+--end
+and s.SUBSCRIBE_STATE='1'
+and s.CUSTOMER_TYPE not in('2','6','7')
+and s.UPDATE_STAFF=#staff_id#
+order by S.UPDATE_TIME desc
+
+-- [bindpaymentToOrder]
+UPDATE tf_b_payment  p
+SET p.BIND_FLAG='2',
+p.UPDATE_TIME=NOW(),
+p.SUBSCRIBE_ID=#orderId#,
+p.UPDATE_STAFF=#staffId#
+WHERE p.PAYMENT_ID in
+--for item=paymentId index=seq collection=paymentList open=( separator=, close=)
+  #paymentId#
+--end
+
+--[queryStockAmountByPrintId]
+SELECT REMAIN_COUNT,OCCUPY_AMOUNT, PRINT_CODE FROM TF_M_STOCK WHERE PRINT_CODE=#PRINT_CODE#
+and STOCK_TYPE=#STOCK_TYPE#
+
+--[occupyBookAfterCheck]
+UPDATE TF_M_STOCK SET OCCUPY_AMOUNT=#OCCUPY_AMOUNT#,UPDATE_TIME=now(),UPDATE_STAFF=#staffId#
+WHERE PRINT_CODE=#PRINT_CODE# AND STOCK_TYPE=#STOCK_TYPE#
+
+--[selectTotalBindMoneyAsOrderId]
+SELECT 
+  SUM(p.payment_value) TOTALMONEY_HAS_BIND ,SUBSCRIBE_ID
+FROM
+  tf_b_payment p 
+WHERE p.SUBSCRIBE_ID = #orderId#
+
+--[updateOrderStateToWaitToSend]
+UPDATE TF_B_SUBSCRIBE S 
+SET S.SUBSCRIBE_STATE='2',
+s.UPDATE_STAFF=#staffId#
+WHERE S.SUBSCRIBE_ID=#orderId#
+
+--[insertANewCustomer]
+INSERT INTO tf_m_customer
+(
+CUSTOMER_ID,
+CUSTOMER_NAME,
+CUSTOMER_PHONE,
+CUSTOMER_TYPE,
+FIXED_TELEPHONE,
+COMPANY,
+DISCOUNT_RATE,
+CONTACT_NAME,
+CONTACT_PHONE,
+REMARK,
+UPDATE_STAFF,
+UPDATE_TIME
+)
+VALUES
+(
+#CUSTOMER_ID#,
+#CUSTOMER_NAME#,
+#CUSTOMER_PHONE#,
+#CUSTOMER_TYPE#,
+#FIXED_TELEPHONE#,
+#COMPANY#,
+#DISCOUNT_RATE#,
+#CONTACT_NAME#,
+#CONTACT_PHONE#,
+#REMARK#,
+#UPDATE_STAFF#,
+now()
+)

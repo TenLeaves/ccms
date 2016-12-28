@@ -1,0 +1,26 @@
+.w300{width:300px;}
+.w80{width:80px;}
+.w168{width:168px;}
+.w124{width:124px;}
+.w145{width:145px;}
+.sec-box{height:1110px;padding:20px 0;margin:0 35px 0 0;border:1px solid #d3d3d3;background:#eff3f3;overflow-y: auto;}
+.oprt-table{width:850px;margin:0 0 0 20px;font-size:14px;}
+.oprt-table th,.oprt-table td{padding:10px 0;}
+.oprt-table th{width:120px;line-height:32px;padding-right:5px;vertical-align:top;text-align:right;}
+.star{color:#a40000;margin-right:5px;}
+.hinge{display:inline-block;width:30px;line-height:32px;font-size:14px;vertical-align:middle;text-align:center;}
+.sec-title{line-height:35px;margin:0 20px 15px 40px;border-bottom:1px dashed #ccc;font-size:14px;font-weight:bold;}
+.list-box{margin:0 15px 0 40px;padding:15px;background:#fff;}
+.list-tb{width:100%;font-size:12px;}
+.list-tb thead th{background:#f5f5f5;padding:10px 0;text-align:center;}
+.list-tb tbody td{padding:15px 0;border-bottom:1px solid #f5f5f5;text-align:center;word-wrap:break-word;word-break:break-all;}
+.list-tb tfoot td{background:#f5f5f5;padding:7px 10px;}
+.list-tb tfoot td .paging{float:right;}
+.detail-btn{margin-right:10px;}
+.date{width:124px;background:#fff url(../images/date.png) no-repeat 118px center;}
+.icon1,.icon2,.icon3,.icon4{display:inline-block;width:16px;height:16px;margin-right:6px;background:url(../images/status.png) no-repeat;vertical-align:middle;}
+.icon1{background-position:0 0;}
+.icon2{background-position:0 -16px;}
+.icon3{background-position:0 -32px;}
+.icon4{background-position:0 -48px;}
+.status{display:inline-block;vertical-align:middle;line-height:16px;}

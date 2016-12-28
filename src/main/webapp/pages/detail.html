@@ -1,0 +1,835 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+ <head> 
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+  <link th:href="@{/static/css/com.css}" rel="stylesheet" type="text/css" /> 
+  <link th:href="@{/static/css/base.css}" rel="stylesheet" type="text/css" /> 
+  <link th:href="@{/static/css/detail.css}" rel="stylesheet" type="text/css" /> 
+  <link th:href="@{/static/css/bgoverlay.css}" rel="stylesheet" type="text/css" /> 
+  <title>审批查询</title> 
+  <script type="text/javascript" th:src="@{/static/js/jquery-1.8.js}"></script> 
+  <script type="text/javascript" th:src="@{/static/js/base.js}"></script> 
+  <script type="text/javascript" th:src="@{/static/js/edit.js}"></script> 
+  <script type="text/javascript" th:src="@{/static/js/detail.js}"></script> 
+  <script type="text/javascript" th:src="@{/static/js/jquery.json-2.4.js}"></script> 
+  <script type="text/javascript" th:src="@{/static/js/common.js}"></script> 
+  <script th:src="@{/static/js/jquery.form.min.js}"></script>
+ </head> 
+ <body class="content"> 
+  <div class="bg_overlay hidden" id="shadow"></div> 
+  <div id="detailPageId" style="display:block;"> 
+   <div class="w"> 
+    <div class="sec-box"> 
+     <div class="cont-sec"> 
+      <h3 class="sec-title">客户信息</h3> 
+      <div class="show-box"> 
+       <table class="show-table" cellspacing="0" cellpadding="0" border="0"> 
+        <tbody> 
+         <tr> 
+          <th width="100">订购单位：</th> 
+          <td style="display:none;" id="optionKeyId" th:text="${optionKey}">1,2,3</td> 
+          <td style="display:none;" id="parentOrderIdVal" th:text="${cust['SUBSCRIBE_ID']}">prentID</td> 
+          <td width="335" th:text="${cust['COMPANY']}">中国联合网络通信有限公司</td> 
+          <th width="100">客户类型：</th> 
+          <td width="335" th:if="${cust['CUSTOMER_TYPE']=='1'}">大客户</td> 
+          <td width="335" th:if="${cust['CUSTOMER_TYPE']=='2'}">批发商</td> 
+          <td width="335" th:if="${cust['CUSTOMER_TYPE']=='3'}">零售商</td> 
+          <td width="335" th:if="${cust['CUSTOMER_TYPE']=='4'}">赠刊</td> 
+          <td width="335" th:if="${cust['CUSTOMER_TYPE']=='5'}">样刊</td> 
+         </tr> 
+         <tr> 
+          <th width="100">联系人：</th> 
+          <td width="335" th:text="${cust['CUSTOMER_NAME']}">常小兵</td> 
+          <th width="100">联系人手机：</th> 
+          <td width="335" th:text="${cust['CUSTOMER_PHONE']}">18699999999</td> 
+         </tr> 
+         <tr> 
+          <th width="100">固定电话：</th> 
+          <td width="335" th:text="${cust['FIXED_TELEPHONE']}">010-88594412</td> 
+          <th width="100">经联人：</th> 
+          <td width="335" th:text="${cust['CONTACT_NAME']}">姚总</td> 
+         </tr> 
+         <tr> 
+          <th width="100">经联人电话：</th> 
+          <td width="335" th:text="${cust['CONTACT_PHONE']}">18433332222</td> 
+          <th width="100">折扣率：</th> 
+          <td width="335" th:text="${cust['DISCOUNT_RATE']}">100</td> 
+         </tr> 
+        </tbody> 
+       </table> 
+       <div class="result-tips"> 
+        <i class="bulb"></i> 
+        <label><em>备注：</em><span th:text="${cust['REMARK']}">该客户是我部大批发商，如果库存紧张优先发货</span></label> 
+       </div> 
+      </div> 
+     </div> 
+     <div class="cont-sec"> 
+      <div class="sec-title-w"> 
+       <h3 class="sec-title" id="selectOrderDetailSeq">订阅信息&lt;1&gt;</h3> 
+       <a id="change-order-btn" href="javascript:void(0);" class="change-info" onclick="showAllOrders('detail');">切换订阅信息</a> 
+      </div> 
+      <div class="show-box"> 
+       <table id="orderInfoTablDetail" class="show-table" cellspacing="0" cellpadding="0" border="0"> 
+        <tbody> 
+         <tr> 
+          <th width="130">订阅数量：</th> 
+          <td width="305">10</td> 
+          <th width="130">产品：</th> 
+          <td width="305">中国书法专业版</td> 
+         </tr> 
+         <tr> 
+          <th width="130">订阅周期：</th> 
+          <td width="305">2014-01</td> 
+          <th width="130">订阅方式：</th> 
+          <td width="305">电话订阅</td> 
+         </tr> 
+         <tr> 
+          <th width="130">是否需要发票：</th> 
+          <td width="305">是</td> 
+          <th width="130">是否未付款先发货：</th> 
+          <td width="305">否</td> 
+          <td style="display:none;" class="orderIdHidden"></td> 
+         </tr> 
+        </tbody> 
+       </table> 
+       <div class="sub-show-box"> 
+        <div class="sec-title-w"> 
+         <h3 class="sec-title" id="selectSendDetailSeq">配送信息&lt;1&gt;</h3> 
+         <a id="change-dispatch-btnDetail" href="javascript:void(0);" class="change-info" onclick="showAllSends('detail');">切换配送信息</a> 
+        </div> 
+        <ul class="info-list" id="sendInfoTblDetail"> 
+         <li><label>库存地址：</label><span>--</span></li> 
+         <li><label>月配送数量：</label><span>--</span></li> 
+         <li><label>寄送方式：</label><span>--</span></li> 
+         <li><label>寄送地址：</label><span>--</span></li> 
+         <li><label>邮编：</label><span>--</span></li> 
+         <li><label>收件人：</label><span>--</span></li> 
+         <li><label>电话：</label><span>--</span></li> 
+         <li><label>是否需要标签：</label><span>--</span></li> 
+         <li id="nosendInfoId" style="display:none;"> 
+          <div class="result-tips"> 
+           <i class="bulb"></i> 
+           <label><em>提示：</em><span>该订单自提或者本月无需配送</span></label> 
+          </div> </li> 
+        </ul> 
+       </div> 
+      </div> 
+     </div> 
+     <div class="cont-sec" id="fapiaoArearDivDetail"> 
+      <div class="sec-title-w"> 
+       <h3 class="sec-title">发票信息&lt;1&gt;</h3> 
+       <a id="change-receipt-btn1" href="javascript:void(0);" class="change-info" onclick="showAllInvoice('detail');">切换发票信息</a> 
+      </div> 
+      <div class="show-box"> 
+       <table class="show-table" cellspacing="0" cellpadding="0" border="0" id="invoiceInfoTblDetail"> 
+        <tbody> 
+         <tr> 
+          <th width="130">发票类型：</th> 
+          <td width="305">杂志社</td> 
+          <th width="130">发票抬头：</th> 
+          <td width="305">抬头aaaaaaa</td> 
+         </tr> 
+         <tr> 
+          <th width="130">单张金额：</th> 
+          <td width="305">100</td> 
+          <th width="130">发票数量：</th> 
+          <td width="305">100</td> 
+         </tr> 
+         <tr> 
+          <th width="130">发票编号：</th> 
+          <td width="305">10010124124</td> 
+          <th width="130">&nbsp;</th> 
+          <td width="305">&nbsp;</td> 
+         </tr> 
+        </tbody> 
+       </table> 
+      </div> 
+     </div> 
+     <div class="func-box"> 
+      <a href="javascript:void(0);" class="blue-bdr-btn" onclick="closeDialog();">返回</a> 
+      <a href="javascript:void(0);" class="blue-bdr-btn" onclick="edit();" id="editOptionBtn">编辑</a> 
+     </div> 
+    </div> 
+   </div> 
+   <!-- 切换订阅信息弹出层begin --> 
+   <div id="orderListDivDetail" class="layer list-layer" style="display:none;left:650px;"> 
+    <div class="layer-t"> 
+     <label>订阅列表</label> 
+     <span class="layer-close">&times;</span> 
+    </div> 
+    <div class="layer-cont"> 
+     <div class="order-list-box"> 
+      <table cellspacing="0" cellpadding="0" border="0" class="order-list-head"> 
+       <tbody> 
+        <tr> 
+         <th width="30">&nbsp;</th> 
+         <th width="100">选择</th> 
+         <th width="140">订阅序列</th> 
+         <th width="150">产品</th> 
+         <th width="100">订阅周期</th> 
+         <th>订阅数</th> 
+        </tr> 
+       </tbody> 
+      </table> 
+      <div class="order-list-w"> 
+       <table id="orderToShowTblIdDetail" cellspacing="0" cellpadding="0" border="0" class="order-list"> 
+        <tbody> 
+         <tr> 
+          <td width="30"><input type="radio" class="radio-style" name="page-order" /></td> 
+          <td width="110">订阅信息&lt;1&gt;</td> 
+          <td width="110">12347593475938</td> 
+          <td width="150">中国书法专业版</td> 
+          <td width="100">2011－01</td> 
+          <td>1500</td> 
+         </tr> 
+         <tr> 
+          <td width="30"><input type="radio" class="radio-style" name="page-order" /></td> 
+          <td width="110">订阅信息&lt;1&gt;</td> 
+          <td width="110">12347593475938</td> 
+          <td width="150">中国书法专业版</td> 
+          <td width="100">2011－01</td> 
+          <td>1500</td> 
+         </tr> 
+         <tr> 
+          <td width="30"><input type="radio" class="radio-style" name="page-order" /></td> 
+          <td width="110">订阅信息&lt;1&gt;</td> 
+          <td width="110">12347593475938</td> 
+          <td width="150">中国书法专业版</td> 
+          <td width="100">2011－01</td> 
+          <td>1500</td> 
+         </tr> 
+         <tr> 
+          <td width="30"><input type="radio" class="radio-style" name="page-order" /></td> 
+          <td width="110">订阅信息&lt;1&gt;</td> 
+          <td width="110">12347593475938</td> 
+          <td width="150">中国书法专业版</td> 
+          <td width="100">2011－01</td> 
+          <td>1500</td> 
+         </tr> 
+         <tr> 
+          <td width="30"><input type="radio" class="radio-style" name="page-order" /></td> 
+          <td width="110">订阅信息&lt;1&gt;</td> 
+          <td width="110">12347593475938</td> 
+          <td width="150">中国书法专业版</td> 
+          <td width="100">2011－01</td> 
+          <td>1500</td> 
+         </tr> 
+         <tr> 
+          <td width="30"><input type="radio" class="radio-style" name="page-order" /></td> 
+          <td width="110">订阅信息&lt;1&gt;</td> 
+          <td width="110">12347593475938</td> 
+          <td width="150">中国书法专业版</td> 
+          <td width="100">2011－01</td> 
+          <td>1500</td> 
+         </tr> 
+        </tbody> 
+       </table> 
+      </div> 
+     </div> 
+     <div class="layer-btns"> 
+      <a href="javascript:void(0);" class="short-btn " onclick="changeOrder('detail');">确定</a> 
+      <a href="javascript:void(0);" class="short-btn layer-cancel">取消</a> 
+     </div> 
+    </div> 
+   </div> 
+   <!-- 切换订阅信息弹出层end --> 
+   <!-- 切换配送信息弹出层begin --> 
+   <div id="sendListDivDetail" class="layer list-layer" style="display:none;top:400px;"> 
+    <div class="layer-t"> 
+     <label>配送列表</label> 
+     <span class="layer-close">&times;</span> 
+    </div> 
+    <div class="layer-cont"> 
+     <div class="order-list-box"> 
+      <table cellspacing="0" cellpadding="0" border="0" class="order-list-head"> 
+       <tbody> 
+        <tr> 
+         <th width="30">&nbsp;</th> 
+         <th width="100">选择</th> 
+         <th width="160">配送期刊</th> 
+         <th width="200">配送地址</th> 
+         <th width="90">收件人</th> 
+         <th>收件人电话</th> 
+        </tr> 
+       </tbody> 
+      </table> 
+      <div class="order-list-w"> 
+       <table id="sendToShowTblIdDetail" cellspacing="0" cellpadding="0" border="0" class="order-list"> 
+        <tbody> 
+         <tr> 
+          <td width="30"><input type="radio" class="radio-style" name="dispatch-list" /></td> 
+          <td width="100">配送信息&lt;1&gt;</td> 
+          <td width="110">12347593475938</td> 
+          <td width="160">金融街21号</td> 
+          <td width="90">好人</td> 
+          <td>12345678901</td> 
+         </tr> 
+         <tr> 
+          <td width="30"><input type="radio" class="radio-style" name="dispatch-list" /></td> 
+          <td width="100">配送信息&lt;1&gt;</td> 
+          <td width="110">12347593475938</td> 
+          <td width="160">金融街21号</td> 
+          <td width="90">好人</td> 
+          <td>12345678901</td> 
+         </tr> 
+         <tr> 
+          <td width="30"><input type="radio" class="radio-style" name="dispatch-list" /></td> 
+          <td width="100">配送信息&lt;1&gt;</td> 
+          <td width="110">12347593475938</td> 
+          <td width="160">金融街21号</td> 
+          <td width="90">好人</td> 
+          <td>12345678901</td> 
+         </tr> 
+         <tr> 
+          <td width="30"><input type="radio" class="radio-style" name="dispatch-list" /></td> 
+          <td width="100">配送信息&lt;1&gt;</td> 
+          <td width="110">12347593475938</td> 
+          <td width="160">金融街21号</td> 
+          <td width="90">好人</td> 
+          <td>12345678901</td> 
+         </tr> 
+         <tr> 
+          <td width="30"><input type="radio" class="radio-style" name="dispatch-list" /></td> 
+          <td width="100">配送信息&lt;1&gt;</td> 
+          <td width="110">12347593475938</td> 
+          <td width="160">金融街21号</td> 
+          <td width="90">好人</td> 
+          <td>12345678901</td> 
+         </tr> 
+         <tr> 
+          <td width="30"><input type="radio" class="radio-style" name="dispatch-list" /></td> 
+          <td width="100">配送信息&lt;1&gt;</td> 
+          <td width="110">12347593475938</td> 
+          <td width="160">金融街21号</td> 
+          <td width="90">好人</td> 
+          <td>12345678901</td> 
+         </tr> 
+         <tr> 
+          <td width="30"><input type="radio" class="radio-style" name="dispatch-list" /></td> 
+          <td width="100">配送信息&lt;1&gt;</td> 
+          <td width="110">12347593475938</td> 
+          <td width="160">金融街21号</td> 
+          <td width="90">好人</td> 
+          <td>12345678901</td> 
+         </tr> 
+        </tbody> 
+       </table> 
+      </div> 
+     </div> 
+     <div class="layer-btns"> 
+      <a href="javascript:void(0);" class="short-btn " onclick="changeSend('detail');">确定</a> 
+      <a href="javascript:void(0);" class="short-btn layer-cancel" onclick="cancleHanler('sendListDivDetail');">取消</a> 
+     </div> 
+    </div> 
+   </div> 
+   <!-- 切换配送信息弹出层end --> 
+   <!-- 切换发票信息弹出层begin --> 
+   <div id="invoiceListDivDetail" class="layer list-layer" style="display:none;top:650px"> 
+    <div class="layer-t"> 
+     <label>发票列表</label> 
+     <span class="layer-close">&times;</span> 
+    </div> 
+    <div class="layer-cont"> 
+     <div class="order-list-box"> 
+      <table cellspacing="0" cellpadding="0" border="0" class="order-list-head"> 
+       <tbody> 
+        <tr> 
+         <th width="30">&nbsp;</th> 
+         <th width="110">选择</th> 
+         <th width="100">发票类型</th> 
+         <th width="160">发票抬头</th> 
+         <th width="90">发票金额</th> 
+         <th>发票份数</th> 
+        </tr> 
+       </tbody> 
+      </table> 
+      <div class="order-list-w"> 
+       <table id="invoiceToShowTblIdDetail" cellspacing="0" cellpadding="0" border="0" class="order-list"> 
+        <tbody> 
+         <tr> 
+          <td width="30"><input type="radio" class="radio-style" name="receipt" /></td> 
+          <td width="110">12347593475938</td> 
+          <td width="100">办公用品</td> 
+          <td width="160">亚信联创</td> 
+          <td width="90">1000</td> 
+          <td>1000</td> 
+         </tr> 
+         <tr> 
+          <td width="30"><input type="radio" class="radio-style" name="receipt" /></td> 
+          <td width="110">12347593475938</td> 
+          <td width="100">办公用品</td> 
+          <td width="160">亚信联创</td> 
+          <td width="90">1000</td> 
+          <td>1000</td> 
+         </tr> 
+         <tr> 
+          <td width="30"><input type="radio" class="radio-style" name="receipt" /></td> 
+          <td width="110">12347593475938</td> 
+          <td width="100">办公用品</td> 
+          <td width="160">亚信联创</td> 
+          <td width="90">1000</td> 
+          <td>1000</td> 
+         </tr> 
+         <tr> 
+          <td width="30"><input type="radio" class="radio-style" name="receipt" /></td> 
+          <td width="110">12347593475938</td> 
+          <td width="100">办公用品</td> 
+          <td width="160">亚信联创</td> 
+          <td width="90">1000</td> 
+          <td>1000</td> 
+         </tr> 
+         <tr> 
+          <td width="30"><input type="radio" class="radio-style" name="receipt" /></td> 
+          <td width="110">12347593475938</td> 
+          <td width="100">办公用品</td> 
+          <td width="160">亚信联创</td> 
+          <td width="90">1000</td> 
+          <td>1000</td> 
+         </tr> 
+         <tr> 
+          <td width="30"><input type="radio" class="radio-style" name="receipt" /></td> 
+          <td width="110">12347593475938</td> 
+          <td width="100">办公用品</td> 
+          <td width="160">亚信联创</td> 
+          <td width="90">1000</td> 
+          <td>1000</td> 
+         </tr> 
+        </tbody> 
+       </table> 
+      </div> 
+     </div> 
+     <div class="layer-btns"> 
+      <a href="javascript:void(0);" class="short-btn layer-sure">确定</a> 
+      <a href="javascript:void(0);" class="short-btn layer-cancel" onclick="changeInvoice('detail');">取消</a> 
+     </div> 
+    </div> 
+   </div> 
+   <!-- 切换发票信息弹出层end --> 
+  </div> 
+  <div id="editPageId" style="display:none;"> 
+   <div class="w"> 
+    <div class="sec-box"> 
+     <div class="cont-sec"> 
+      <h3 class="sec-title">客户信息</h3> 
+      <div class="show-box"> 
+       <table class="show-table" cellspacing="0" cellpadding="0" border="0"> 
+        <tbody> 
+         <tr> 
+          <th width="100">订购单位：</th> 
+          <td width="335" th:text="${cust['COMPANY']}">中国联合网络通信有限公司</td> 
+          <th width="100">客户类型：</th> 
+          <td width="335" th:if="${cust['CUSTOMER_TYPE']=='1'}">大客户</td> 
+          <td width="335" th:if="${cust['CUSTOMER_TYPE']=='2'}">批发商</td> 
+         </tr> 
+         <tr> 
+          <th width="100">联系人：</th> 
+          <td width="335" th:text="${cust['CUSTOMER_NAME']}">常小兵</td> 
+          <th width="100">联系人手机：</th> 
+          <td width="335" th:text="${cust['CUSTOMER_PHONE']}">18699999999</td> 
+         </tr> 
+         <tr> 
+          <th width="100">固定电话：</th> 
+          <td width="335" th:text="${cust['FIXED_TELEPHONE']}">010-88594412</td> 
+          <th width="100">经联人：</th> 
+          <td width="335" th:text="${cust['CONTACT_NAME']}">姚总</td> 
+         </tr> 
+         <tr> 
+          <th width="100">经联人电话：</th> 
+          <td width="335" th:text="${cust['CONTACT_PHONE']}">18433332222</td> 
+          <th width="100">折扣率：</th> 
+          <td width="335" th:text="${cust['DISCOUNT_RATE']+'折'}">100</td> 
+         </tr> 
+        </tbody> 
+       </table> 
+       <div class="result-tips"> 
+        <i class="bulb"></i> 
+        <label><em>备注：</em><span th:text="${cust['REMARK']}">该客户是我部大批发商，如果库存紧张优先发货</span></label> 
+       </div> 
+      </div> 
+     </div> 
+     <div class="cont-sec" id="orderEditAreaId"> 
+      <div class="sec-title-w"> 
+       <h3 class="sec-title" id="selectOrderSeq">订阅信息&lt;1&gt;</h3> 
+       <a id="changeOrderId" href="javascript:void(0);" class="change-info">切换订阅信息</a> 
+      </div> 
+      <div class="show-box"> 
+       <table class="show-table" cellspacing="0" cellpadding="0" border="0" id="orderInfoTrId"> 
+        <tbody> 
+         <tr> 
+          <th width="130">订阅数量：</th> 
+          <td width="315">10</td> 
+          <th width="130">产品：</th> 
+          <td width="315">中国书法专业版</td> 
+         </tr> 
+         <tr> 
+          <th width="130">订阅周期：</th> 
+          <td width="315">2014-01</td> 
+          <th width="130">订阅方式：</th> 
+          <td width="315">电话订阅</td> 
+         </tr> 
+         <tr> 
+          <th width="130">是否需要发票：</th> 
+          <td width="305"> <span class="sel-box sel-box-on needInvoiceEdit" needinvoice="1">&nbsp;&nbsp;是&nbsp;&nbsp;</span> <span style="margin-left:15px;" class="sel-box needInvoiceEdit" needinvoice="2">&nbsp;&nbsp;否&nbsp;&nbsp;</span> <input id="parentOrderInvoiceTag" value="" style="display:none;" /> </td> 
+          <th width="130">是否未付款先发货：</th> 
+          <td width="305"> <span class="sel-box sel-box-on sendFirstEdit" sendfirst="1">&nbsp;&nbsp;是&nbsp;&nbsp;</span> <span style="margin-left:15px;" class="sel-box sendFirstEdit" sendfirst="2">&nbsp;&nbsp;否&nbsp;&nbsp;</span> <input id="parentOrderSendfirstTag" value="" style="display:none;" /> </td> 
+          <td style="display:none;" class="orderIdHidden"></td> 
+          <td style="display:none;" class="prodTypeHidden"></td> 
+          <td style="display:none;" class="prodBeginHidden"></td> 
+          <td style="display:none;" class="prodEndHidden"></td> 
+          <td style="display:none;" class="isLianxuHidden"></td> 
+         </tr> 
+        </tbody> 
+       </table> 
+       <div class="sub-show-box"> 
+        <div class="sec-title-w"> 
+         <h3 class="sec-title" id="selectSendSeq">配送信息&lt;1&gt;</h3> 
+         <a id="changeSendInfoId" href="javascript:void(0);" class="change-info">切换配送信息</a> 
+        </div> 
+        <input type="hidden" value="" id="selectSendInfoId" /> 
+        <table class="oprt-table" cellspacing="0" cellpadding="0" border="0" id="sendInfoEditTblId"> 
+         <tbody> 
+          <tr> 
+           <th>库存地址：</th> 
+           <td id="stockAddrId"> <span class="sel-box sel-box-on stocktypecss" stocktype="1">杂志社</span> <span class="sel-box stocktypecss" stocktype="2">邮局</span> <span class="sel-box stocktypecss" stocktype="3">印刷厂</span> <input type="hidden" value="1" id="userSelectStockAddr" /> </td> 
+          </tr> 
+          <tr> 
+           <th>月配送数量：</th> 
+           <td id="sendAmontPerMonthId"> <input type="text" class="ipt-style w300" /> </td> 
+          </tr> 
+          <tr> 
+           <th>寄送方式：</th> 
+           <td id="sendWayId"> <span class="sel-box sel-box-on sendwaycss" sendway="1">自提</span> <span class="sel-box sendwaycss" sendway="2">邮局</span> <span class="sel-box sendwaycss" sendway="3">中铁</span> <input type="hidden" value="1" id="userSelectSendWay" /> </td> 
+          </tr> 
+          <tr> 
+           <th>寄送地址：</th> 
+           <td id="sendAddrId"> <input type="text" class="ipt-style w300" /> </td> 
+          </tr> 
+          <tr> 
+           <th>邮编：</th> 
+           <td id="sendPostId"> <input type="text" class="ipt-style w120" /> </td> 
+          </tr> 
+          <tr> 
+           <th>收件人：</th> 
+           <td id="receiveName"> <input type="text" class="ipt-style w300" /> </td> 
+          </tr> 
+          <tr> 
+           <th>电话：</th> 
+           <td id="receivePhone"> <input type="text" class="ipt-style w120" /> </td> 
+          </tr> 
+          <tr> 
+           <th>是否需要标签：</th> 
+           <td id="needMarkId"> <span class="sel-box sel-box-on bookmarkcss" bookmark="1">是</span> <span class="sel-box bookmarkcss" bookmark="2">否</span> <input type="hidden" value="" id="userSelectNeedBookMrk" /> </td> 
+          </tr> 
+         </tbody> 
+        </table> 
+        <div class="sub-btns-box" id="optionBtnAreaId"> 
+         <input type="button" value="新建配送单" class="oprt-btn" onclick="addSend();" id="addNewSendBtnId" /> 
+         <input type="button" value="取消新建" class="oprt-btn" onclick="cancelAdd();" style="display:none;" id="cancelAddBtnId" /> 
+         <input type="button" value="保存新建配送单" class="oprt-btn" onclick="saveAdd();" style="display:none;" id="saveAddBtnId" /> 
+         <input type="button" value="修改配送单" class="oprt-btn" onclick="editSend();" id="modifyBtnId" /> 
+         <a class="txt-btn delete" href="javascript:void(0);" onclick="deleteSend();" id="deleteSendBtn">删除配送单</a> 
+        </div> 
+        <div class="result-tips" id="nosendInfoEdit" style="display:none;"> 
+         <i class="bulb"></i> 
+         <label><em>备注：</em><span>该订单客户自提没有配送信息</span></label> 
+        </div> 
+       </div> 
+      </div> 
+     </div> 
+    </div> 
+    <div class="cont-sec" id="fapiaoArearDivEdit"> 
+     <div class="sec-title-w"> 
+      <h3 class="sec-title">发票信息&lt;1&gt;</h3> 
+      <a id="change-receipt-btn" href="javascript:void(0);" class="change-info" onclick="showAllInvoice();">切换发票信息</a> 
+     <input type="button" value="导入发票" class="oprt-btn" onclick="importInvoice();" style="margin-left: 100px;margin-top: 10px;"/>  
+     </div> 
+     <div class="show-box"> 
+      <table id="invoiceInfoTblId" class="oprt-table" cellspacing="0" cellpadding="0" border="0"> 
+       <tbody> 
+        <tr> 
+         <th>发票类型：</th> 
+         <td> <span class="sel-box sel-box-on invoiceTypeCss" invoicetype="1">普通发票</span> <span class="sel-box invoiceTypeCss" invoicetype="2">增值税发票</span> <input type="hidden" value="1" id="userSelectInvoiceType" /> </td> 
+        </tr> 
+        <tr> 
+         <th>发票项目：</th> 
+         <td> <span class="sel-box sel-box-on invoiceItem" invoiceitem="1">中国书法</span> <span class="sel-box invoiceItem" invoiceitem="2">书本</span> <span class="sel-box invoiceItem" invoiceitem="3">广告费</span> <span class="sel-box invoiceItem" invoiceitem="4">宣传费</span> <input type="hidden" value="1" id="userSelectInvoiceItem" /> </td> 
+        </tr> 
+        <tr> 
+         <th>发票抬头：</th> 
+         <td> <input type="text" class="ipt-style w300" /> </td> 
+        </tr> 
+        <tr> 
+         <th>单张金额：</th> 
+         <td> <input type="text" class="ipt-style w120" /><span class="hinge">元</span> </td> 
+        </tr> 
+        <tr> 
+         <th>发票数量：</th> 
+         <td> <input readonly="readonly" type="text" class="ipt-style w120" value="1" /><span class="hinge">张</span> </td> 
+        </tr> 
+        <tr> 
+         <th>发票号：</th> 
+         <td> <input type="text" class="ipt-style w120"  /><span style="color:blue;">发票打印后填写该项</span> </td> 
+        </tr> 
+        <tr style="display:none;"> 
+         <th>发票序列，生成的标识，非发票号：</th> 
+         <td> <input type="text" class="ipt-style w120" value="1" /></td> 
+        </tr> 
+        <tr> 
+         <th>备注：</th> 
+         <td> <textarea class="text-style remarks" id="invoiceRemark"></textarea> </td>
+        </tr> 
+        <!--  
+         <tr> 
+          <th>发票编号：</th> 
+          <td> <input type="text" class="ipt-style w300" /> </td>
+          <td style="display:none;"> <input type="text" value="" /></td> 
+         </tr>
+         --> 
+       </tbody> 
+      </table> 
+      <div class="sub-btns-box" id="invoiceOptionBtnAreaId"> 
+       <input type="button" value="新建发票" class="oprt-btn" id="addnewInvoice"  onclick="addOneInvoice();" />
+       <input type="button" value="取消新建" class="oprt-btn" id="cancelAddInvoice" onclick="cancelAddNewInvoide();" /> 
+       <input type="button" value="保存新建发票" class="oprt-btn" id="saveNewInvoice" onclick="saveNewInvoice();" /> 
+       <input type="button" value="修改发票" class="oprt-btn" id="PreInvoicesaveBtn" onclick="updateTheInvoice();" />
+       <a class="txt-btn delete" href="javascript:void(0);" id='deleteInvoiceBtn' onclick="deleteInvoice();">删除发票</a> 
+      </div> 
+     </div> 
+    </div> 
+    <div class="func-box" id="BOTTOM"> 
+     <a href="javascript:void(0);" class="blue-bdr-btn mrg-r-15" onclick="close();">返回</a> 
+     <a href="javascript:void(0);" class="blue-btn" onclick="updateSendFirst();">保存</a> 
+    </div> 
+   </div> 
+  </div> 
+  <!-- 切换订阅信息弹出层begin --> 
+  <div id="orderListDiv" class="layer list-layer" style="display:none;left:650px;"> 
+   <div class="layer-t"> 
+    <label>订阅列表</label> 
+    <span class="layer-close">&times;</span> 
+   </div> 
+   <div class="layer-cont"> 
+    <div class="order-list-box"> 
+     <table cellspacing="0" cellpadding="0" border="0" class="order-list-head"> 
+      <tbody>
+       <tr> 
+        <th width="30">&nbsp;</th> 
+        <th width="100">选择</th> 
+        <th width="140">订阅序列</th> 
+        <th width="150">产品</th> 
+        <th width="100">订阅周期</th> 
+        <th>订阅数</th> 
+       </tr> 
+      </tbody>
+     </table> 
+     <div class="order-list-w"> 
+      <table id="orderToShowTblId" cellspacing="0" cellpadding="0" border="0" class="order-list"> 
+       <tbody>
+        <tr> 
+         <td width="30"><input type="radio" class="radio-style" name="page-order" /></td> 
+         <td width="110">订阅信息&lt;1&gt;</td> 
+         <td width="110">12347593475938</td> 
+         <td width="150">中国书法专业版</td> 
+         <td width="100">2011－01</td> 
+         <td>1500</td> 
+        </tr> 
+       </tbody>
+      </table> 
+     </div> 
+    </div> 
+    <div class="layer-btns"> 
+     <a href="javascript:void(0);" class="short-btn" onclick="changeOrder();">确定</a> 
+     <a href="javascript:void(0);" class="short-btn layer-cancel">取消</a> 
+    </div> 
+   </div> 
+  </div> 
+  <!-- 切换订阅信息弹出层end --> 
+  <!-- 切换配送信息弹出层begin --> 
+  <div id="sendListDiv" class="layer list-layer" style="display:none;top:400px;"> 
+   <div class="layer-t"> 
+    <label>配送列表</label> 
+    <span class="layer-close">&times;</span> 
+   </div> 
+   <div class="layer-cont"> 
+    <div class="order-list-box"> 
+     <table cellspacing="0" cellpadding="0" border="0" class="order-list-head"> 
+      <tbody>
+       <tr> 
+        <th width="30">&nbsp;</th> 
+        <th width="100">选择</th> 
+        <th width="160">配送期刊</th> 
+        <th width="200">配送地址</th> 
+        <th width="90">收件人</th> 
+        <th>收件人电话</th> 
+       </tr> 
+      </tbody>
+     </table> 
+     <div class="order-list-w"> 
+      <table id="sendToShowTblId" cellspacing="0" cellpadding="0" border="0" class="order-list"> 
+       <tbody>
+        <tr> 
+         <td width="30"><input type="radio" class="radio-style" name="dispatch-list" /></td> 
+         <td width="100">&lt;1&gt;</td> 
+         <td width="110">12347593475938</td> 
+         <td width="160">金融街21号</td> 
+         <td width="90">好人</td> 
+         <td>12345678901</td> 
+        </tr> 
+       </tbody>
+      </table> 
+     </div> 
+    </div> 
+    <div class="layer-btns"> 
+     <a href="javascript:void(0);" class="short-btn " onclick="changeSend();">确定</a> 
+     <a href="javascript:void(0);" class="short-btn layer-cancel">取消</a> 
+    </div> 
+   </div> 
+  </div> 
+  <!-- 切换配送信息弹出层end --> 
+  <!-- 切换发票信息弹出层begin --> 
+  <div id="invoiceListDiv" class="layer list-layer" style="display:none;top:600px;"> 
+   <div class="layer-t"> 
+    <label>发票列表</label> 
+    <span class="layer-close">&times;</span> 
+   </div> 
+   <div class="layer-cont"> 
+    <div class="order-list-box"> 
+     <table cellspacing="0" cellpadding="0" border="0" class="order-list-head"> 
+      <tbody>
+       <tr> 
+        <th width="30">&nbsp;</th> 
+        <th width="110">选择</th> 
+        <th width="100">发票类型</th> 
+        <th width="160">发票抬头</th> 
+        <th width="90">发票金额</th> 
+        <th>发票份数</th> 
+       </tr> 
+      </tbody>
+     </table> 
+     <div class="order-list-w"> 
+      <table id="invoiceToShowTblId" cellspacing="0" cellpadding="0" border="0" class="order-list"> 
+       <tbody>
+        <tr> 
+         <td width="30"><input type="radio" class="radio-style" name="receipt" /></td> 
+         <td width="110">12347593475938</td> 
+         <td width="100">办公用品</td> 
+         <td width="160">亚信联创</td> 
+         <td width="90">1000</td> 
+         <td>1000</td> 
+        </tr> 
+        <tr> 
+         <td width="30"><input type="radio" class="radio-style" name="receipt" /></td> 
+         <td width="110">12347593475938</td> 
+         <td width="100">办公用品</td> 
+         <td width="160">亚信联创</td> 
+         <td width="90">1000</td> 
+         <td>1000</td> 
+        </tr> 
+        <tr> 
+         <td width="30"><input type="radio" class="radio-style" name="receipt" /></td> 
+         <td width="110">12347593475938</td> 
+         <td width="100">办公用品</td> 
+         <td width="160">亚信联创</td> 
+         <td width="90">1000</td> 
+         <td>1000</td> 
+        </tr> 
+        <tr> 
+         <td width="30"><input type="radio" class="radio-style" name="receipt" /></td> 
+         <td width="110">12347593475938</td> 
+         <td width="100">办公用品</td> 
+         <td width="160">亚信联创</td> 
+         <td width="90">1000</td> 
+         <td>1000</td> 
+        </tr> 
+        <tr> 
+         <td width="30"><input type="radio" class="radio-style" name="receipt" /></td> 
+         <td width="110">12347593475938</td> 
+         <td width="100">办公用品</td> 
+         <td width="160">亚信联创</td> 
+         <td width="90">1000</td> 
+         <td>1000</td> 
+        </tr> 
+        <tr> 
+         <td width="30"><input type="radio" class="radio-style" name="receipt" /></td> 
+         <td width="110">12347593475938</td> 
+         <td width="100">办公用品</td> 
+         <td width="160">亚信联创</td> 
+         <td width="90">1000</td> 
+         <td>1000</td> 
+        </tr> 
+       </tbody>
+      </table> 
+     </div> 
+    </div> 
+    <div class="layer-btns"> 
+     <a href="javascript:void(0);" class="short-btn layer-sure" onclick="changeInvoice();">确定</a> 
+     <a href="javascript:void(0);" class="short-btn layer-cancel" >取消</a> 
+    </div> 
+   </div> 
+  </div> 
+  
+  <!-- 选择文件导入弹出层begin -->
+<div class="layer list-layer" style="display:none;" id="import">
+	<div class="layer-t">
+		<label>订单列表</label>
+		<span class="layer-close">×</span>
+	</div>
+	<div class="layer-cont">
+		<div class="lead-in">
+			<p>1、文件须小于<em style="color: red">500</em>行。</p>
+			<p>2、请点击“浏览” 按钮选中需要上传的附件，然后点击“上传”按钮进行上传。</p>
+			<div class="choose-file">
+				<form action="#" th:action="@{/importInvoice}" method="post" enctype="multipart/form-data" id="import_form">
+					<input style="display:none;" id="subscribeId" name="subscribeId"/>
+					<input type="file" id="fileInfo" name="file"/>
+				</form>
+			</div>
+			<div class="lead-btns">
+				<a class="oprt-btn" href="javascript:void(0);" onclick="importSubmit()">确认导入</a>
+			</div>
+		</div>
+		<div class="result-tips"><i class="bulb"></i><label>导入结果展示：本次导入 <em id="result_info1">0</em> 条，成功 <em id="result_info2">0</em> 条，失败 <em id="result_info3">0</em> 条</label></div>
+		<div class="lead-tb-box">
+			<table cellspacing="0" cellpadding="0" border="0" class="lead-head">
+				<tr>
+					<th width="120">行数</th>
+					<th width="200">错误原</th>
+					<th>操作建议</th>
+				</tr>
+			</table>
+			<div class="lead-tb-w">
+				<table cellspacing="0" cellpadding="0" border="0" class="lead-tb" id="tal_error">
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+  <!-- 切换发票信息弹出层end --> 
+  <!-- 成功提示层 begin --> 
+  <div id="succ_tips_layer" class="tips-layer"> 
+   <div class="tips-layer-t"> 
+    <label>信息提示</label> 
+   </div> 
+   <div class="tips-layer-cont"> 
+    <p class="tips-sec"><span class="success-icon"></span><label id="succ_tips_lable">成功成功成功成功成功成功成功成功成功成功</label></p> 
+    <div class="tips-layer-btns"> 
+     <a href="javascript:void(0)" class="oprt-btn tips-layer-sure">确&nbsp;&nbsp;定</a> 
+    </div> 
+   </div> 
+  </div> 
+  <!-- 成功提示层 end --> 
+  <!-- 失败提示层 begin --> 
+  <div id="fail_tips_layer" class="tips-layer"> 
+   <div class="tips-layer-t"> 
+    <label>信息提示</label> 
+   </div> 
+   <div class="tips-layer-cont"> 
+    <p class="tips-sec"><span class="success-icon"></span><label id="fail_tips_lable">成功成功成功成功成功成功成功成功成功成功</label></p> 
+    <div class="tips-layer-btns"> 
+     <a href="javascript:void(0)" class="oprt-btn tips-layer-sure">确&nbsp;&nbsp;定</a> 
+    </div> 
+   </div> 
+  </div> 
+  <!-- 失败提示层 end -->   
+ </body>
+</html>

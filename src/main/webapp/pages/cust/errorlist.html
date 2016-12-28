@@ -1,0 +1,27 @@
+<div class="list-box">
+                    <table class="list-thead" cellspacing="0" cellpadding="0" border="0">
+                        <tr>
+                            <th width="100">行数</th>
+                            <th width="400">错误原因</th>
+                            <th>操作建议</th>
+                        </tr>
+                    </table>
+                    <div class="list-tb-w">
+                        <table class="list-tb" cellspacing="0" cellpadding="0" border="0" th:if="${errsResults != null and not #lists.isEmpty(errsResults)}" >
+                            <tr th:each="errCust,rowStat : ${errsResults}">
+                                <td width="100" th:text= "${errCust['line']}" ></td>
+                                <td width="400" th:text= "${errCust['error']}" ></td>
+                                <td th:text= "${errCust['right_operate']}"></td>
+                            </tr>
+                            
+                        </table>
+                    </div>
+</div>
+
+<div class="list-box">
+<div th:include="pages/fragment/ajaxpager::ajaxpager"
+  th:with="ajaxPageId='errorList'" th:remove="tag"></div>
+</div>
+
+
+

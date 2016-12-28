@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+ <head> 
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+  <title>寄送回单管理</title> 
+  <link rel="stylesheet" th:href="@{/static/css/base.css}" type="text/css" /> 
+  <link rel="stylesheet" th:href="@{/static/css/order_input.css}" type="text/css" /> 
+  <link rel="stylesheet" th:href="@{/static/css/list_manage.css}" type="text/css" /> 
+  <script type="text/javascript" th:src="@{/static/js/jquery-1.8.js}"></script> 
+  <script type="text/javascript" th:src="@{/static/js/post_manage.js}"></script>
+  <script th:src="@{/static/js/jq-overlay.js}"></script>
+  <script th:src="@{/static/js/jquery.timers-1.2.js}"></script> 
+  <script type="text/javascript" src="../static/js/jquery.form.min.js" th:src="@{/static/js/jquery.form.min.js}"></script>
+      <script  th:src="@{/static/js/date/WdatePicker.js}"></script>
+        <script type="text/javascript" th:src="@{/static/js/jquery.json-2.4.js}"></script> 
+      
+  
+ </head> 
+ <body> 
+  <div class="w"> 
+   <div class="tabs"> 
+    <ul id="tablist" class="tablist"> 
+     <li class="on">回单导入</li> 
+     <li>回单查询</li> 
+    </ul> 
+   </div> 
+   <div class="sec-box"> 
+    <div class="tabs-cont"> 
+     <div class="cont-sec"> 
+      <h3 class="sec-title">选择文件导入</h3> 
+      <div class="lead-in"> 
+       <p>1、文件须小于<em style="color: red">500</em>行。</p> 
+       <p>2、请点击“浏览” 按钮选中需要上传的附件，然后点击“上传”按钮进行上传。</p> 
+       <form action="#" th:action="@{/importPostInfo}" method="post" enctype="multipart/form-data" id="importPostInfo"> 
+          <div class="choose-file">
+              <input type="file" name="file" style="height:22px" value="选择文件"/>
+          </div>
+       </form>
+       <div class="lead-btns">
+        <a class="oprt-btn" href="javascript:void(0);" onclick="importPost();">确认导入</a>
+       </div> 
+      </div> 
+     </div> 
+     <div class="cont-sec"> 
+      <h3 class="sec-title">导入结果</h3> 
+      <div class="result-tips">
+       <i class="bulb"></i>
+       <label>导入结果展示：本次导入 <em id="totalNumId">0</em> 条，成功 <em id="successNumId">0</em> 条，失败 <em id="failNumId">0</em> 条</label>
+      </div> 
+      <div class="list-box"> 
+       <table id="importFailRecordTb" class="list-tb" cellspacing="0" cellpadding="0" border="0"> 
+        <thead> 
+         <tr>
+          <th width="20%">行数</th> 
+          <th width="40%">错误原因</th> 
+          <th width="40%">操作建议</th> 
+         </tr> 
+        </thead> 
+        <tbody> 
+         
+        </tbody> 
+       </table> 
+      </div> 
+     </div> 
+     
+    </div> 
+    <div class="tabs-cont" style="display:none;"> 
+     <div class="cont-sec"> 
+      <h3 class="sec-title">查询条件</h3> 
+      <table class="oprt-table" cellspacing="0" cellpadding="0" border="0"> 
+       <tbody>
+        <tr> 
+         <th>配送序列：</th> 
+         <td> <input type="text" class="ipt-style w300" id="sendId"/> </td> 
+        </tr> 
+        <tr> 
+         <th>配送地址：</th> 
+         <td><input type="text" class="ipt-style w124" id="receiveAddr"/></td> 
+        </tr> 
+        <tr> 
+         <th>收件人：</th> 
+         <td><input type="text" class="ipt-style w124" id="receivePeople"/></td> 
+        </tr> 
+        
+        <tr> 
+         <th>收件人手机：</th> 
+         <td><input type="text" class="ipt-style w124" id="receivePhone" /></td> 
+        </tr> 
+        <tr> 
+         <th>配送日期：</th> 
+         <td> 
+         <input id="sendTimeStartInput" type="text" class="ipt-style date" onfocus="WdatePicker({maxDate:'%y-%M',dateFmt:'yyyy-MM'})" />
+         <span class="hinge">至</span> 
+         <input id="sendTimeEndInput" type="text" class="ipt-style date" onfocus="WdatePicker({maxDate:'%y-%M',minDate:'#F{$dp.$D(\'sendTimeStartInput\')}',dateFmt:'yyyy-MM'})" /> </td> 
+        </tr>  
+        <tr> 
+         <th>&nbsp;</th> 
+         <td> <a href="javascript:void(0);" class="oprt-btn" onclick="searchSendList();">查&nbsp;&nbsp;&nbsp;&nbsp;询</a> </td> 
+        </tr> 
+       </tbody>
+      </table> 
+     </div> 
+     <div class="cont-sec"> 
+      <h3 class="sec-title">查询结果</h3> 
+      <div class="list-box"> 
+       <form id="sendListInfoTbl" method="post" th:action="@{/qrySendWithPostInfo}" th:include="pages/post/sendListFrag"> 
+        <!-- 此处展示的是需要分页的部分 连同分页组件一起 --> 
+       </form>
+      </div> 
+     </div> 
+    </div> 
+ 
+   </div> 
+  </div> 
+  <!-- 成功提示层 begin -->
+<div id="succ_tips_layer" class="tips-layer">
+    <div class="tips-layer-t">
+        <label>信息提示</label>
+    </div>
+    <div class="tips-layer-cont">
+        <p class="tips-sec"><span class="success-icon"></span><label id="succ_tips_lable">成功成功成功成功成功成功成功成功成功成功</label></p>
+        <div class="tips-layer-btns">
+            <a href="javascript:void(0)" class="oprt-btn tips-layer-sure">确&nbsp;&nbsp;定</a>
+        </div>
+    </div>
+</div>
+<!-- 成功提示层 end -->
+
+<!-- 失败提示层 begin -->
+<div id="fail_tips_layer" class="tips-layer">
+    <div class="tips-layer-t">
+        <label>信息提示</label>
+    </div>
+    <div class="tips-layer-cont">
+        <p class="tips-sec"><span class="success-icon"></span><label id="fail_tips_lable">成功成功成功成功成功成功成功成功成功成功</label></p>
+        <div class="tips-layer-btns">
+            <a href="javascript:void(0)" class="oprt-btn tips-layer-sure">确&nbsp;&nbsp;定</a>
+        </div>
+    </div>
+</div>
+<!-- 失败提示层 end -->
+ </body>
+</html>

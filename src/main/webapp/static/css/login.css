@@ -1,0 +1,25 @@
+﻿@charset "utf-8";
+/* CSS Document */
+body{background:#e5e5dd; background:url(../images/login_bg4.jpg) repeat center 0 ;}
+.box{width:1220px;height:700px;margin:0px auto;position:relative;margin:0px auto; }
+.login{position:absolute;top:425px;left:450px;width:289px;}
+.login span{width:80px;height:36px;float:left;}
+.login ul li{height:26px;font-size:12px;padding-bottom:15px;}
+.login input{width:150px;height:26px;line-height:26px;border:1px solid #DFD9C1;background:#F5F5F3;padding-left:10px;color:#D1D1D1;}
+.login input.reg1{width:80px;vertical-align:top;}
+.login #btn{border:none;background:url(../images/t1.png) no-repeat -90px -2px;width:106px;height:116px;
+position:absolute;right:-100px;top:0px;border:none;cursor:pointer;outline:none;}
+
+#check input{width:80px;float:left;}
+#check img{width:60px;height:28px;cursor:pointer;padding:0px 6px;float:left;}
+#check a{display:inline-block;line-height:30px;color:#D1D1D1;}
+
+#errorInfo{padding-left:80px;}
+.login p a{color:#D1D1D1;}
+.name{background:url(../images/t1.png) no-repeat 0px -8px;}
+.pwd{background:url(../images/t1.png) no-repeat 0px -48px;}
+.reg{background:url(../images/t1.png) no-repeat 0px -88px;}
+
+.footer{width:910px;margin:0px auto;text-align:center;line-height:24px;font-size:14px;}
+.p1{color:#B4B3AF;}
+

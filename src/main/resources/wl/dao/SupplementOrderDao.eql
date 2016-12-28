@@ -1,0 +1,22 @@
+-- [seq]
+ select func_nextval(##)
+--[insertOrderInfo]
+insert into tf_b_order(SUBSCRIBE_ID,ORDER_ID,ORDER_TYPE,
+PRODUCT_TYPE,PRODUCT_PER_COUNT,CONTIN_MONTH,PRODUCT_BEGIN,PRODUCT_END,UPDATE_STAFF,UPDATE_TIME)
+values(#subscribeId#,#orderId#,#subscribeType#,#productType#,#productPerCount#,#continMonth#,#productStart#,#productEnd#,#staffId#,now())
+--[insertSubscribeInfo]
+insert into tf_b_subscribe(SUBSCRIBE_ID,SUBSCRIBE_STATE,CUSTOMER_NAME,CUSTOMER_PHONE,CUSTOMER_TYPE,FIXED_TELEPHONE,UPDATE_STAFF,UPDATE_TIME,REMARK,COMPANY,CONTACT_NAME,CONTACT_PHONE,TOTAL_COUNT,ACCEPT_TIME,ACCEPT_STAFF,TOTAL_MONEY)
+values(#subscribeId#,'1',#customerName#,#customerPhone#,#customerType#,#fixedTel#,#staffId#,now(),#remark#,#company#,#contactName#,#contactPhone#,#sum#,now(),#staffId#,#totalMoney#)
+--[insertDistributInfo]
+insert into tf_b_distribut(ORDER_ID,DISTRIBUT_ID,STOCK_ADDRESS,DISTRIBUT_COUNT,DISTRIBUT_TYPE,DISTRIBUT_ADDRESS,ADDRESSEE_NAME,ADDRESSEE_PHONE,ZIP_CODE,NEED_LABEL_FLAG,PRODUCT_TYPE,YEAR,MONTH,LABEL_CONTENT,UPDATE_STAFF,UPDATE_TIME,REMARK)
+values(#orderId#,#distributId#,#address#,#count#,#distributType#,#distributAddress#,#addressName#,#addressPhone#,#zipCode#,#labelFlag#,#productType#,#year#,#month#,#LABEL_CONTENT#,#staffId#,now(),#remark#)
+--[selectStock]
+select REMAIN_COUNT,OCCUPY_AMOUNT
+from tf_m_stock
+where PRINT_CODE=#printCode#
+and STOCK_TYPE=#stockType#
+--[updateOccupyStock]
+update tf_m_stock
+set OCCUPY_AMOUNT=OCCUPY_AMOUNT+#count#,UPDATE_TIME=now(),UPDATE_STAFF=#staffId#
+where PRINT_CODE=#printCode#
+and STOCK_TYPE=#stockType#

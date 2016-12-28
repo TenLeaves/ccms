@@ -1,0 +1,18 @@
+.navs{width:260px;height:1120px;padding:15px 0;border:1px solid #606060;border-width:1px 0;background:#606060 url(../images/navs_bg.jpg) no-repeat left bottom;}
+.nav{margin-bottom:5px;}
+.nav dt{cursor:pointer;height:40px;margin-bottom:5px;padding-left:15px;font-size:18px;color:#fefefe;font-weight:bold;}
+.nav dt i{display:inline-block;width:24px;height:24px;margin-right:5px;background:url(../images/nav_icons.png) no-repeat;vertical-align:middle;}
+.nav dt i.fill-ico{background-position:0 0;}
+.nav dt i.store-ico{background-position:0 -24px;}
+.nav dt i.fee-ico{background-position:0 -48px;}
+.nav dt i.examine-ico{background-position:0 -72px;}
+.nav dt i.report-ico{background-position:0 -96px;}
+.nav dt label{cursor:pointer;display:inline-block;line-height:40px;vertical-align:middle;}
+.sub-navs{display:none;}
+.sub-navs a{display:block;padding:0 20px 0 40px;line-height:40px;font-size:14px;color:#fff;}
+.sub-navs a b{float:right;}
+.sub-navs a i{display:inline-block;width:8px;height:0;margin-right:5px;border-bottom:1px solid #ccc;overflow:hidden;font-size:0;vertical-align:middle;}
+.sub-navs a span{display:inline-block;vertical-align:middle;}
+.sub-navs a:hover,.sub-navs a.selected{background:#fff;}
+.sub-navs a:hover span,.sub-navs a:hover b,.sub-navs a.selected span,.sub-navs a.selected b{color:#69c;}
+.sub-navs a:hover i,.sub-navs a.selected i{border-color:#ccc;}

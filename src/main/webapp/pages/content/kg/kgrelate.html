@@ -1,0 +1,26 @@
+<table class="list-tb" cellspacing="0" cellpadding="0" border="0">
+                    <thead>
+                        <tr>
+                            <th>发票序列</th>
+                            <th>发票数量</th>
+                            <th>填写时间</th>
+                            <th>打印状态</th>
+                            <th>打印时间</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="each:${kgrelate}">
+                            <td th:text="${each['INVOICE_ID']}">12343</td>
+                            <td th:text="${each['INVOICE_COUNT']+'张'}">3张</td>
+                            <td th:text="${each['ACCEPT_TIME']}">2014年5月10日 14:03:57</td>
+                            <td th:text="${each['INVOICE_STATE']}"></td>
+                            <td th:text="${each['INVOICE_TYPE_TIME']}">2014年5月10日 14:03:57</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <td colspan="5">
+                            <div th:include="pages/fragment/ajaxpager::ajaxpager"
+  th:with="ajaxPageId='kgrelateTable'" th:remove="tag"></div>
+                        </td>
+                    </tfoot>
+                </table>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<body>
+<div th:fragment="ajaxpager">
+
+    <link rel="stylesheet" th:href="@{/static/css/pager.css}" href="../../static/css/pager.css"/>
+    
+    <div class="tableTitle" th:id="${#objects.nullSafe(ajaxPageId,'_ajaxPage') + 'Id'}">
+            <span class="pagingNew">
+                <input type="hidden" name="totalRows" th:value="${eqlPage.totalRows}"/>
+                <input type="hidden" name="totalPages" th:id="${#objects.nullSafe(ajaxPageId,'_ajaxPage') + 'totalPages'}" th:value="${eqlPage.TotalPages}"/>
+                <input type="hidden" name="startIndex" th:value="${eqlPage.startIndex}"/>
+                <input type="hidden" name="currentPage" th:value="${eqlPage.currentPage}"/>
+                <input type="hidden" name="pageRows" th:value="${eqlPage.pageRows}"/>
+                <label>
+                    <span>每页</span>
+                    <span>
+                        <select class="pagingNum" th:id="${#objects.nullSafe(ajaxPageId,'ajaxPageRows') + 'Select'}">
+                            <option th:each="pageRows : ${T(wl.common.PageRowsEnum).values()}"
+                                    th:value="${pageRows.value}"
+                                    th:text="${pageRows.value}"
+                                    th:selected="${pageRows.value == eqlPage.pageRows}">
+                            </option>
+                        </select>
+                    </span>
+                    <span>条</span>
+                </label>
+
+                <a class="prevPage" th:text="${'上一页'}" th:id="${#objects.nullSafe(ajaxPageId,'ajaxPageRows') + 'prevPage'}"
+                     th:if="${eqlPage.currentPage!= 1}"></a>
+
+                <label th:id="${#objects.nullSafe(ajaxPageId,'_ajaxPage') + 'PageNum'}"></label>
+
+                <a class="nextPage" th:text="${'下一页'}" th:id="${#objects.nullSafe(ajaxPageId,'ajaxPageRows') + 'nextPage'}" 
+                   th:if="${eqlPage.currentPage != eqlPage.totalPages}" ></a>
+
+                <label class="marginTop4" th:text="${'共 ' + eqlPage.totalPages + ' 页'}" 
+                         />
+                <label class="marginTop4">跳转至</label>
+                  <input type="text" class="inputW20H18" th:value="${eqlPage.currentPage}"
+                         th:id="${#objects.nullSafe(ajaxPageId,'_ajaxPage') + 'IdInputPageNo'}"/>
+                <label class="marginTop4">页</label>
+                <a href="javascript:void(0);" class="determineBtn"
+                   th:id="${#objects.nullSafe(ajaxPageId,'_ajaxPage') + 'IdDetermineBtn'}">确定</a>
+            </span>
+        <label class="totalRecord">共<font class="font" th:text="${eqlPage.totalRows}"/>条</label>
+    </div>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        $(function () {
+            var PageFormId = "errorList";// /*[[${#objects.nullSafe(PageFormId,'_ajaxPage')}]]*/ 
+            var totalPages =  $("#" + PageFormId + "totalPages").val();  //总页数        /*[[${eqlPage.totalPages}]]*/
+            var currentPage = $("input[name='currentPage']").val();  //当前页       /*[[${eqlPage.currentPage}]]*/
+            var $pageRowsSelect = $("#" + PageFormId + "Select"); // 选择每页条数
+            var $pageRowsHide = $("input[name='pageRows']"); // 每页条数 hideen
+            var $currentPageHide = $("input[name='currentPage']"); //当前页数
+            var $startIndex = $("input[name='startIndex']"); // 隐藏的起始序号
+            var $pageNumDiv = $("#" + PageFormId + "PageNum"); // 页脚Lable
+            var $prevPage = $("#" + PageFormId + "prevPage"); // 上一页
+            var $nextPage = $("#" + PageFormId + "nextPage"); // 下一页
+            var $goPageBtn = $("#" + PageFormId + "IdDetermineBtn"); // 跳转按钮
+            //var $goPageBtn = $("#" + PageFormId + " .determineBtn"); // 跳转按钮
+            var $goPageInput = $("#" + PageFormId + "IdInputPageNo"); // 跳转输入框
+            var $pageForm = $("#" + PageFormId); // 列表表单
+
+            $pageRowsSelect.change(function () {
+                $pageRowsHide.val($(this).val());
+                chosen("1", "refresh");
+            });
+
+            $prevPage.click(function () {
+                gotoPage(parseInt(currentPage) - 1);
+            });
+
+            $nextPage.click(function () {
+                gotoPage(parseInt(currentPage) + 1);
+            });
+
+            $goPageBtn.click(function () {
+                gotoPage($.trim($goPageInput.val()));
+            });
+
+            // pager currently only handles 10 viewable pages ( could be easily parameterized, maybe in next version ) so handle edge cases
+            var startPoint = 1;
+            var _endPoint = 5;
+
+            if (currentPage > 4) {
+                startPoint = (currentPage - 2)<1?1:(currentPage - 2);
+                _endPoint = (parseInt(currentPage) + 2)>totalPages?totalPages:parseInt(currentPage) + 2;
+                
+            }
+
+            // loop thru visible pages and render buttons
+            for (var page = startPoint; page <= _endPoint; page++) {
+                addDiv(page, currentPage);
+            }
+
+
+            function addDiv(pageNum, currentPage) {
+                var $currentButton = $('<a class="page-number">' + pageNum + '</a>--');
+                $currentButton.click(function () {
+                    chosen(pageNum)
+                });
+                if (pageNum == currentPage) $currentButton.addClass('pagingSelect');
+                $currentButton.appendTo($pageNumDiv);
+            }
+
+            // 页脚调用分页
+            function chosen(index, refresh) {
+                gotoPage(index, refresh);
+            }
+
+            function gotoPage(pageIndex, refresh) {
+                if (!pageIndex.toString().match(/^[0-9]+$/))
+                    return;
+                if (0 >= pageIndex || pageIndex > totalPages || (pageIndex == currentPage && "refresh" != refresh))
+                    return;
+
+                $currentPageHide.val(pageIndex);
+                $startIndex.val($pageRowsHide.val() <= 0 ? 0 : ($currentPageHide.val() - 1) * $pageRowsHide.val());
+               
+                $pageForm.ajaxSubmit({
+                  success: function (result) {
+                      $pageForm.empty().html(result);
+                  }
+                });
+            }
+        });
+        /*]]>*/
+    </script>
+</div>
+</body>
+</html>

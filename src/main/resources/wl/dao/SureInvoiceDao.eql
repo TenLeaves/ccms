@@ -1,0 +1,65 @@
+﻿
+--[selectTypedInvoice]
+SELECT 
+  i.SUBSCRIBE_ID,
+  i.INVOICE_ID,
+  i.INVOICE_TITLE,
+  i.INVOICE_AMOUNT,
+  i.INVOICE_COUNT,
+  i.REMARK,
+  CASE i.INVOICE_ITEM  WHEN '1' THEN '中国书法' WHEN '2' THEN '书本' WHEN '3' THEN '广告费' WHEN '4' THEN '宣传费' ELSE '其他' END INVOICE_ITEM,
+  IF(i.INVOICE_TYPE = '1', '普通发票 ', '增值发票') INVOICE_TYPE,
+  IF(i.INVOICE_STATE = '0', '未打印', '已打印') INVOICE_STATEDESC,
+  i.INVOICE_STATE,
+  i.INVOICE_TYPE_TIME,
+  i.INVOICE_NO
+FROM
+  tf_b_subscribe s,
+  tf_b_invoice i 
+WHERE s.SUBSCRIBE_ID = i.SUBSCRIBE_ID 
+  AND s.INVOICE_FLAG in ('2','3')
+-- isNotEmpty invoiceId
+and i.INVOICE_ID like CONCAT('%',#invoiceId#,'%')
+-- end
+-- isNotEmpty orderId
+and i.SUBSCRIBE_ID like CONCAT('%',#orderId#,'%')
+-- end
+-- isNotEmpty invoiceTitle
+and i.INVOICE_TITLE like CONCAT('%',#invoiceTitle#,'%')
+-- end
+-- isNotEmpty exportInfo
+     AND i.INVOICE_STATE = #exportInfo#
+-- end
+-- isNotEmpty startTime
+ and  i.INVOICE_TYPE_TIME >= STR_TO_DATE(#startTime#, '%Y-%m-%d') 
+-- end
+-- isNotEmpty endTime
+ and  i.INVOICE_TYPE_TIME < date_add(#endTime#, interval 1 day)
+-- end
+
+--[updateInvoice]
+update tf_b_invoice set INVOICE_STATE='1',INVOICE_TYPE_TIME=now(),INVOICE_NO=#invoiceNo#
+where INVOICE_ID=#invoiceId#
+and SUBSCRIBE_ID=#orderId#
+
+--[selectSub]
+select sum(i.INVOICE_AMOUNT) num,s.TOTAL_MONEY
+from tf_b_subscribe s,
+  tf_b_invoice i 
+WHERE s.SUBSCRIBE_ID = i.SUBSCRIBE_ID 
+and s.SUBSCRIBE_ID=#orderId#
+group by s.SUBSCRIBE_ID
+
+--[updateSub]
+update tf_b_subscribe set INVOICE_FLAG='3'
+where SUBSCRIBE_ID=#orderId#
+
+--[selectPayInfoBySubId]
+SELECT 
+  p.PAYMENT_NAME,
+  p.PAYMENT_TIME,
+  p.PAYMENT_VALUE 
+FROM
+  tf_b_payment p 
+WHERE p.SUBSCRIBE_ID = ## 
+  

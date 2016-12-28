@@ -1,0 +1,54 @@
+				<table class="list-tb" cellspacing="0" cellpadding="0" border="0"
+				th:if="${results != null and not #lists.isEmpty(results)}" id="tal">
+					<thead>
+					<tr>
+                        
+						<th width="6%">所属订单</th>
+						<th style="display: none;">发票序列</th>
+						<th width="8%">发票号</th>
+						<th width="12%">抬头</th>
+						<th width="4%">项目内容</th>
+						<th width="4%">发票类别</th>
+						<th width="5%">金额</th>
+						<th width="2%">数量</th>
+						<th width="4%">打印状态</th>
+						<th width="6%">打印时间</th>
+						
+						<th width="15%" >汇款人</th>
+						<th width="9%" >汇款时间</th>
+						<th width="8%" >汇款金额</th>
+                        <th >备注</th>
+                        <th width="4%" >操作</th>
+					</tr>
+					</thead>
+					<tbody>
+						<tr  th:each="cust,rowStat : ${results}">
+                            
+							<td th:text="${cust[SUBSCRIBE_ID]}">140418000271</td>
+							<td style="display: none;" th:text="${cust[INVOICE_ID]}">单位单位单位单位单位单位单位</td>
+							<td th:text="${cust[INVOICE_NO]}+'&nbsp;'">大客户</td>
+							<td th:text="${cust[INVOICE_TITLE]}">大客户</td>
+							<td th:text="${cust[INVOICE_ITEM]}">大客户</td>
+							<td th:text="${cust[INVOICE_TYPE]}">大客户</td>
+							<td th:text="${cust[INVOICE_AMOUNT]}">10</td>
+							<td th:text="${cust[INVOICE_COUNT]}">2014-4-04 14:53:42</td>
+							
+							<td th:text="${cust[INVOICE_STATEDESC]}">大客户</td>
+							<td th:text="${cust[INVOICE_TYPE_TIME]}+'&nbsp;'">大客户</td>
+							
+                            <td th:text="${cust[PAYMENT_NAME]}">汇款人</td>
+                            <td th:text="${cust[PAYMENT_TIME]}">汇款时间</td>
+                            <td th:text="${cust[PAYMENT_VALUE]}">金额</td>
+                            <td th:text="${cust[REMARK]}">大客户</td>
+                            <td>
+                                <a href="javascript:void(0);" class="c69c fb sure-btn" th:if="${cust[INVOICE_STATE] == '0'}" onclick="sureInvoice(this)">确认</a>
+                            </td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<td colspan="9">
+							<div th:include="pages/fragment/ajaxpager::ajaxpager"
+  								th:with="ajaxPageId='pagesList'" th:remove="tag"></div>
+						</td>
+					</tfoot>
+				</table>

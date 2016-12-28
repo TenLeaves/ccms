@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>客户信息维护</title>
+<link rel="stylesheet" type="text/css" href="../css/base.css" th:href="@{/static/css/base.css}"/>
+<link rel="stylesheet" type="text/css" href="../css/print_paper_apply.css" th:href="@{/static/css/print_paper_apply.css}"/>
+<script type="text/javascript" src="../js/jquery.min.js" th:src="@{/static/js/jquery.min.js}"></script>
+<script type="text/javascript" src="../js/print_paper_apply.js" th:src="@{/static/js/print_paper_apply.js}"></script>
+<script src="../static/js/jquery-1.8.js"  th:src="@{/static/js/jquery-1.8.js}"></script>
+<script src="../static/js/jquery.form.min.js" th:src="@{/static/js/jquery.form.min.js}"></script>
+<script type="text/javascript" src="../js/common.js" th:src="@{/static/js/common.js}"></script>
+<script src="../static/js/jquery.timers-1.2.js" th:src="@{/static/js/jquery.timers-1.2.js}"></script>
+<script src="../static/js/jq-overlay.js" th:src="@{/static/js/jq-overlay.js}"></script>
+<script th:src="@{/static/js/jquery.json-2.4.js}"></script>
+</head>
+
+<body onload="checkInfo()">
+<div class="w">
+	<div class="sec-box">
+		<div class="cont-sec" id="list1" style="display: block;">
+			<h3 class="sec-title" id="type1">2014年中国书法专业版第03期</h3>
+			<table class="oprt-table" cellspacing="0" cellpadding="0" border="0">
+				<tr>
+					<th>北京市发行报刊局：</th>
+					<td>
+						<input type="text" class="ipt-style w300" onblur="totalInfo(0)" id="paper0"/>
+					</td>
+				</tr>
+				<tr>
+					<th>国际图书公司：</th>
+					<td><input type="text" class="ipt-style w300" onblur="totalInfo(0)" id="book0"/></td>
+				</tr>
+				<tr>
+					<th><a class="merchant" href="javascript:void(0);" onclick="merchant(0)"><i class="pen"></i>批发商：</a></th>
+					<td id="wholesale0">0</td>
+				</tr>			
+				<tr>
+					<th><span class="month2"></span>月大客户数量：</th>
+					<td id="cust0">0</td>
+					<th style="font-size: 15px;">历史数据：</th>
+					<td width="300px"></td>
+				</tr>			
+				<tr>
+					<th><span class="month2"></span>月零售数量：</th>
+					<td id="saleNew0">0</td>
+					<th><span class="month3"></span>月零售数量：</th>
+					<td id="sale0">0</td>
+				</tr>
+				<tr>
+					<th><span class="month2"></span>月赠刊样刊数量：</th>
+					<td id="giveNew0">0</td>
+					<th><span class="month3"></span>月赠刊样刊数量：</th>
+					<td id="give0">0</td>
+				</tr>
+				<tr>
+					<th>预留：</th>
+					<td>
+						<input type="text" class="ipt-style w120" onblur="totalInfo(0)" id="save0"/>
+					</td>
+				</tr>
+				<tr>
+					<th>总计：</th>
+					<td id="total0">0</td>
+				</tr>
+			</table>
+			<div class="layer-btns">
+			<a href="javascript:void(0);" class="blue-btn" onclick="addPayReady(1)">提交申请</a>
+			</div>
+		</div>
+		<div class="cont-sec" id="list2" style="display: block;">
+			<h3 class="sec-title" id="type2">2014年中国书法普及版第03期</h3>
+			<table class="oprt-table" cellspacing="0" cellpadding="0" border="0">
+				<tr>
+					<th>北京市发行报刊局：</th>
+					<td>
+						<input type="text" class="ipt-style w300" onblur="totalInfo(1)" id="paper1"/>
+					</td>
+				</tr>
+				<tr>
+					<th>国际图书公司：</th>
+					<td><input type="text" class="ipt-style w300" onblur="totalInfo(1)" id="book1"/></td>
+				</tr>
+				<tr>
+					<th><a class="merchant" href="javascript:void(0);" onclick="merchant(1)"><i class="pen"></i>批发商：</a></th>
+					<td id="wholesale1">0</td>
+				</tr>			
+				<tr>
+					<th><span class="month2"></span>月大客户数量：</th>
+					<td id="cust1">0</td>
+					<th style="font-size: 15px;">历史数据：</th>
+					<td width="300px"></td>
+				</tr>			
+				<tr>
+					<th><span class="month2"></span>月零售数量：</th>
+					<td id="saleNew1">0</td>
+					<th><span class="month3"></span>月零售数量：</th>
+					<td id="sale1">0</td>
+				</tr>
+				<tr>
+					<th><span class="month2"></span>月赠刊样刊数量：</th>
+					<td id="giveNew1">0</td>
+					<th><span class="month3"></span>月赠刊样刊数量：</th>
+					<td id="give1">0</td>
+				</tr>
+				<tr>
+					<th>预留：</th>
+					<td>
+						<input type="text" class="ipt-style w120" onblur="totalInfo(1)" id="save1"/>
+					</td>
+				</tr>
+				<tr>
+					<th>总计：</th>
+					<td id="total1">0</td>
+				</tr>
+			</table>
+			<div class="layer-btns">
+			<a href="javascript:void(0);" class="blue-btn" onclick="addPayReady(2)">提交申请</a>
+			</div>
+		</div>
+		
+	</div>
+</div>
+<!-- 修改批发商begin -->
+<div id="merchant-edit" class="layer merchant-edit" style="display:none;">
+	<div class="layer-t">
+		<label>修改批发商信息</label>
+		<span class="layer-close">×</span>
+	</div>
+	<div class="layer-cont">
+		<div class="layer-tb-w">
+			<table class="layer-tb" cellspacing="0" cellpadding="0" border="0" id="tal1">
+			</table>
+		</div>
+		<div class="layer-btns">
+			<a href="javascript:void(0);" class="short-btn layer-cancel">取消</a>
+			<a href="javascript:void(0);" class="short-btn layer-sure" onclick="sumInfo()">确定</a>
+		</div>
+	</div>
+</div>
+<!-- 修改批发商end -->
+<!-- 成功提示层 begin -->
+<div id="succ_tips_layer" class="tips-layer">
+    <div class="tips-layer-t">
+        <label>信息提示</label>
+    </div>
+    <div class="tips-layer-cont">
+        <p class="tips-sec"><span class="success-icon"></span><label id="succ_tips_lable">成功成功成功成功成功成功成功成功成功成功</label></p>
+        <div class="tips-layer-btns">
+            <a href="javascript:void(0)" class="oprt-btn tips-layer-sure" onclick="closeLayer()">确&nbsp;&nbsp;定</a>
+        </div>
+    </div>
+</div>
+<!-- 成功提示层 end -->
+</body>
+</html>

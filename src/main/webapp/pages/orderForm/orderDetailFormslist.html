@@ -1,0 +1,33 @@
+				<table class="list-tb" cellspacing="0" cellpadding="0" border="0"
+					th:if="${results != null and not #lists.isEmpty(results)}" id="tal">
+						<thead>
+							<tr class="bg-f5f5f5">
+								<th width="11%">订单编号</th>
+								<th width="13%">订购单位</th>
+								<th width="10%">联系人</th>
+								<th width="10%">订购套数</th>
+								<th width="10%">订购产品</th>
+								<th width="10%">订单金额</th>
+								<th width="10%">订单状态</th>
+								<th class="bdr-r-none">客户类型</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="cust,rowStat : ${results}">
+								<td th:text="${cust[SUBSCRIBE_ID]}+'&nbsp;'"></td>
+								<td th:text="${cust[COMPANY]}+'&nbsp;'"></td>
+								<td th:text="${cust[CUSTOMER_NAME]}+'&nbsp;'"></td>
+								<td th:text="${cust[PRODUCT_PER_COUNT]}+'&nbsp;'"></td>
+								<td th:text="${cust[product]}+'&nbsp;'"></td>
+								<td th:text="${cust[money]}+'&nbsp;'"></td>
+								<td th:text="${cust[SUBSCRIBE_STATE]}+'&nbsp;'"></td>
+								<td class="bdr-r-none" th:text="${cust[custType]}+'&nbsp;'"></td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<td colspan="8">
+								<div th:include="pages/fragment/ajaxpager::ajaxpager"
+                              	th:with="ajaxPageId='pagesList2'" th:remove="tag"></div>
+							</td>
+						</tfoot>
+					</table>

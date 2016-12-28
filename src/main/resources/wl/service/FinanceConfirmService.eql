@@ -1,0 +1,21 @@
+-- [updateFinance]
+update tf_b_subscribe a
+-- trim prefix=SET suffixOverrides=,
+-- iff true
+            a.FIRST_SEND = #FIRST_SEND#,
+            a.PAY_FLAG = #PAY_FLAG#,
+            a.SUBSCRIBE_STATE = #TO_SUBSCRIBE_STATE#,
+            a.PAY_TIME = now(),
+            a.PAY_STAFF=#UPDATE_STAFF#,
+-- end
+WHERE a.SUBSCRIBE_ID = #SUBSCRIBE_ID#
+
+-- [addRemarkToOrder]
+update tf_b_subscribe a
+-- trim prefix=SET suffixOverrides=,
+-- iff true
+            a.PAY_TIME = now(),
+            a.PAY_STAFF=#UPDATE_STAFF#,
+            a.REMARK=#REMARK#,
+-- end
+WHERE a.SUBSCRIBE_ID = #SUBSCRIBE_ID#

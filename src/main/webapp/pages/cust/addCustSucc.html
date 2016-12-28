@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link th:href="@{/static/css/com.css}" href="../static/css/com.css" rel="stylesheet" type="text/css" />
+<link th:href="@{/static/css/reForm.css}" href="../static/css/reForm.css" rel="stylesheet" type="text/css" />
+
+<title>添加客户成功</title>
+<script type="text/javascript">
+
+function reAdd(){
+    window.location.href = "/ccms1/customer";
+}
+</script>
+</head>
+
+<body class="content">
+<div class="Details">
+  <h2></h2>
+  <div  class="Dejuz">
+      <p style="height:50px">成功添加客户信息！<br/></p>
+       
+       <div class="Fill">
+        <input type="button" value="填写新客户" class="back1 buttn1" onclick="reAdd()"/>
+        </div>
+  </div>
+</div>
+</body>
+</html>

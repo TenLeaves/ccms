@@ -1,0 +1,161 @@
+-- [selectChildOrdersById]
+SELECT 
+  co.SUBSCRIBE_ID,
+  co.ORDER_ID,
+  co.ORDER_TYPE,
+  co.PRODUCT_TYPE,
+  co.PRODUCT_PER_COUNT,
+  co.PRODUCT_BEGIN,
+  co.PRODUCT_END,
+  co.CONTIN_MONTH,
+  co.UPDATE_STAFF,
+  co.UPDATE_TIME,
+  d.DISTRIBUT_ID,
+  d.STOCK_ADDRESS,
+  d.DISTRIBUT_COUNT,
+  d.DISTRIBUT_TYPE,
+  d.DISTRIBUT_ADDRESS,
+  d.ADDRESSEE_NAME,
+  d.ADDRESSEE_PHONE,
+  d.ZIP_CODE,
+  d.NEED_LABEL_FLAG,
+  d.EXPORT_FLAG,
+  d.EXPORT_TIME,
+  d.STATUS,
+  d.REASON 
+FROM
+  tf_b_order co,
+  tf_b_distribut d 
+where 
+co.ORDER_ID=d.ORDER_ID
+and co.SUBSCRIBE_ID in
+--for item=parentOrderId index=seq collection=parentIdList open=( separator=, close=)
+        #parentOrderId#
+--end
+order by d.UPDATE_TIME desc
+
+--[selectTypedInvoice]
+SELECT 
+  s.SUBSCRIBE_ID,
+  s.COMPANY,
+  s.CUSTOMER_NAME,
+  s.TOTAL_COUNT,
+  i.INVOICE_TYPE_TIME,
+  i.INVOICE_NO,
+  i.REMARK,
+  i.INVOICE_COUNT,
+  i.INVOICE_AMOUNT,
+  i.INVOICE_TITLE,
+  CASE i.INVOICE_ITEM  WHEN '1' THEN '中国书法' WHEN '2' THEN '书本' WHEN '3' THEN '广告费' WHEN '4' THEN '宣传费' ELSE '其他' END INVOICE_ITEM,
+  IF(i.INVOICE_TYPE = '1', '普通发票 ', '增值发票') INVOICE_TYPE,
+  IF(i.INVOICE_STATE = '0', '未打印 ', '已打印') INVOICE_STATE
+FROM
+  tf_b_subscribe s,
+  tf_b_invoice i 
+WHERE s.SUBSCRIBE_ID = i.SUBSCRIBE_ID 
+  AND s.INVOICE_FLAG = '2'
+
+-- isNotEmpty INVOICE_STATE
+and i.INVOICE_STATE=#INVOICE_STATE#
+-- end
+-- isNotEmpty invoiceTypeTimeStart
+and i.INVOICE_TYPE_TIME<=#invoiceTypeTimeStart#
+-- end
+-- isNotEmpty invoiceTypeTimeEnd
+and i.INVOICE_TYPE_TIME>=#invoiceTypeTimeEnd#
+-- end
+order by s.UPDATE_TIME desc
+
+-- [seq]
+ select func_nextval(##)
+ 
+ --[queryOrderCanAddInvice]
+SELECT 
+  O.SUBSCRIBE_ID,
+  O.CUSTOMER_NAME,
+  O.CUSTOMER_PHONE,
+  O.CUSTOMER_TYPE,
+  O.SUBSCRIBE_STATE,
+  O.COMPANY, 
+  O.FIXED_TELEPHONE,
+  O.CONTACT_NAME,
+  O.CONTACT_PHONE,
+  O.DISCOUNT_RATE,
+  O.UPDATE_STAFF,
+  date_format(O.UPDATE_TIME,'%Y-%c-%d %H:%i:%s') UPDATE_TIME,
+  O.APPROVAL_TIME,
+  O.SUBSCRIBE_STATE,
+  O.TOTAL_MONEY,
+  o.POST_MONEY,
+  O.TOTAL_COUNT,
+  O.PAY_FLAG,
+  O.REMARK,
+  o.FIRST_SEND,
+  o.NEED_INVOICE
+  
+FROM
+  TF_B_SUBSCRIBE O 
+ WHERE 1=1
+-- isNotEmpty SUBSCRIBE_ID
+ and  o.SUBSCRIBE_ID  LIKE CONCAT('%',#SUBSCRIBE_ID#,'%')
+-- end
+
+-- isNotEmpty CUSTOMER_NAME
+ and  o.CUSTOMER_NAME LIKE CONCAT('%',#CUSTOMER_NAME#,'%')
+-- end
+
+-- isNotEmpty COMPANY
+ and  o.COMPANY  LIKE CONCAT('%',#COMPANY#,'%')
+-- end
+-- isNotEmpty CONTACT_NAME
+ and  o.CONTACT_NAME  LIKE CONCAT('%',#CONTACT_NAME#,'%')
+-- end
+-- isNotEmpty OrderStartTime
+ and  DATE_FORMAT(o.UPDATE_TIME,'%Y-%m-%d')>= #OrderStartTime#
+-- end
+-- isNotEmpty OrderEndTime
+ and  DATE_FORMAT(o.UPDATE_TIME,'%Y-%m-%d')<= #OrderEndTime#
+-- end
+
+and ( o.SUBSCRIBE_STATE='2' or o.SUBSCRIBE_STATE='3' OR (BEFORE_INVOICE='1' AND BEFORE_INVOICE_TAG='2') )
+and o.INVOICE_FLAG in('1','2')
+and o.NEED_INVOICE='1'
+
+
+--[selectTypeInvoice1]
+SELECT 
+  i.SUBSCRIBE_ID,
+  i.INVOICE_ID,
+  i.INVOICE_TITLE,
+  i.INVOICE_AMOUNT,
+  i.INVOICE_COUNT,
+  i.REMARK,
+  CASE i.INVOICE_ITEM  WHEN '1' THEN '中国书法' WHEN '2' THEN '书本' WHEN '3' THEN '广告费' WHEN '4' THEN '宣传费' ELSE '其他' END INVOICE_ITEM,
+  IF(i.INVOICE_TYPE = '1', '普通发票 ', '增值发票') INVOICE_TYPE,
+  IF(i.INVOICE_STATE = '0', '未打印', '已打印') INVOICE_STATEDESC,
+  i.INVOICE_STATE,
+  i.INVOICE_TYPE_TIME,
+  i.INVOICE_NO
+FROM
+  tf_b_subscribe s,
+  tf_b_invoice i 
+WHERE s.SUBSCRIBE_ID = i.SUBSCRIBE_ID 
+  AND s.INVOICE_FLAG in ('2','3')
+-- isNotEmpty invoiceId
+and i.INVOICE_ID like CONCAT('%',#invoiceId#,'%')
+-- end
+-- isNotEmpty orderId
+and i.SUBSCRIBE_ID like CONCAT('%',#orderId#,'%')
+-- end
+-- isNotEmpty invoiceTitle
+and i.INVOICE_TITLE like CONCAT('%',#invoiceTitle#,'%')
+-- end
+-- isNotEmpty exportInfo
+     AND i.INVOICE_STATE = #exportInfo#
+-- end
+-- isNotEmpty startTime
+ and  i.INVOICE_TYPE_TIME >= STR_TO_DATE(#startTime#, '%Y-%m-%d') 
+-- end
+-- isNotEmpty endTime
+ and  i.INVOICE_TYPE_TIME < date_add(#endTime#, interval 1 day)
+-- end

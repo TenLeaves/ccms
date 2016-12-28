@@ -1,0 +1,25 @@
+<table class="list-tb" cellspacing="0" cellpadding="0" border="0">
+                    <thead>
+                        <tr>
+                            <th>申请单号</th>
+                            <th>产品</th>
+                            <th>申请时间</th>
+                            <th>入库状态</th>
+                        </tr>
+                    </thead>
+                    <tbody  >
+                        <tr th:each="each:${kgtoDo}">
+                            <td th:text="${each['PRINT_ID']}">12132321</td>
+                            <td th:text="${each['PRODUCT_NAME']}">2014年专业版第二期</td>
+                            <td th:text="${each['ACCEPT_TIME']}">2014年5月10日 14:58:02</td>
+                            <td th:text="${'未入库'}">1</td>
+                            
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <td colspan="4">
+                            <div th:include="pages/fragment/ajaxpager::ajaxpager"
+  th:with="ajaxPageId='kuguanTodoTable'" th:remove="tag"></div>
+                        </td>
+                    </tfoot>
+                </table>

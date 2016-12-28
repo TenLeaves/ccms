@@ -1,0 +1,347 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:th="http://www.thymeleaf.org" >
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>客户信息维护</title>
+<link rel="stylesheet" type="text/css" th:href="@{/static/css/base.css}" href="../static/css/base.css" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/css/customer_info_maintain.css}" href="../static/css/customer_info_maintain.css" />
+<link rel="stylesheet" type="text/css" th:href="@{/static/css/bgoverlay.css}" href="../static/css/bgoverlay.css"  />
+<script type="text/javascript" src="../static/js/jquery-1.8.js"  th:src="@{/static/js/jquery-1.8.js}"></script>
+<script type="text/javascript" src="../static/js/jquery.form.min.js" th:src="@{/static/js/jquery.form.min.js}"></script>
+<script type="text/javascript" src="../static/js/jquery.timers-1.2.js" th:src="@{/static/js/jquery.timers-1.2.js}"></script>
+<script type="text/javascript" src="../static/js/jq-overlay.js" th:src="@{/static/js/jq-overlay.js}"></script>
+<script type="text/javascript" src="../static/js/common.js" th:src="@{/static/js/common.js}"></script>
+<script type="text/javascript" src="../static/js/customer_info_maintain.js" th:src="@{/static/js/customer_info_maintain.js}"></script>
+</head>
+<body>
+<div class="w">
+<div id="bgOver" class="bg_overlay"></div>
+    <div class="tabs">
+        <ul id="tablist" class="tablist">
+            <li class="on">新增客户</li>
+            <li>查询客户</li>
+            <li>批量导入</li>
+        </ul>
+    </div>
+    <div class="sec-box">
+        <div class="tabs-cont">
+            <h3 class="sec-title">添加订阅信息</h3>
+            <form id="addCustInfo" action="#" th:action="@{/addCust}" th:object="${customer}" method="post">
+            <table class="oprt-table" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                    <th><em class="star">*</em>订购单位：</th>
+                    <td>
+                        <input id="complany" th:field="*{complany}" type="text" class="ipt-style w300" />
+                        <span id="complany_err" class="err"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th><em class="star">*</em>联系人：</th>
+                    <td>
+                        <input id="name" th:field="*{name}" type="text" class="ipt-style w124" />
+                        <span id="name_err" class="err"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th><em class="star">*</em>客户类型：</th>
+                    <td>
+                        <span class="sel-box sel-long sel-box-on" onclick="custTypeChange(1);">大客户</span>
+                        <span class="sel-box sel-long" onclick="custTypeChange(2);">批发商</span>
+                        <span class="sel-box sel-long" onclick="custTypeChange(6);">报刊发行局</span>
+                        <span class="sel-box sel-long" onclick="custTypeChange(7);">发行站</span>
+                    </td>
+                    <td><input id="custType" type="hidden" value='1' th:field = "*{custType}" /></td>
+                </tr>           
+                <tr>
+                    <th><em class="star">*</em>联系人手机：</th>
+                    <td>
+                        <input id="phone" th:field = "*{phone}" type="text" class="ipt-style w124" />
+                        <span id="phone_err" class="err"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>固定电话：</th>
+                    <td>
+                        <input id="fixTel1" type="text" class="ipt-style w80" value="" /><span class="hinge">-</span>
+                        <input id="fixTel2" type="text" class="ipt-style w168" /><span class="hinge">转</span>
+                        <input id="fixTel3" type="text" class="ipt-style w80" />
+                        <span id="fixTel_err" class="err"></span>
+                    </td>
+                    <td><input id="fixedPhone" type="hidden" th:field = "*{fixedPhone}" /> </td>
+                </tr>
+                <tr>
+                    <th>折扣率：</th>
+                    <td><input id="discount" th:field = "*{discount}" type="text" class="ipt-style w124" value="" />
+                    <span class="hinge">折</span>
+                    <span id="discount_err" class="err"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>经联人：</th>
+                    <td><input id="contactName" th:field = "*{contactName}" type="text" class="ipt-style w124" /></td>
+                </tr>
+                
+                <tr>
+                    <th>经联人电话：</th>
+                    <td><input id="contactPhone" th:field = "*{contactPhone}" type="text" class="ipt-style w124" /></td>
+                </tr>
+                <tr>
+                    <th>备注：</th>
+                    <td>
+                        <textarea id="remark" th:field = "*{remark}" class="text-style remarks" ></textarea>
+                        <p class="ipt-tips"></p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>&nbsp;</th>
+                    <td>
+                        <input type="reset" value="重  置" class="blue-bdr-btn mrg-r-15"/>
+                        <input type="button" value="确  定" class="blue-btn" onclick="addCust();"/>
+                    </td>
+                </tr>
+            </table>
+            </form>
+        </div>
+        <div class="tabs-cont" style="display:none;">
+            <div class="cont-sec">
+                <h3 class="sec-title">查询条件</h3>
+                <form action="#" th:action="@{/selAllCust}" th:object="${customer}" method="post" id="selCusts">
+                <table class="oprt-table" cellspacing="0" cellpadding="0" border="0">
+                    <tr>
+                        <th>订购单位：</th>
+                        <td>
+                            <input th:field="*{complany}" type="text" class="ipt-style w300" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>单位联系人：</th>
+                        <td><input th:field="*{name}" type="text" class="ipt-style w124" /></td>
+                    </tr>
+                    <tr>
+                        <th>客户类型：</th>
+                        <td>
+                            <span class="sel-box sel-long sel-box-on" onclick="sel_custTypeChange(1);">大客户</span>
+                            <span class="sel-box sel-long" onclick="sel_custTypeChange(2);">批发商</span>
+                            <span class="sel-box sel-long" onclick="sel_custTypeChange(6);">报刊发行局</span>
+                            <span class="sel-box sel-long" onclick="sel_custTypeChange(7);">发行站</span>
+                        </td>
+                        <td><input id = "sel_custType" type="hidden" value='1' th:field = "*{custType}" /></td>
+                    </tr>           
+                    <tr>
+                        <th>联系人手机：</th>
+                        <td><input th:field = "*{phone}" type="text" class="ipt-style w124" /></td>
+                    </tr>
+                    <tr>
+                        <th>经联人：</th>
+                        <td><input th:field = "*{contactName}" type="text" class="ipt-style w124" /></td>
+                    </tr>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <td>
+                        <input type="button" value="查  询" class="oprt-btn" onclick= "selAllCust();"/>
+                        </td>
+                    </tr>
+                </table>
+                </form>
+            </div>
+            
+            <form action="#" th:action="@{/selCust}"  method="post" 
+                th:include="pages/cust/custlist" id="pagesList">
+            </form>
+            
+        </div>
+        
+        <div class="tabs-cont" style="display:none;">
+            <div class="cont-sec">
+                <h3 class="sec-title">选择文件导入</h3>
+                <div class="lead-in">
+                    <p>1、客户数量须小于<em style="color: red">500</em>个。</p>
+                    <p>2、请点击“浏览” 按钮选中需要上传的附件，然后点击“上传”按钮进行上传。</p>
+                    <form action="#" th:action="@{/importCust}" method="post" enctype="multipart/form-data" id="importCust"> 
+                    <div class="choose-file">
+                        <input type="file" name="file" style="height:22px" value="选择文件"/>
+                    </div>
+                    <div class="lead-btns"><a class="oprt-btn" onclick="importCust();">确认导入</a></div>
+                    </form>
+                </div>
+            </div>
+            <div class="cont-sec">
+                <h3 class="sec-title">导入结果</h3>
+                <div class="result-tips"><i class="bulb"></i><label>导入结果展示：本次导入 <em id="totalSize">0</em> 条，成功 <em id="succSize">0</em> 条，失败 <em id="errorSize">0</em> 条</label></div>
+                
+                <form action="#" th:action="@{/selCustError}"  method="post" id="errorList"
+                    th:include="pages/cust/errorlist">
+                </form>
+                
+                
+            </div>
+            
+            <form action="#" th:action="@{/exportError}"  method="post" id="exportError" onsubmit=" return exportError();">
+            <div class="btns-box mrg-t-30"><input type="submit" class="blue-btn" value="信息导出"></input></div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- 客户信息详情弹出层begin -->
+<div id="customer-layer" class="layer customer-layer" style="display:none;">
+    <div class="layer-t">
+        <label>客户信息详情</label>
+        <span class="layer-close" onclick="closeDiv('customer-layer', 'bgOver')">×</span>
+    </div>
+    <div class="layer-cont">
+        <div class="layer-tb-w">
+            <table class="layer-tb" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                    <th>订购单位：</th>
+                    <td id="det_company">亚信联创科技南京有限公aaaa</td>
+                </tr>
+                <tr>
+                    <th>单位联系人：</th>
+                    <td id="det_name">张1111</td>
+                </tr>
+                <tr>
+                    <th>客户类型：</th>
+                    <td id="det_custTypeDes">大客户</td>
+                </tr>
+                <tr>
+                    <th>联系人手机：</th>
+                    <td id="det_phone">18500000001</td>
+                </tr>
+                <tr>
+                    <th> 固定电话：</th>
+                    <td id="det_fixedPhone">111-111-111</td>
+                </tr>
+                <tr>
+                    <th>折扣率(折)：</th>
+                    <td id="det_discount">7</td>
+                </tr>
+                <tr>
+                    <th>经联人：</th>
+                    <td id="det_contactName">田溯宁</td>
+                </tr>
+                <tr>
+                    <th> 经联人电话：</th>
+                    <td id="det_contactPhone">186333344450 </td>
+                </tr>
+                <tr>
+                    <th>备注：</th>
+                    <td id="det_contactRemark">备注备注备注备注备注备注备注备注备注</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- 客户信息详情弹出层end -->
+<!-- 修改客户信息详情begin -->
+<div id="customer-edit" class="layer customer-edit" style="display:none;">
+    <div class="layer-t">
+        <label>修改客户信息</label>
+        <span class="layer-close" onclick="closeDiv('customer-layer', 'bgOver')">×</span>
+    </div>
+    <div class="layer-cont">
+        <div class="layer-tb-w">
+            <table class="layer-tb" cellspacing="0" cellpadding="0" border="0">
+                    <tr>
+                        <th>订购单位：</th>
+                        <td>
+                            <input id ="mod_complany" type="text" class="ipt-style w300" />
+                            <span id="mod_complany_err" class="err"></span>
+                            <input type="hidden" id ="mod_custId" value="" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>单位联系人：</th>
+                        <td>
+                            <input id = "mod_name" type="text" class="ipt-style w124" />
+                            <span id="mod_name_err" class="err"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>客户类型：</th>
+                        <td>
+                            <span id = "mod_custTypeDes1" class="sel-box sel-long sel-box-on" onclick="mod_custTypeChange(1)">大客户</span>
+                            <span id ="mod_custTypeDes2" class="sel-box sel-long" onclick="mod_custTypeChange(2)">批发商</span>
+                            <input id="mod_custType" type="hidden" value='1' />
+                        </td>
+                    </tr>           
+                    <tr>
+                        <th>联系人手机：</th>
+                        <td>
+                            <input id = "mod_phone" type="text" class="ipt-style w124" />
+                            <span id="mod_phone_err" class="err"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>固定电话：</th>
+                        <td>
+                            <input id="mod_fixTel1" type="text" class="ipt-style w80" value="区号" /><span class="hinge">-</span>
+                            <input id="mod_fixTel2" type="text" class="ipt-style w168" /><span class="hinge">转</span>
+                            <input id="mod_fixTel3" type="text" class="ipt-style w80" />
+                            <span id="mod_fixTel_err" class="err"></span>
+                            <input id="mod_fixedPhone" type="hidden" value='1' /> 
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>折扣率：</th>
+                        <td>
+                            <input id="mod_discount" type="text" class="ipt-style w124" value="" />
+                            <span class="hinge">折</span>
+                            <span id="mod_discount_err" class="err"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>经联人：</th>
+                        <td><input id = "mod_contactName" type="text" class="ipt-style w124" /></td>
+                    </tr>
+                    <tr>
+                        <th>经联人电话：</th>
+                        <td><input id="mod_contactPhone" type="text" class="ipt-style w124" /></td>
+                    </tr>
+                    <tr>
+                        <th>备注：</th>
+                        <td>
+                            <textarea id="mod_contactRemark" class="text-style remarks"></textarea>
+                            <p class="ipt-tips"></p>
+                        </td>
+                    </tr>
+                </table>
+        </div>
+        <div class="layer-btns">
+            <input type="button" class="short-btn" value="返回" onclick="closeDiv('customer-edit', 'bgOver')" />
+            <input type="button" class="short-btn" value="确定" onclick="updateCust();" />
+        </div>
+    </div>
+</div>
+<!-- 修改客户信息详情end -->
+
+<!-- 成功提示层 begin -->
+<div id="succ_tips_layer" class="tips-layer">
+    <div class="tips-layer-t">
+        <label>信息提示</label>
+    </div>
+    <div class="tips-layer-cont">
+        <p class="tips-sec"><span class="success-icon"></span><label id="succ_tips_lable">成功成功成功成功成功成功成功成功成功成功</label></p>
+        <div class="tips-layer-btns">
+            <a href="javascript:void(0)" class="oprt-btn tips-layer-sure">确&nbsp;&nbsp;定</a>
+        </div>
+    </div>
+</div>
+<!-- 成功提示层 end -->
+
+<!-- 失败提示层 begin -->
+<div id="fail_tips_layer" class="tips-layer">
+    <div class="tips-layer-t">
+        <label>信息提示</label>
+    </div>
+    <div class="tips-layer-cont">
+        <p class="tips-sec"><span class="success-icon"></span><label id="fail_tips_lable">成功成功成功成功成功成功成功成功成功成功</label></p>
+        <div class="tips-layer-btns">
+            <a href="javascript:void(0)" class="oprt-btn tips-layer-sure">确&nbsp;&nbsp;定</a>
+        </div>
+    </div>
+</div>
+<!-- 失败提示层 end -->
+
+</body>
+</html>

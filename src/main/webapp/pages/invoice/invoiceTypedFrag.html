@@ -1,0 +1,76 @@
+<table class="list-tb1" cellspacing="0" cellpadding="0" border="0">
+  <thead>
+    <tr>
+      <th width="100">订购编号</th>
+      <th width="150">订购单位</th>
+      <th width="80">联系人</th>
+      <th width="80">订购数量</th>
+      <th width="80">打印时间</th>
+      <th width="100">发票号</th>
+      <th width="80">抬头</th>
+	  <th width="100">项目内容</th>
+	  <th width="80">发票类别</th>
+	  <th width="80">金额</th>
+	  <th width="80">数量</th>
+	  <th width="130">备注</th>
+      <th>详情</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr th:each="orderMap : ${invoiceList}">
+      <td th:text="${orderMap['SUBSCRIBE_ID']}">000285</td>
+      <td th:text="${orderMap['COMPANY']}">亚信联创科技南京有限公aaaa</td>
+      <td th:text="${orderMap['CUSTOMER_NAME']}">张1111</td>
+      <td th:text="${orderMap['TOTAL_COUNT']}">4500</td>
+      <td th:text="${orderMap['INVOICE_TYPE_TIME']}+'&nbsp;'">2014-4-24 17:35:03</td>
+      <td th:text="${orderMap[INVOICE_NO]}+'&nbsp;'">大客户</td>
+      <td th:text="${orderMap[INVOICE_TITLE]}">大客户</td>
+	  <td th:text="${orderMap[INVOICE_ITEM]}">大客户</td>
+	  <td th:text="${orderMap[INVOICE_TYPE]}">大客户</td>
+	  <td th:text="${orderMap[INVOICE_AMOUNT]}">10</td>
+	  <td th:text="${orderMap[INVOICE_CINVOICE_COUNTOUNT]}">2014-4-04 14:53:42</td>
+	  <td th:text="${orderMap[REMARK]}+'&nbsp;'">大客户</td>
+      <td><a href="javascript:void(0);" class="c36c detail-btn" onclick="showDetailFormInvoice(this,1);">详情</a></td>
+    </tr>
+    <tr th:remove="all">
+      <td>000285</td>
+      <td>亚信联创科技南京有限公aaaa</td>
+      <td>张1111</td>
+      <td>4500</td>
+      <td>2014-4-24 17:35:03</td>
+      <td><a href="javascript:void(0);" class="c36c detail-btn">详情</a></td>
+    </tr>
+    <tr th:remove="all">
+      <td>000285</td>
+      <td>亚信联创科技南京有限公aaaa</td>
+      <td>张1111</td>
+      <td>4500</td>
+      <td>2014-4-24 17:35:03</td>
+      <td><a href="javascript:void(0);" class="c36c detail-btn">详情</a></td>
+    </tr>
+    <tr th:remove="all">
+      <td>000285</td>
+      <td>亚信联创科技南京有限公aaaa</td>
+      <td>张1111</td>
+      <td>4500</td>
+      <td>2014-4-24 17:35:03</td>
+      <td><a href="javascript:void(0);" class="c36c detail-btn">详情</a></td>
+    </tr>
+    <tr th:remove="all">
+      <td>000285</td>
+      <td>亚信联创科技南京有限公aaaa</td>
+      <td>张1111</td>
+      <td>4500</td>
+      <td>2014-4-24 17:35:03</td>
+      <td><a href="javascript:void(0);" class="c36c detail-btn">详情</a></td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="6">
+        <div th:include="pages/fragment/ajaxpager::ajaxpager"
+  th:with="ajaxPageId='typedInvoiceInfoTable'" th:remove="tag"></div>
+    </td>
+    </tr>
+  </tfoot>
+</table>

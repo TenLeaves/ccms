@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+ <head> 
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+  <title>库存明细查询</title> 
+  <link th:href="@{/static/css/base.css}" href="../static/css/base.css" rel="stylesheet" type="text/css" /> 
+  <link th:href="@{/static/css/home.css}" href="../static/css/base.css" rel="stylesheet" type="text/css" /> 
+  <script type="text/javascript" th:src="@{/static/js/jquery-1.8.js}"></script> 
+  <script type="text/javascript" th:src="@{/static/js/cwhome.js}"></script> 
+  <script th:src="@{/static/js/jquery.form.min.js}"></script> 
+ </head> 
+ <body> 
+  <div class="w"> 
+   <div class="center-cont"> 
+    <div class="section-box undo-work"> 
+     <h3 class="section-title">待处理工作</h3> 
+     <div class="tabs"> 
+      <ul class="tablist" id="tablist"> 
+       <li class="on todoCss" todoval="1">待收款订单</li> 
+       <li class="todoCss" todoval="2">待打印发票</li> 
+      </ul> 
+     </div> 
+     <div id="getPayDiv"> 
+      <div class="list-box"> 
+       <from id="cwGetPayTable" method="post" th:action="@{/cwToGetPay}" th:include="pages/content/cw/getPayFrag"> 
+        <!-- 收款 --> 
+       </from> 
+      </div> 
+      <div class="oprt-box"> 
+       <a class="oprt-btn" href="/ccms1/financeConfirm" target="main-content">立即处理</a> 
+      </div> 
+     </div> 
+     <div id="invoiceTypeDiv" style="display:none;"> 
+      <div class="list-box"> 
+       <from id="invoiceTypeTable" method="post" th:action="@{/cwPrintInvoice}" th:include="pages/content/cw/cwInvoicetoType"> 
+        <!-- 打发票 --> 
+       </from> 
+      </div> 
+      <div class="oprt-box"> 
+       <a class="oprt-btn" href="/ccms1/financeConfirm" target="main-content">立即处理</a> 
+      </div> 
+     </div> 
+    </div> 
+   </div> 
+  </div>   
+ </body>
+</html>

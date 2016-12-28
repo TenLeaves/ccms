@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:th="http://www.thymeleaf.org" >
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>汇款单维护</title>
+<link rel="stylesheet" type="text/css" href="../css/base.css" th:href="@{/static/css/base.css}"/>
+<link rel="stylesheet" type="text/css" href="../css/payment_maintain.css" th:href="@{/static/css/payment_maintain.css}"/>
+<script type="text/javascript" src="../js/jquery.min.js" th:src="@{/static/js/jquery.min.js}"></script>
+<script type="text/javascript" src="date/WdatePicker.js" th:src="@{/static/js/date/WdatePicker.js}"></script>
+<script src="../static/js/jquery-1.8.js"  th:src="@{/static/js/jquery-1.8.js}"></script>
+<script src="../static/js/jquery.form.min.js" th:src="@{/static/js/jquery.form.min.js}"></script>
+<script type="text/javascript" src="../js/common.js" th:src="@{/static/js/common.js}"></script>
+<script src="../static/js/jquery.timers-1.2.js" th:src="@{/static/js/jquery.timers-1.2.js}"></script>
+<script src="../static/js/jq-overlay.js" th:src="@{/static/js/jq-overlay.js}"></script>
+<script src="../static/js/payment.js" th:src="@{/static/js/payment.js}"></script>
+</head>
+
+<body>
+<div class="w">
+	<div class="tabs">
+		<ul id="tablist" class="tablist">
+			<li class="on">新增汇款单</li>
+			<li>查询汇款单</li>
+			<li>导入汇款单</li>
+		</ul>
+	</div>
+	<div class="sec-box">
+		<div class="tabs-cont">
+			<h3 class="sec-title">填写汇款单信息</h3>
+			<form action="#" th:action="@{/addPay}" th:object="${payment}" method="post" id="submitInfo">
+			<table class="oprt-table" cellspacing="0" cellpadding="0" border="0">
+				<tr>
+					<th><em class="star">*</em>电子回单号：</th>
+					<td>
+						<input type="text" class="ipt-style w300" id="paymentId" th:field = "*{paymentId}"/>
+					</td>
+				</tr>
+				<tr>
+					<th><em class="star">*</em>汇款人户名：</th>
+					<td><input type="text" class="ipt-style w124" id="paymentName" th:field = "*{paymentName}"/></td>
+				</tr>			
+				<tr>
+					<th><em class="star">*</em>汇款金额：</th>
+					<td><input type="text" class="ipt-style w124" id="paymentValue" th:field = "*{paymentValue}" onblur="checkMoney('paymentValue');"/><span class="hinge">元</span></td>
+				</tr>
+				<tr>
+					<th><em class="star">*</em>汇款时间：</th>
+					<td><input type="text" class="ipt-style date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" readonly="readonly" id="paymentTime" th:field = "*{paymentTime}" /></td>
+				</tr>
+				<tr>
+					<th>汇款人电话：</th>
+					<td><input type="text" class="ipt-style w124" id="paymentPhone" th:field = "*{paymentPhone}"/></td>
+				</tr>
+				<tr>
+					<th>汇款人地址：</th>
+					<td><input type="text" class="ipt-style w300" id="paymentAddress" th:field = "*{paymentAddress}"/></td>
+				</tr>
+				<tr>
+					<th>购买数量：</th>
+					<td><input type="text" class="ipt-style w124" id="buyCount" th:field = "*{buyCount}"/></td>
+				</tr>
+				<tr>
+					<th>邮编：</th>
+					<td><input type="text" class="ipt-style w124" id="postCode" th:field = "*{postCode}"/></td>
+				</tr>
+				<tr>
+						<th>汇款方式：</th>
+						<td>
+							<span class="sel-box sel-long sel-box-on" id="postCompany1">邮局</span>
+							<span class="sel-box sel-long" id="postCompany2">银行</span>
+							<input id="postCompany" type="hidden" value='1' th:field = "*{postCompany}" />
+						</td>
+					</tr>
+					<tr>
+						<th>收到标识：</th>
+						<td>
+							<span class="sel-box sel-long sel-box-on" id="paymentFlag1">是</span>
+							<span class="sel-box sel-long" id="paymentFlag2">否</span>
+							<input id="paymentFlag" type="hidden" value='1' th:field = "*{paymentFlag}" />
+						</td>
+					</tr>
+				<tr>
+					<th>备注：</th>
+					<td>
+						<textarea class="text-style remarks" id="remark" th:field = "*{remark}"></textarea>
+						<p class="ipt-tips">文字不超过200字</p>
+					</td>
+				</tr>
+				<tr>
+					<th>&nbsp;</th>
+					<td>
+						<a href="javascript:void(0);" class="blue-bdr-btn mrg-r-15" onclick="resetInfo()">重&nbsp;&nbsp;&nbsp;&nbsp;置</a>
+						<a href="javascript:void(0);" class="blue-btn" onclick="addPayReady()">确&nbsp;&nbsp;&nbsp;&nbsp;定</a>
+					</td>
+				</tr>
+			</table>
+			</form>
+		</div>
+		<div class="tabs-cont" style="display:none;">
+			<div class="cont-sec">
+				<h3 class="sec-title" id="TOP">查询条件</h3>
+				<form action="#" th:action="@{/selAllPay}" th:object="${payment}" method="post" id="selPays">
+				<table class="oprt-table" cellspacing="0" cellpadding="0" border="0">
+					<tr>
+						<th>汇款单号：</th>
+						<td>
+							<input type="text" class="ipt-style w300" id="sel_paymentId" th:field = "*{paymentId}"/>
+						</td>
+					</tr>
+					<tr>
+						<th>汇款时间：</th>
+						<td><input type="text" class="ipt-style date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="sel_updateTime" th:field = "*{updateTime}" readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<th>是否绑定：</th>
+						<td>
+							<span class="sel-box sel-long sel-box-on" id="bindFlag1">否</span>
+							<span class="sel-box sel-long" id="bindFlag2">是</span>
+							<input id="bindFlag" type="hidden" value='1' th:field = "*{bindFlag}" />
+						</td>
+					</tr>			
+					<tr>
+						<th>汇款人姓名：</th>
+						<td><input type="text" class="ipt-style w124" id="sel_paymentName" th:field = "*{paymentName}"/></td>
+					</tr>
+					<tr>
+						<th>汇款金额：</th>
+						<td><input type="text" class="ipt-style w124" id="sel_paymentValue" th:field = "*{paymentValue}"/><span class="hinge">元</span></td>
+					</tr>
+					<tr>
+						<th>备注信息：</th>
+						<td><input type="text" class="ipt-style w124" id="sel_paymentRemark" th:field = "*{remark}"/></td>
+					</tr>
+					<tr>
+						<th>&nbsp;</th>
+						<td>
+							<a href="#RESULT" class="oprt-btn" onclick= "selAllPay();">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
+						</td>
+					</tr>
+				</table>
+				</form>
+			</div>
+			<div class="cont-sec">
+				<h3 class="sec-title" id="RESULT">查询结果</h3>
+				<div class="list-box">
+					<form action="#" th:action="@{/selPay}"  method="post" 
+                            th:include="pages/payment/paylist" id="payList">
+                        </form>
+				</div>
+			</div>
+		<div style="padding-left:40px;margin-top:15px;font-size: 12px;">
+        	<a href="#TOP" style="color: blue;">返回顶部</a>
+       </div>
+		</div>
+		<div class="tabs-cont" style="display:none;">
+			<div class="lead-in" style="padding-bottom: 20px">
+				<span class="sel-box sel-long sel-box-on" id="postCompanyInfo1">邮局</span>
+				<span class="sel-box sel-long" id="postCompanyInfo2">银行</span>
+			</div>
+			<div class="cont-sec">
+				
+				<h3 class="sec-title">选择文件导入</h3>
+				<div class="lead-in">
+					<p>1、文件须小于<em style="color: red">500</em>行。</p>
+					<p>2、请点击“浏览” 按钮选中需要上传的附件，然后点击“上传”按钮进行上传。</p>
+					<div class="choose-file">
+					<form action="#" th:action="@{/importPayment}" method="post" enctype="multipart/form-data" id="import_form">
+						<input style="display:none;" id="postCompanyInfo" name="postCompanyInfo"/>
+						<input type="file" id="fileInfo" name="file"/>
+					</form>
+					</div>
+					<div class="lead-btns"><a class="oprt-btn" href="javascript:void(0);" onclick="sureImport()">确认导入</a></div>
+				</div>
+			</div>
+			<div class="cont-sec">
+				<h3 class="sec-title">导入结果</h3>
+				<div class="result-tips"><i class="bulb"></i><label>导入结果展示：本次导入 <em id="result_info1">0</em> 条，成功 <em id="result_info2">0</em> 条，失败 <em id="result_info3">0</em> 条</label></div>
+				<div class="list-box">					
+					<table class="list-tb" cellspacing="0" cellpadding="0" border="0" id="tal_error">
+							<tr>
+								<td width="200">行数</td>
+								<td width="400">错误原</td>
+								<td>操作建议</td>
+							</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 修改回款单begin -->
+<div id="modify" class="layer list-edit" style="display:none;">
+	<div class="layer-t">
+		<label>修改汇款单信息</label>
+		<span class="layer-close">×</span>
+	</div>
+	<div class="layer-cont">
+		<div class="layer-tb-w">
+			<table class="layer-tb" cellspacing="0" cellpadding="0" border="0">
+				<tr>
+					<th>电子回单号：</th>
+					<td>
+						<input type="text" class="ipt-style w300" id = "mod_paymentId" readonly="readonly"/>
+					</td>
+				</tr>
+				<tr>
+					<th>汇款人户名：</th>
+					<td><input type="text" class="ipt-style w124" id = "mod_paymentName"/></td>
+				</tr>		
+				<tr>
+					<th>汇款金额：</th>
+					<td><input type="text" class="ipt-style w124" id = "mod_paymentValue" onblur="checkMoney('mod_paymentValue');"/><span class="hinge">元</span></td>
+				</tr>
+				<tr>
+					<th>汇款时间：</th>
+					<td><input type="text" class="ipt-style date" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" readonly="readonly" id="mod_paymentTime"/></td>
+				</tr>
+				<tr>
+					<th>汇款人电话：</th>
+					<td><input type="text" class="ipt-style w124" id="mod_paymentPhone"/></td>
+				</tr>
+				<tr>
+					<th>汇款人地址：</th>
+					<td><input type="text" class="ipt-style w300" id="mod_paymentAddress"/></td>
+				</tr>
+				<tr>
+					<th>购买数量：</th>
+					<td><input type="text" class="ipt-style w124" id="mod_buyCount"/></td>
+				</tr>
+				<tr>
+					<th>邮编：</th>
+					<td><input type="text" class="ipt-style w124" id="mod_postCode"/></td>
+				</tr>
+				<tr>
+					<th>备注：</th>
+					<td>
+						<textarea class="text-style remarks" id="mod_remark"></textarea>
+						<p class="ipt-tips">文字不超过200字</p>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="layer-btns">
+			<a href="javascript:void(0);" class="short-btn layer-back" onclick="closeDiv()">返回</a>
+			<a href="javascript:void(0);" class="short-btn layer-sure" onclick="updateCust();">确定</a>
+		</div>
+	</div>
+</div>
+<!-- 修改回款单end -->
+<!-- 成功提示层 begin -->
+<div id="succ_tips_layer" class="tips-layer">
+    <div class="tips-layer-t">
+        <label>信息提示</label>
+    </div>
+    <div class="tips-layer-cont">
+        <p class="tips-sec"><span class="success-icon"></span><label id="succ_tips_lable">成功成功成功成功成功成功成功成功成功成功</label></p>
+        <div class="tips-layer-btns">
+            <a href="javascript:void(0)" class="oprt-btn tips-layer-sure">确&nbsp;&nbsp;定</a>
+        </div>
+    </div>
+</div>
+<!-- 成功提示层 end -->
+</body>
+</html>

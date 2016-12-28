@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>配送单导出</title>
+<link rel="stylesheet" type="text/css" href="../css/base.css" th:href="@{/static/css/base.css}"/>
+<link rel="stylesheet" type="text/css" href="../css/distribution_export.css" th:href="@{/static/css/distribution_export.css}"/>
+<script type="text/javascript" src="../js/jquery-1.8.js" th:src="@{/static/js/jquery-1.8.js}"></script>
+<script type="text/javascript" src="../static/js/common.js" th:src="@{/static/js/common.js}"></script>
+<script type="text/javascript" src="date/WdatePicker.js" th:src="@{/static/js/date/WdatePicker.js}"></script>
+<script type="text/javascript" src="../js/orderOut.js" th:src="@{/static/js/orderOut.js}"></script>
+<script src="../static/js/jquery.timers-1.2.js" th:src="@{/static/js/jquery.timers-1.2.js}"></script>
+<script src="../static/js/jq-overlay.js" th:src="@{/static/js/jq-overlay.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/jquery.json-2.4.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/jquery.form.min.js}"></script>
+</head>
+
+<body>
+<div class="w">
+	<div class="sec-box">
+		<div class="cont-sec">
+			<h3 class="sec-title" id="TOP">查询条件</h3>
+			<form action="#" th:action="@{/selOrderOutInfo}" th:object="${customer}" method="post" id="selCusts">
+			<table class="oprt-table" cellspacing="0" cellpadding="0" border="0">
+				<tr>
+					<th>收件人：</th>
+					<td>
+						<input type="text" class="ipt-style w124" id="custName"/>
+					</td>
+				</tr>
+				<tr>
+					<th>联系电话：</th>
+					<td>
+						<input type="text" class="ipt-style w124" id="telephone"/>
+					</td>
+				</tr>
+				<tr>
+					<th>是否已导出：</th>
+					<td>
+						<span class="sel-box sel-long sel-box-on" id="explorWay0" onclick="exporeFlag(0)">否</span>
+						<span class="sel-box sel-long" id="explorWay1" onclick="exporeFlag(1)">是</span>
+					</td>
+				</tr>
+				<tr style="display:none;" id="tr1">
+					<th>导出时间：</th>
+					<td>
+						<input readonly="readonly" id="exploreTime" type="text" class="ipt-style date" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+					</td>
+				</tr>
+				<tr>
+					<th>邮寄地址：</th>
+					<td>
+						<input type="text" class="ipt-style w300" id="address"/>
+					</td>
+				</tr>
+				<tr>
+				    <th>配送方式：</th>
+            		<td>
+            			<span class="sel-box sel-long sel-box-on" id="myselfWay0">自提</span>
+						<span class="sel-box sel-long" id="myselfWay1">邮局</span>
+						<span class="sel-box sel-long" id="myselfWay2">中铁</span>
+						<span class="sel-box sel-long" id="myselfWay3">其他</span>
+            		</td>
+				</tr>
+				
+				<tr>
+					<th>&nbsp;</th>
+					<td>
+						<a href="#RESULT" class="oprt-btn" onclick="checkOrderInfo()">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
+					</td>
+				</tr>
+			</table>
+			</form>
+		</div>
+		<div class="cont-sec">
+			<h3 class="sec-title" id="RESULT">查询结果</h3>
+			<div class="list-box">
+				<form action="#" th:action="@{/custOutPageInfo}" th:object="${userMap}" method="post" 
+    			th:include="pages/orderOut/orderOutlist" id="pagesList">
+    			</form>
+			</div>
+		</div>
+		<div class="btns-box mrg-t-30" id="btn0" >
+		 <form action="#" th:action="@{/exportOrderOut}"  method="post" onsubmit="return exportList()">
+          	<input id="partExport" type="hidden" name="partExport"/>
+			<input type="submit" class="blue-bdr-btn mrg-r-15"  value="导出" style="float: left;margin-left: 320px;margin-top: 10px;"/>
+		</form>
+		<form action="#" th:action="@{/exportAllOrderOut}"  method="post">
+			<input type="submit" class="blue-btn" value="全量导出" style="float:none;margin-top: 10px;margin-left: -220px;"/>
+		</form>
+		</div>
+		<div class="btns-box mrg-t-30" id="btn1" style="display:none;">
+		 <form action="#" th:action="@{/sureStock}"  method="post" onsubmit="return sureList()">
+          	<input id="partStock" type="hidden" name="partStock"/>
+			<input type="submit" class="blue-btn" value="出库确认"/>
+		</form>
+		</div>
+		<div style="padding-left:40px;margin-top:15px;font-size: 12px;">
+        <a href="#TOP" style="color: blue;">返回顶部</a>
+       </div>
+	</div>
+</div>
+<!-- 成功提示层 begin -->
+<div id="succ_tips_layer" class="tips-layer">
+    <div class="tips-layer-t">
+        <label>信息提示</label>
+    </div>
+    <div class="tips-layer-cont">
+        <p class="tips-sec"><span class="success-icon"></span><label id="succ_tips_lable">成功成功成功成功成功成功成功成功成功成功</label></p>
+        <div class="tips-layer-btns">
+            <a href="javascript:void(0)" class="oprt-btn tips-layer-sure">确&nbsp;&nbsp;定</a>
+        </div>
+    </div>
+</div>
+<!-- 成功提示层 end -->
+</body>
+</html>

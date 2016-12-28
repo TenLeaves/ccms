@@ -1,0 +1,28 @@
+.w300{width:300px;}
+.w124{width:124px;}
+.sec-box{height:1110px;padding:20px 0;margin:0 35px 0 0;border:1px solid #d3d3d3;background:#eff3f3;overflow-y: auto;}
+.oprt-table{width:850px;margin:0 0 0 20px;font-size:14px;}
+.oprt-table .sel-box{float:none;display:inline-block;}
+.oprt-table .sel-long{*margin-right:23px;}
+.oprt-table th,.oprt-table td{padding:10px 0;}
+.oprt-table th{width:120px;line-height:32px;padding-right:5px;vertical-align:top;text-align:right;}
+.sec-title{line-height:35px;margin:0 20px 15px 40px;border-bottom:1px dashed #ccc;font-size:14px;font-weight:bold;}
+.list-box{margin:0 15px 0 40px;padding:15px;background:#fff;}
+.list-tb{width:100%;font-size:12px;}
+.list-tb thead th{background:#f5f5f5;padding:10px 0;text-align:center;}
+.list-tb tbody td{padding:15px 0;border-bottom:1px solid #f5f5f5;text-align:center;word-wrap:break-word;word-break:break-all;}
+.list-tb tfoot td{background:#f5f5f5;padding:7px 10px;}
+.list-tb tfoot td .paging{float:right;}
+.return-btn{margin-right:5px;}
+
+.all-year{display:inline-block;*display:inline;zoom:1;width:146px;margin:0 30px 10px 0;vertical-align:top;}
+.all-year .sel-box{display:block;width:142px;}
+.all-year-on{position:relative;height:140px;}
+.sel-all{height:auto;}
+.paper-monthes{display:none;position:absolute;left:0;margin-top:15px;width:646px;*width:640px;padding:20px 20px 0;*padding-bottom:20px;overflow:hidden;zoom:1;background:#fff;}
+.paper-monthes span{float:left;width:80px;margin-bottom:20px;font-size:12px;}
+.paper-monthes span .check-style{margin-right:8px;}
+.paper-monthes span label{display:inline-block;line-height:14px;vertical-align:middle;}
+.arrow{display:none;position:absolute;width:0;height:0;margin:-8px 0 0 65px;font-size:0;border-width:12px 6px;border-color:transparent transparent #fff transparent;border-style:solid;_border-color:tomato tomato #fff tomato;_filter:chroma(color=tomato);}
+.all-year-on .paper-monthes,.all-year-on .arrow{display:block;}
+.date{width:124px;background:#fff url(../images/date.png) no-repeat 118px center;}

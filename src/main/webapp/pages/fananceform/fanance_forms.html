@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>订单报表</title>
+
+<link rel="stylesheet" type="text/css"  th:href="@{/static/css/base.css}"/>
+<link rel="stylesheet" type="text/css"  th:href="@{/static/css/order_forms.css}"/>
+<script type="text/javascript"  th:src="@{/static/js/jquery-1.8.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/common.js}"></script>
+<script type="text/javascript"  th:src="@{/static/js/date/WdatePicker.js}"></script>
+<script type="text/javascript"  th:src="@{/static/js/fanance_form.js}"></script>
+<script  th:src="@{/static/js/jquery.timers-1.2.js}"></script>
+<script  th:src="@{/static/js/jq-overlay.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/jquery.json-2.4.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/jquery.form.min.js}"></script>
+</head>
+
+<body>
+<div class="w">
+	<div class="sec-box">
+		<div class="tabs-cont">
+			<div class="cont-sec">
+				<h3 class="sec-title" id="TOP">查询条件</h3>
+				<table class="oprt-table" cellspacing="0" cellpadding="0" border="0">
+				<tr>
+						<th>付款方式：</th>
+						<td>
+							<select class="select-style w145" id="export" onchange="changeChanges(this);">
+								<option value="2">银行</option>
+								<option value="1">邮局</option>
+								<option value="3">现金</option>
+							</select>
+							<input type="hidden" id="userSelectChanges" value='2'/>
+						</td>
+					</tr>
+					<tr class="noChangesCss">
+						<th>汇款单号：</th>
+						<td><input type="text" class="ipt-style w145" id="paymentNo" /></td>
+					</tr>
+					<tr class="noChangesCss">
+						<th>汇款人：</th>
+						<td>
+						<input type="text" class="ipt-style w145" id="paymentName" />
+						</td>
+					</tr>
+					
+					<tr class="noChangesCss">
+						<th>是否绑定：</th>
+						<td>
+							<select class="select-style w145" id="export" onchange="changeBindState(this);">
+								<option value="0">--请选择</option>
+								<option value="1">未绑定</option>
+								<option value="2">已绑定</option>
+							</select>
+							<input type="hidden" id="userSelectBindSta" value='0'/>
+						</td>
+					</tr>
+					<tr class="noChangesCss">
+						<th>汇款时间：</th>
+						<td>
+							<input  id="startTime" type="text" class="ipt-style date" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'endTime\',{d:-1})}',dateFmt:'yyyy-MM-dd'})" />
+							<span class="hinge">至</span>
+							<input id="endTime" type="text" class="ipt-style date"  onfocus="WdatePicker({minDate:'#F{$dp.$D(\'startTime\',{d:0})||\'%y-%M-%d-#{%H+1}\'}',dateFmt:'yyyy-MM-dd'})"/>
+						</td>
+					</tr>
+                     <tr class="yjChangesCss">
+                        <th>录入时间：</th>
+                        <td>
+                            <input  id="startTime1" type="text" class="ipt-style date" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'endTime\',{d:-1})}',dateFmt:'yyyy-MM-dd'})" />
+                            <span class="hinge">至</span>
+                            <input id="endTime1" type="text" class="ipt-style date"  onfocus="WdatePicker({minDate:'#F{$dp.$D(\'startTime\',{d:0})||\'%y-%M-%d-#{%H+1}\'}',dateFmt:'yyyy-MM-dd'})"/>
+                        </td>
+                    </tr>
+                     <tr class="cashChangesCss" style="display:none;">
+                        <th>下单时间：</th>
+                        <td>
+                            <input  id="orderTimeStart" type="text" class="ipt-style date" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'endTime\',{d:-1})}',dateFmt:'yyyy-MM-dd'})" />
+                            <span class="hinge">至</span>
+                            <input id="orderTimeEnd" type="text" class="ipt-style date"  onfocus="WdatePicker({minDate:'#F{$dp.$D(\'startTime\',{d:0})||\'%y-%M-%d-#{%H+1}\'}',dateFmt:'yyyy-MM-dd'})"/>
+                        </td>
+                    </tr>
+					
+					<tr>
+						<th>&nbsp;</th>
+						<td>
+							<a href="#RESULT" class="oprt-btn" onclick="qryFananceSatuation()">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="cont-sec">
+				<h3 class="sec-title" id="RESULT">查询结果</h3>
+				<div class="result-total">
+					<span id="count1">未付款总金额：0（元）</span>
+				</div>
+								<div class="result-total">
+					<span id="count2">已收款总金额：0（元）</span>
+				</div>
+				
+				<div class="list-box">
+					<form action="#" th:action="@{/qryOrderPaySituationNoneCashPage}"  method="post" 
+    				th:include="pages/fananceform/fanance_money" id="pagesList1" style="diaplay:none;">
+    				</form>
+    				
+    				<form action="#" th:action="@{/qryOrderPaySituationCashPage}"  method="post" 
+    				th:include="pages/fananceform/fanance_money_sale" id="pagesList2" style="display:none;">
+    				</form>		
+				</div>
+			</div>
+			<div style="padding-left:40px;margin-top:15px;font-size: 12px;">
+        		<a href="#TOP" style="color: blue;">返回顶部</a>
+       		</div>
+       		<div class="btns-box mrg-t-30" id="btn0" style="display: none;">
+				<form action="#" th:action="@{/exportAllFananceForms}"  method="post">
+					<input type="submit" class="blue-btn" value="全量导出"/>
+				</form>
+			</div>
+			<div class="btns-box mrg-t-30" id="btn1" style="display: none;">
+				<form action="#" th:action="@{/exportAllFananceFormsNew}"  method="post">
+					<input type="submit" class="blue-btn" value="全量导出"/>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

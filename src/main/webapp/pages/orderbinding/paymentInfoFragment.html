@@ -1,0 +1,48 @@
+<div class="cont-sec">
+  <h3 class="sec-title">汇款单列表</h3>
+  <div class="search-area-w">
+    <div class="search-area">
+      <ul class="classify">
+        <li qryType="1" class="paymentQryType on" onclick="changeAryTypePay(this);">汇款单号</li>
+        <li qryType="2" class="paymentQryType" onclick="changeAryTypePay(this);">汇款人</li>
+        <li qryType="3" class="paymentQryType" onclick="changeAryTypePay(this);">汇款金额</li>
+        <li qryType="4" class="paymentQryType" onclick="changeAryTypePay(this);">汇款单日期</li>
+        <input type="hidden" value="7" id="paymentQryTypeId"/>
+      </ul>
+      <div class="search-box" id="inputNotimeDiv">
+        <input type="text" class="search-ipt" id="inputPayKeyWords"/> <span
+          class="searching" onclick="searchPay();"></span>
+      </div>
+      <div class="search-box" style="display:none;" id="inputtimeDiv">
+        <input type="text" class="search-ipt date" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="inputPayKeyWordsTime"/> <span
+          class="searching" onclick="searchPay();"></span>
+      </div>
+    </div>
+  </div>
+  <div class="list-box" style="height: 250px; overflow: auto;">
+    <table border="0" cellspacing="0" cellpadding="0" class="list-tb">
+      <thead>
+        <tr>
+          <th width="60">选择</th>
+          <th width="200">汇款单号</th>
+          <th width="150">汇款人</th>
+          <th width="150">汇款方式</th>
+          <th width="150">汇款金额</th>
+          <th>汇款时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="eachPayMent : ${pamentList}">
+          <td><input type="checkbox" name="out-receipt"
+            class="check-style" /></td>
+          <td th:text="${eachPayMent['PAYMENT_ID']}">123213213123</td>
+          <td th:text="${eachPayMent['PAYMENT_NAME']}">咱三</td>
+          <td th:text="${eachPayMent['POST_COMPANY']}">咱三</td>
+          <td th:text="${eachPayMent['PAYMENT_VALUE']+'元'}">50000元</td>
+          <td th:text="${eachPayMent['PAYMENT_TIME']}">2014-12-29</td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+</div>

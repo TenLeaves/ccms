@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>库存明细查询</title>
+<link th:href="@{/static/css/base.css}" href="../static/css/base.css" rel="stylesheet" type="text/css" />
+<link th:href="@{/static/css/home.css}" href="../static/css/base.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" th:src="@{/static/js/jquery-1.8.js}" src="../js/jquery.min.js"></script> 
+<script type="text/javascript" th:src="@{/static/js/kghome.js}" src="../js/jquery.min.js"></script> 
+    <script th:src="@{/static/js/jquery.form.min.js}"></script>
+
+</head>
+
+<body>
+<div class="w">
+	<div class="center-cont">
+		<div class="section-box undo-work">
+			<h3 class="section-title">待处理工作</h3>
+			<div class="tabs">
+				<ul class="tablist" id="tablist">
+                    <li class="on">印刷确认入库</li>
+				</ul>
+			</div>
+			<div class="list-box">
+                <from id="kuguanTodoTable" method="post" th:action="@{/showPrintTobeIn}" th:include="pages/content/kg/kgtodoFrag">
+              
+                </from>
+				
+			</div>
+			<div class="oprt-box">
+				<a class="oprt-btn" href="/ccms1/toConfirmPrint" target="main-content">立即处理</a>
+			</div>
+		</div>
+		<div class="section-box work-status">
+			<h3 class="section-title">相关工作状态</h3>
+			<div class="tabs">
+				<ul class="tablist" id="tablist">
+					<li class="on">发票打印状态</li>
+				</ul>
+			</div>
+			<div class="list-box">
+                <from id="kgrelateTable" method="post" th:action="@{/showTypedInvoice}" th:include="pages/content/kg/kgrelate">
+                    <!-- 库管相关  发票是否打印 -->
+                </from>
+			</div>
+			
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

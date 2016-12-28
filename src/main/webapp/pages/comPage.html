@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>订阅信息结果页面</title>
+<link rel="stylesheet" type="text/css" href="../css/base.css" th:href="@{/static/css/base.css}"/>
+<link rel="stylesheet" type="text/css" href="../css/order_result.css" th:href="@{/static/css/order_result.css}"/>
+<script type="text/javascript" th:src="@{/static/js/jquery-1.8.js}"></script> 
+<script type="text/javascript" th:src="@{/static/js/comPage.js}"></script> 
+</head>
+
+<body>
+<div class="w">
+	<h2 class="sec-title">订单信息填写</h2>
+	<div class="sec-box">
+		<div class="result-tips">订单已提交，订单编号
+		<span th:text="${subscribeId}" style="clear: both;float: none;width: auto;" id="subscribeId"></span>
+		，提交日期为<span th:text="${date}" style="clear: both;float: none;width: auto;"></span></div>
+		<div class="btns-box">
+			<a class="blue-bdr-btn mrg-r-15" href="javascript:void(0);" onclick="showDetail()">查看详情</a>
+			<a class="blue-btn" href="javascript:void(0);" onclick="insertOrder()">填写新订单</a>
+			<input type="hidden" th:value="${data}" id="hidden"/>
+		</div>
+	</div>
+</div>
+</body>
+</html>

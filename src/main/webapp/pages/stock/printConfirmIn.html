@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+ <head> 
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+  <title>库存管理</title> 
+  <link th:href="@{/static/css/base.css}" rel="stylesheet" type="text/css" /> 
+  <link th:href="@{/static/css/store_manage.css}" rel="stylesheet" type="text/css" /> 
+  <script type="text/javascript" th:src="@{/static/js/jquery-1.8.js}"></script> 
+  <script type="text/javascript" th:src="@{/static/js/printConfirmIn.js}"></script> 
+  <script type="text/javascript" th:src="@{/static/js/jquery.json-2.4.js}"></script>
+      <script  th:src="@{/static/js/date/WdatePicker.js}"></script>
+     <script type="text/javascript" th:src="@{/static/js/common.js}" src="../js/jquery.min.js"></script> 
+   
+ </head> 
+ <body> 
+  <div class="w"> 
+   <div class="tabs"> 
+    <ul id="tablist" class="tablist"> 
+     <li class="on">印刷确认入库</li> 
+     <li>库存调拨</li> 
+    </ul> 
+   </div> 
+   <div class="sec-box"> 
+    <div class="tabs-cont"> 
+     <div class="cont-sec"> 
+      <h3 class="sec-title">印刷申请单信息</h3> 
+      <table class="oprt-table" cellspacing="0" cellpadding="0" border="0" id="productInfoTbl"> 
+       <tbody>
+        <tr> 
+         <th>选择印刷申请单:</th> 
+         <td> 
+          <div class="apply-list apply-list-on" th:each="eachProd : ${prodList}"> 
+           <span class="sel-box sel-auto productList" onclick="selectCertainPro(this);">
+             <span  th:text="${eachProd['prodDesc']}">2012年第一期申请单</span>
+             <span style="display:none;" th:text="${eachProd['prodCode']}"></span>
+             <span style="display:none;" th:text="${eachProd['PRINT_ID']}"></span>
+           </span> 
+           <input type="hidden" value="" id="selectedProdId"/>
+           <input type="hidden" value="" id="selectedprintId"/>
+          </div> 
+          </td> 
+        </tr> 
+        <tr> 
+         <th>申请单详细信息:</th> 
+         <td> 
+          <div class="apply-detail"> 
+           <ul> 
+            <li><label>印刷申请刊物：</label><span>--</span></li> 
+            <li><label>印刷数量：</label><span>--</span></li> 
+            <li><label>申请人：</label><span>--</span></li> 
+            <li><label>申批通过时间：</label><span>--</span></li> 
+           </ul> 
+          </div> </td> 
+        </tr> 
+       </tbody>
+      </table> 
+     </div> 
+     <div class="cont-sec"> 
+      <h3 class="sec-title">库存信息</h3> 
+      <table class="oprt-table" cellspacing="0" cellpadding="0" border="0"> 
+       <tbody>
+        <tr> 
+         <th>印刷厂印刷总数：</th> 
+         <td><input type="text" class="ipt-style w200" id="totalAmoutToPrint"/></td> 
+        </tr> 
+       </tbody>
+      </table> 
+     </div> 
+     <div class="cont-sec"> 
+      <h3 class="sec-title">分配库存</h3> 
+      <table class="oprt-table" cellspacing="0" cellpadding="0" border="0"> 
+       <tbody>
+        <tr> 
+         <th>杂志社：</th> 
+         <td><input type="text" class="ipt-style w200" id="zzsAmountToPrint"/></td> 
+        </tr> 
+        <tr> 
+         <th>邮局：</th> 
+         <td><input type="text" class="ipt-style w200" id="ofisAmountToPrint"/></td> 
+        </tr> 
+        <tr> 
+         <th>印刷厂：</th> 
+         <td><input type="text" class="ipt-style w200" id="printFactToPrint"/></td> 
+        </tr>
+        <tr>
+          <th>&nbsp;</th>
+           <td>
+            <a href="javascript:void(0);" class="oprt-btn" onclick="confirmPrintIn();">确&nbsp;&nbsp;&nbsp;&nbsp;定</a>
+           </td>
+        </tr> 
+       </tbody>
+      </table> 
+     </div> 
+    </div> 
+    <div class="tabs-cont" style="display:none;">
+            <div class="cont-sec">
+                <h3 class="sec-title">查询条件</h3>
+                <table class="oprt-table" cellspacing="0" cellpadding="0" border="0">
+                    <tr>
+                        <th>期刊：</th>
+                        <td><input type="text" id="prodPirod" class="ipt-style date" onclick="WdatePicker({dateFmt:'yyyy-MM'})"/></td>
+                    </tr>
+                    <tr>
+                        <th>库存类型：</th>
+                        <td>
+                            <span class="sel-box sel-long  prodtype" prodtype='1'>专业版</span>
+                            <span class="sel-box sel-long  prodtype" prodtype='2'>普及版</span>
+                            <input type="hidden" value="" id="userselectProdType"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <td>
+                            <a href="javascript:void(0);" class="oprt-btn" onclick="searchStock();">查&nbsp;&nbsp;&nbsp;&nbsp;询</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="cont-sec">
+                <h3 class="sec-title">被调拨仓库</h3>
+                <div class="list-box">
+                     <input type="hidden" value="" id="userselectStockFrom"/>
+                    <p><label class="stockAddrCss" stockAddr='1'>杂志社：</label><span id="zzsAmtId">--本</span></p>
+                    <p><label class="stockAddrCss" stockAddr='2'>邮局：</label><span id="yjAmtId">--本</span></p>
+                    <p><label class="stockAddrCss" stockAddr='3'>印刷厂：</label><span id="yscAmtId">--本</span></p>
+                    <input type="hidden" value="" id="printCode"/>
+                </div>
+            </div>
+            <div class="cont-sec">
+                <h3 class="sec-title">调拨到仓库</h3>
+                <div class="list-box">
+                    <p id="zzswantMntlabel"><label>杂志社：</label><input type="text" value="0" class="ipt-style w80" id="zzswantMnt"/></p>
+                    <p id="yjwantMntlabel"><label>邮局：</label><input type="text" value="0" class="ipt-style w80" id="yjwantMnt"/></p>
+                    <p id="yscwantMntlabel"><label>印刷厂：</label><input type="text" value="0" class="ipt-style w80" id="yscwantMnt"/></p>
+                </div>
+               <div style="width:100%;text-align:center;margin-top:50px;">
+                <a href="javascript:void(0);" class="oprt-btn" onclick="distribute();">确&nbsp;&nbsp;&nbsp;&nbsp;定</a>
+                </div>
+            </div>
+        </div>
+   </div> 
+  </div>  
+  <!-- 成功提示层 begin -->
+<div id="succ_tips_layer" class="tips-layer">
+    <div class="tips-layer-t">
+        <label>信息提示</label>
+    </div>
+    <div class="tips-layer-cont">
+        <p class="tips-sec"><span class="success-icon"></span><label id="succ_tips_lable">成功成功成功成功成功成功成功成功成功成功</label></p>
+        <div class="tips-layer-btns">
+            <a href="javascript:void(0)" class="oprt-btn tips-layer-sure">确&nbsp;&nbsp;定</a>
+        </div>
+    </div>
+</div>
+<!-- 成功提示层 end -->
+
+<!-- 失败提示层 begin -->
+<div id="fail_tips_layer" class="tips-layer">
+    <div class="tips-layer-t">
+        <label>信息提示</label>
+    </div>
+    <div class="tips-layer-cont">
+        <p class="tips-sec"><span class="success-icon"></span><label id="fail_tips_lable">成功成功成功成功成功成功成功成功成功成功</label></p>
+        <div class="tips-layer-btns">
+            <a href="javascript:void(0)" class="oprt-btn tips-layer-sure">确&nbsp;&nbsp;定</a>
+        </div>
+    </div>
+</div>
+<!-- 失败提示层 end --> 
+ </body>
+</html>
