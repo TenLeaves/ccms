@@ -10,7 +10,7 @@
 	<properties>
 		<spring.version>3.2.0.RELEASE</spring.version>
 		<slf4j.version>1.7.5</slf4j.version>
-		<log4j.version>2.0-beta8</log4j.version>
+		<log4j.version>2.14.1</log4j.version>
 		<junit.version>4.10</junit.version>
 		<thymeleaf.version>2.0.17</thymeleaf.version>
 	</properties>
